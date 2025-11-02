@@ -1,0 +1,126 @@
+name: Bug Report
+description: Report an issue or inconsistency in the TOON specification
+title: '[Bug]: '
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting an issue with the TOON specification!
+
+        Please fill out the sections below to help us understand and address the problem.
+
+  - type: dropdown
+    id: bug-type
+    attributes:
+      label: Issue Type
+      description: What type of issue are you reporting?
+      options:
+        - Specification ambiguity or unclear language
+        - Contradiction in the specification
+        - Missing or incorrect examples
+        - Inconsistency between spec and test fixtures
+        - ABNF grammar issue
+        - Other specification error
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of the issue.
+      placeholder: Describe what's wrong with the specification...
+    validations:
+      required: true
+
+  - type: textarea
+    id: spec-reference
+    attributes:
+      label: Specification Reference
+      description: Which section(s) of the specification are affected?
+      placeholder: |
+        E.g., Section 7.2, lines 320-325
+        Or: SPEC.md:320-325
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-behavior
+    attributes:
+      label: Current Behavior
+      description: What does the specification currently say? (Quote the relevant text if possible)
+      placeholder: |
+        Currently, the spec states...
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: What should the specification say instead? Or how should it be clarified?
+      placeholder: |
+        The spec should clarify that...
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: example
+    attributes:
+      label: Example
+      description: Provide a concrete example that demonstrates the issue.
+      placeholder: |
+        ```toon
+        items[2]{id,name}:
+          1,Alice
+          2,Bob
+        ```
+
+        According to Section X, this should..., but Section Y suggests...
+      render: markdown
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact
+      description: How does this issue affect implementations or users?
+      placeholder: |
+        - Implementations may interpret this differently
+        - This could lead to incompatible encoders/decoders
+        - Edge case X is not covered
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-fix
+    attributes:
+      label: Proposed Fix
+      description: If you have a suggestion for how to fix this, please describe it here.
+      placeholder: |
+        I suggest updating Section 7.2 to explicitly state...
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other information that might be helpful (links to related issues, implementation behavior, etc.)
+      placeholder: |
+        - Related to #123
+        - The reference implementation handles this by...
+        - Other specifications like JSON/YAML handle this by...
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      description: Please confirm the following
+      options:
+        - label: I have searched for similar issues in the issue tracker
+          required: true
+        - label: I have checked the latest version of the specification
+          required: true
+        - label: This issue is about the specification itself (not implementation bugs)
+          required: true

@@ -1,0 +1,94 @@
+name: Specification Clarification
+description: Request clarification on ambiguous or unclear parts of the specification
+title: '[Clarification]: '
+labels: [question, clarification]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for seeking clarification on the TOON specification!
+
+        This template is for questions about what the spec means or how it should be interpreted.
+        If you've found an error, please use the Bug Report template instead.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: What part of the specification needs clarification?
+      placeholder: I'm unclear about how...
+    validations:
+      required: true
+
+  - type: textarea
+    id: spec-reference
+    attributes:
+      label: Specification Section
+      description: Which section(s) are you asking about?
+      placeholder: |
+        E.g., Section 9.3, "Arrays of Objects — Tabular Form"
+        Or: SPEC.md:383-408
+    validations:
+      required: true
+
+  - type: textarea
+    id: confusion
+    attributes:
+      label: Source of Confusion
+      description: What specifically is ambiguous or unclear?
+      placeholder: |
+        The specification says "X", but it's not clear if this means...
+        - Interpretation A: ...
+        - Interpretation B: ...
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: example
+    attributes:
+      label: Example Case
+      description: Provide a concrete example that demonstrates your question.
+      placeholder: |
+        For instance, given this TOON:
+        ```toon
+        items[2]{id,name}:
+          1,Alice
+          2,Bob
+        ```
+
+        Should this be encoded as... or ...?
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Use Case / Context
+      description: Why does this clarification matter? What are you trying to implement or understand?
+      placeholder: |
+        I'm implementing a TOON encoder and need to know...
+        Or: I'm writing test cases for...
+
+  - type: textarea
+    id: tested-behavior
+    attributes:
+      label: Reference Implementation Behavior
+      description: Have you checked how the reference implementation handles this? What does it do?
+      placeholder: |
+        The reference implementation in JavaScript does X...
+        Or: I haven't tested this yet.
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      description: Please confirm the following
+      options:
+        - label: I have read the relevant specification sections
+          required: true
+        - label: I have searched for similar questions in existing issues
+          required: true
+        - label: I have checked the examples in the specification
+          required: true

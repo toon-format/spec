@@ -1,0 +1,9 @@
+user:
+  id: 123
+  name: Ada Lovelace
+  contact:
+    email: ada@example.com
+    phone: "+1-555-0100"
+  settings:
+    theme: dark
+    notifications: true

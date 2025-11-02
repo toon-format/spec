@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 GitHub Discussions
+    url: https://github.com/toon-format/spec/discussions
+    about: Ask questions, share ideas, or discuss the specification with the community
+  - name: 📖 Read the Specification
+    url: https://github.com/toon-format/spec/blob/main/SPEC.md
+    about: Read the complete TOON specification (v1.3)
+  - name: 🧪 Test Fixtures
+    url: https://github.com/toon-format/spec/tree/main/tests
+    about: Browse language-agnostic test fixtures for validating implementations
+  - name: 💻 Reference Implementation
+    url: https://github.com/toon-format/toon
+    about: TypeScript/JavaScript reference implementation with encoder, decoder, and CLI

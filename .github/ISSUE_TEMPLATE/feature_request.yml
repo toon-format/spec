@@ -1,0 +1,219 @@
+name: Feature Request / RFC
+description: Propose a new feature or change to the TOON specification
+title: '[RFC]: '
+labels: [enhancement, RFC]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for proposing an enhancement to the TOON specification!
+
+        This template follows the RFC (Request for Comments) process outlined in CONTRIBUTING.md.
+        Major changes require community discussion before acceptance.
+
+  - type: checkboxes
+    id: change-type
+    attributes:
+      label: Type of Change
+      description: What type of change are you proposing? (Check all that apply)
+      options:
+        - label: Breaking change (incompatible with current spec)
+        - label: Backward-compatible addition
+        - label: Clarification or editorial improvement
+        - label: New optional feature
+        - label: Changes to conformance requirements
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Brief overview of the proposed change (1-3 sentences).
+      placeholder: This proposal adds support for...
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: Why is this change needed? What problems does it solve?
+      placeholder: |
+        ## Problem
+        Currently, the spec doesn't handle X, which causes...
+
+        ## Use Case
+        When implementing Y, I need to...
+
+        ## Benefits
+        This change would allow...
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: detailed-design
+    attributes:
+      label: Detailed Design
+      description: Technical specification of the proposed change. Be as precise as possible.
+      placeholder: |
+        ## Proposed Syntax
+        ```toon
+        # Example of the new syntax
+        ```
+
+        ## Encoding Rules
+        - When encoding X, implementations MUST...
+        - The syntax SHALL be...
+
+        ## Decoding Rules
+        - When decoding Y, parsers SHOULD...
+
+        ## Grammar Changes
+        If ABNF changes are needed, specify them here.
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: examples
+    attributes:
+      label: Examples
+      description: Provide concrete examples showing the proposed feature in action.
+      placeholder: |
+        ### Before (current spec)
+        ```toon
+        # Current syntax
+        ```
+
+        ### After (proposed)
+        ```toon
+        # New syntax
+        ```
+
+        ### Use Case Example
+        ```toon
+        # Real-world usage
+        ```
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: drawbacks
+    attributes:
+      label: Drawbacks
+      description: What are the costs and downsides of this proposal?
+      placeholder: |
+        - Increased complexity in parsers
+        - Breaking change requiring migration
+        - Potential performance impact
+        - Could conflict with future features
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: What other designs did you consider? Why is this approach better?
+      placeholder: |
+        ### Alternative 1: ...
+        Rejected because...
+
+        ### Alternative 2: ...
+        This approach is better because...
+
+        ### Do Nothing
+        Not acceptable because...
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact on Implementations
+      description: How will this affect existing implementations?
+      placeholder: |
+        - **Reference implementation:** Requires changes to...
+        - **Community implementations:** Need to update...
+        - **Backward compatibility:** Existing documents will...
+        - **Migration path:** Implementers should...
+    validations:
+      required: true
+
+  - type: textarea
+    id: migration
+    attributes:
+      label: Migration Strategy
+      description: If this is a breaking change, how should implementations and users migrate?
+      placeholder: |
+        ## For Implementers
+        1. Update encoder to...
+        2. Update decoder to...
+        3. Add validation for...
+
+        ## For Users
+        Existing TOON documents can be migrated by...
+
+  - type: textarea
+    id: test-cases
+    attributes:
+      label: Test Cases
+      description: Provide test fixtures demonstrating the proposed behavior.
+      placeholder: |
+        ```json
+        {
+          "name": "test case name",
+          "input": { ... },
+          "expected": "...",
+          "note": "Tests that..."
+        }
+        ```
+      render: json
+
+  - type: textarea
+    id: spec-sections
+    attributes:
+      label: Affected Specification Sections
+      description: Which sections of SPEC.md need to be updated?
+      placeholder: |
+        - Section 7.2: Arrays of Objects
+        - Section 6: Header Syntax
+        - Appendix A: Examples
+    validations:
+      required: true
+
+  - type: textarea
+    id: unresolved
+    attributes:
+      label: Unresolved Questions
+      description: What parts of the design still need discussion?
+      placeholder: |
+        - Should this apply to X or only Y?
+        - What should happen in edge case Z?
+        - Is this syntax intuitive enough?
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other information (links, research, similar features in other formats, etc.)
+      placeholder: |
+        - Similar to JSON's handling of...
+        - Related to issue #123
+        - Research on token efficiency impact...
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      description: Please confirm the following
+      options:
+        - label: I have read the RFC process in CONTRIBUTING.md
+          required: true
+        - label: I have searched for similar proposals
+          required: true
+        - label: I have considered backward compatibility
+          required: true
+        - label: I understand this may require community discussion before acceptance
+          required: true
