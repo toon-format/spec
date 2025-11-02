@@ -157,6 +157,27 @@
       "specSection": "9"
     },
     {
+      "name": "accepts list items with irregular nested indentation when strict=false",
+      "input": "items[2]:\n  - id: 1\n     nested:\n       value: test\n  - id: 2",
+      "expected": {
+        "items": [
+          {
+            "id": 1,
+            "nested": {
+              "value": "test"
+            }
+          },
+          {
+            "id": 2
+          }
+        ]
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "4"
+    },
+    {
       "name": "empty lines do not trigger validation errors",
       "input": "a: 1\n\nb: 2",
       "expected": {

@@ -92,6 +92,14 @@
       "specSection": "7.1"
     },
     {
+      "name": "parses quoted key containing brackets with inline array",
+      "input": "\"key[test]\"[3]: 1,2,3",
+      "expected": {
+        "key[test]": [1, 2, 3]
+      },
+      "specSection": "7.1"
+    },
+    {
       "name": "parses quoted key with empty array",
       "input": "\"x-custom\"[0]:",
       "expected": {

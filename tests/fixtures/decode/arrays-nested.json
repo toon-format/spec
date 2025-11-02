@@ -15,6 +15,14 @@
       "specSection": "7"
     },
     {
+      "name": "parses list arrays with empty items",
+      "input": "items[3]:\n  - first\n  - second\n  -",
+      "expected": {
+        "items": ["first", "second", {}]
+      },
+      "specSection": "7.3"
+    },
+    {
       "name": "parses objects with nested values inside list items",
       "input": "items[1]:\n  - id: 1\n    nested:\n      x: 1",
       "expected": {
