@@ -11,7 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Numeric precision requirements: JavaScript implementations SHOULD use `Number.toString()` precision (15-17 digits), all implementations MUST preserve round-trip fidelity (Section 2)
 - RFC 5234 core rules (ALPHA, DIGIT, DQUOTE, HTAB, LF, SP) to ABNF grammar definitions (Section 6)
-- Test case for repeating decimal precision (1/3) to validate round-trip behavior
 
 ## [1.2] - 2025-10-29
 
