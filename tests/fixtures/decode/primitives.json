@@ -94,6 +94,24 @@
       "specSection": "5"
     },
     {
+      "name": "parses exponent notation",
+      "input": "1e6",
+      "expected": 1000000,
+      "specSection": "2"
+    },
+    {
+      "name": "parses exponent notation with uppercase E",
+      "input": "1E+6",
+      "expected": 1000000,
+      "specSection": "2"
+    },
+    {
+      "name": "parses negative exponent notation",
+      "input": "-1e-3",
+      "expected": -0.001,
+      "specSection": "2"
+    },
+    {
       "name": "parses true",
       "input": "true",
       "expected": true,
