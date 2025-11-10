@@ -196,7 +196,7 @@
       "specSection": "13.4"
     },
     {
-      "name": "encodes partial fold preserving sibling field order",
+      "name": "encodes folded chains preserving sibling field order",
       "input": {
         "folded": {
           "path": {
@@ -208,7 +208,7 @@
           "x": 3
         }
       },
-      "expected": "folded.path.value: 1\nnormal: 2\nnested:\n  x: 3",
+      "expected": "folded.path.value: 1\nnormal: 2\nnested.x: 3",
       "options": {
         "keyFolding": "safe"
       },
