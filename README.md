@@ -65,6 +65,10 @@ The reference implementation includes:
 
 Official community-driven implementations are currently being developed at the [github.com/toon-format](https://github.com/toon-format) organization.
 
+## Tools & Utilities
+
+**[TOON Token Savings Visualizer](https://github.com/scmclimited/toon-token-savings)** - An interactive visualization tool that demonstrates TOON's token efficiency compared to JSON. Upload your own JSON files to see real-time token savings with TOON encoding. Perfect for benchmarking and understanding TOON's compression benefits for your data structures.
+
 ## Test Fixtures & Conformance
 
 The [tests/fixtures/](./tests/fixtures/) directory contains **language-agnostic JSON test fixtures** for validating TOON implementations. Each fixture file contains test cases with input/output pairs covering all specification requirements.

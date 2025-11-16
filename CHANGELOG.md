@@ -5,6 +5,12 @@ All notable changes to the TOON specification will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **Tools & Utilities section** in README with reference to [TOON Token Savings Visualizer](https://github.com/scmclimited/toon-token-savings), an interactive tool for benchmarking TOON's token efficiency against JSON
+
 ## [2.0] - 2025-11-10
 
 ### Breaking Changes
