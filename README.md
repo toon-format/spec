@@ -4,7 +4,7 @@
 [![Tests](https://img.shields.io/badge/tests-340-green)](./tests/fixtures/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
-This repository contains the official specification for **Token-Oriented Object Notation (TOON)**, a compact, human-readable serialization format designed for passing structured data to Large Language Models with significantly reduced token usage.
+This repository contains the official specification for **Token-Oriented Object Notation (TOON)**, a compact, human-readable encoding of the JSON data model for LLM prompts. It provides a lossless serialization of the same objects, arrays, and primitives as JSON, but in a syntax that minimizes tokens and makes structure easy for models to follow.
 
 ## 📋 Specification
 
@@ -18,17 +18,8 @@ The specification includes complete grammar (ABNF), encoding rules, validation r
 
 ## What is TOON?
 
-**Token-Oriented Object Notation** is a compact, human-readable serialization format designed for passing structured data to Large Language Models with significantly reduced token usage. It's intended for LLM input, not output.
-
-TOON's sweet spot is **uniform arrays of objects** – multiple fields per row, same structure across items. It borrows YAML's indentation-based structure for nested objects and CSV's tabular format for uniform data rows, then optimizes both for token efficiency in LLM contexts. For deeply nested or non-uniform data, JSON may be more efficient.
-
-**Key Features:**
-
-- 💸 **Token-efficient:** typically 30–60% fewer tokens than JSON
-- 🤿 **LLM-friendly guardrails:** explicit lengths and fields enable validation
-- 🍱 **Minimal syntax:** removes redundant punctuation (braces, brackets, most quotes)
-- 📐 **Indentation-based structure:** like YAML, uses whitespace instead of braces
-- 🧺 **Tabular arrays:** declare keys once, stream data as rows
+> [!IMPORTANT]
+> For a high-level overview of TOON, its features and benefits, design goals, and comparisons to other formats, see the [`toon-format/toon` repository](https://github.com/toon-format/toon).
 
 ## Quick Example
 
