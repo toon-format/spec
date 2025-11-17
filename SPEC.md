@@ -673,6 +673,69 @@ Examples:
 - Input: `a.b: 1` then `a: 2` with `expandPaths="safe"` and `strict=true` → Error: "Expansion conflict at path 'a' (object vs primitive)"
 - Input: `a.b: 1` then `a: 2` with `expandPaths="safe"` and `strict=false` → Output: `{"a": 2}` (LWW)
 
+### Implicit-Length Tabular Arrays
+
+In addition to explicit-length tabular arrays of the form:
+
+    users[2]{id,name,role}:
+      1,Alice,admin
+      2,Bob,user
+
+TOON also allows an implicit-length form in which the array length is inferred from the number of tabular rows:
+
+    users{id,name,role}:
+      1,Alice,admin
+      2,Bob,user
+
+#### Example Comparison
+
+Explicit-length:
+
+    products[3]{sku,qty,price}:
+      A1,2,9.99
+      B2,1,14.50
+      C3,5,4.25
+
+Implicit-length:
+
+    products{sku,qty,price}:
+      A1,2,9.99
+      B2,1,14.50
+      C3,5,4.25
+
+#### Token Savings (Typical LLM Tokenizer)
+
+- Explicit-length header: `products[3]{sku,qty,price}:`  
+  consumes several extra tokens for `[3]`.
+
+- Implicit-length header: `products{sku,qty,price}:`  
+  avoids the bracketed length and is typically **10–20% smaller** for each array header.
+
+Savings scale proportionally when multiple tabular arrays are used.
+
+#### Semantics
+
+- `{field1,field2,...}` is required and defines the fields in order.
+- Each subsequent row provides values for the declared fields.
+- The array length equals the count of well-formed rows that follow.
+
+#### Normative Rules
+
+- Implementations MUST support the explicit-length form:
+
+        key[N]{field1,field2,...}:
+          …
+
+- Implementations MAY support the implicit-length form:
+
+        key{field1,field2,...}:
+          …
+
+- When `[N]` is present, decoders in strict mode MUST validate that the number of rows matches the declared length.
+
+- When `[N]` is omitted, decoders MUST NOT perform length-based validation but MAY validate each row’s field count and delimiter correctness.
+
+
 ### 13.1 Encoder Conformance Checklist
 
 Conforming encoders MUST:
