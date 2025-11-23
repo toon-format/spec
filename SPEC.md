@@ -894,7 +894,11 @@ This specification does not request IANA registration at this time, as the forma
 
 ### 18.2 Provisional Media Type
 
-The following provisional media type designation is RECOMMENDED for experimental implementations:
+Until IANA registration is completed, implementations SHOULD use:
+- Media type: `text/toon`
+- File extension: `.toon`
+
+Full designation details:
 
 Type name: text
 

@@ -122,6 +122,22 @@ The [tests/fixtures/](./tests/fixtures/) directory contains **language-agnostic 
 
 See [tests/README.md](./tests/README.md) for detailed fixture format and usage instructions.
 
+## Media Type & File Extension
+
+TOON defines a provisional media type (see §18.2 of the specification):
+
+- **Media type:** `text/toon` (provisional, pending IANA registration)
+- **File extension:** `.toon`
+- **Charset:** Always UTF-8
+
+For HTTP usage:
+
+```http
+Content-Type: text/toon
+```
+
+See the full [IANA Considerations section](SPEC.md#18-iana-considerations) for details.
+
 ## Contributing
 
 We welcome contributions to improve the specification! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for:
