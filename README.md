@@ -1,7 +1,7 @@
 # TOON Format Specification
 
-[![SPEC v2.1](https://img.shields.io/badge/spec-v2.1-lightgrey)](./SPEC.md)
-[![Tests](https://img.shields.io/badge/tests-344-green)](./tests/fixtures/)
+[![SPEC v3.0](https://img.shields.io/badge/spec-v3.0-lightgrey)](./SPEC.md)
+[![Tests](https://img.shields.io/badge/tests-345-green)](./tests/fixtures/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
 This repository contains the official specification for **Token-Oriented Object Notation (TOON)**, a compact, human-readable encoding of the JSON data model for LLM prompts. It provides a lossless serialization of the same objects, arrays, and primitives as JSON, but in a syntax that minimizes tokens and makes structure easy for models to follow.
@@ -10,7 +10,7 @@ This repository contains the official specification for **Token-Oriented Object 
 
 [→ Read the full specification (SPEC.md)](./SPEC.md)
 
-- **Version:** 2.1 (2025-11-23)
+- **Version:** 3.0 (2025-11-24)
 - **Status:** Working Draft
 - **License:** MIT
 

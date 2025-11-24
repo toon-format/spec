@@ -1,5 +1,5 @@
 {
-  "version": "2.1",
+  "version": "3.0",
   "category": "decode",
   "description": "Nested and mixed array decoding - list format, arrays of arrays, root arrays, mixed types",
   "tests": [
@@ -52,8 +52,8 @@
       "specSection": "9.4"
     },
     {
-      "name": "parses nested tabular arrays as first field on hyphen line (legacy)",
-      "input": "items[1]:\n  - users[2]{id,name}:\n    1,Ada\n    2,Bob\n    status: active",
+      "name": "parses list items whose first field is a tabular array",
+      "input": "items[1]:\n  - users[2]{id,name}:\n      1,Ada\n      2,Bob\n    status: active",
       "expected": {
         "items": [
           {
@@ -66,25 +66,23 @@
         ]
       },
       "specSection": "10",
-      "note": "Still valid for backward compatibility"
+      "note": "Canonical encoding: tabular header on hyphen line, rows at depth +2, sibling fields at depth +1"
     },
     {
-      "name": "parses nested tabular arrays in list items with bare hyphen",
-      "input": "items[1]:\n  -\n    users[2]{id,name}:\n      1,Ada\n      2,Bob\n    status: active",
+      "name": "parses single-field list-item object with tabular array",
+      "input": "items[1]:\n  - users[2]{id,name}:\n      1,Ada\n      2,Bob",
       "expected": {
         "items": [
           {
             "users": [
               { "id": 1, "name": "Ada" },
               { "id": 2, "name": "Bob" }
-            ],
-            "status": "active"
+            ]
           }
         ]
       },
       "specSection": "10",
-      "minSpecVersion": "2.1",
-      "note": "Canonical v2.1+ encoding (bare hyphen with all fields indented)"
+      "note": "Single-field list-item object: only the tabular array, no sibling fields"
     },
     {
       "name": "parses objects containing arrays (including empty arrays) in list format",
@@ -98,7 +96,7 @@
     },
     {
       "name": "parses arrays of arrays within objects",
-      "input": "items[1]:\n  - matrix[2]:\n    - [2]: 1,2\n    - [2]: 3,4\n    name: grid",
+      "input": "items[1]:\n  - matrix[2]:\n      - [2]: 1,2\n      - [2]: 3,4\n    name: grid",
       "expected": {
         "items": [
           { "matrix": [[1, 2], [3, 4]], "name": "grid" }

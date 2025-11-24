@@ -5,6 +5,27 @@ All notable changes to the TOON specification will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0] - 2025-11-24
+
+### Breaking Changes
+
+- Standardized encoding for list-item objects whose first field is a tabular array (§10):
+  - Encoders MUST emit `- key[N]{fields}:` on the hyphen line.
+  - Tabular rows MUST appear at depth +2 relative to the hyphen line.
+  - All other fields of the same object MUST appear at depth +1.
+  - The v2.0 shallow form (rows and fields at the same depth) and the v2.1 bare-hyphen form are no longer normative and MUST NOT be emitted by conforming encoders.
+
+### Changed
+
+- Encoding/decoding rules (§10) simplified to describe only the YAML-style pattern; legacy layouts are treated as generic nesting and are not covered by conformance tests.
+- Nested tabular list-item example in Appendix A updated to the canonical v3.0 form.
+
+### Migration from v2.1
+
+- Update encoders to emit the YAML-style form for list-item objects whose first field is a tabular array.
+- If you rely on v2.0/v2.1 layouts, keep decoder compatibility in non-strict or implementation-defined modes; the spec no longer requires or tests these patterns.
+- Optionally regenerate existing `.toon` files for consistent v3 formatting.
+
 ## [2.1] - 2025-11-23
 
 ### Changed
