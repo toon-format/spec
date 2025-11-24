@@ -2,9 +2,9 @@
 
 ## Token-Oriented Object Notation
 
-**Version:** 2.0
+**Version:** 2.1
 
-**Date:** 2025-11-10
+**Date:** 2025-11-23
 
 **Status:** Working Draft
 
@@ -20,7 +20,7 @@ Token-Oriented Object Notation (TOON) is a line-oriented, indentation-based text
 
 ## Status of This Document
 
-This document is a Working Draft v2.0 and may be updated, replaced, or obsoleted. Implementers should monitor the canonical repository at https://github.com/toon-format/spec for changes.
+This document is a Working Draft v2.1 and may be updated, replaced, or obsoleted. Implementers should monitor the canonical repository at https://github.com/toon-format/spec for changes.
 
 This specification is stable for implementation but not yet finalized. Breaking changes may occur in future major versions.
 
@@ -499,7 +499,15 @@ Decoding:
 For an object appearing as a list item:
 
 - Empty object list item: a single "-" at the list-item indentation level.
-- First field on the hyphen line:
+- Encoding selection (normative):
+  - When an object has **exactly one field** and that field encodes to a tabular array, encoders SHOULD use the compact form with the tabular header on the hyphen line:
+    - Tabular array: - key[N<delim?>]{fields}:
+      - Followed by tabular rows at depth +1 (relative to the hyphen line).
+  - For all other cases (multiple fields, or single non-tabular field), encoders SHOULD emit a bare hyphen on its own line:
+    - Bare hyphen: -
+    - All fields appear at depth +1 under the hyphen line in encounter order, using normal object field rules (Section 8).
+    - When a field is a tabular array, its header appears at depth +1 and its rows at depth +2 (relative to the hyphen line).
+- First field on the hyphen line (legacy encoding, still valid for decoding):
   - Primitive: - key: value
   - Primitive array: - key[M<delim?>]: v1<delim>…
   - Tabular array: - key[N<delim?>]{fields}:
@@ -508,7 +516,7 @@ For an object appearing as a list item:
     - Followed by list items at depth +1.
   - Object: - key:
     - Nested object fields appear at depth +2 (i.e., one deeper than subsequent sibling fields of the same list item).
-- Remaining fields of the same object appear at depth +1 under the hyphen line in encounter order, using normal object field rules.
+  - Remaining fields of the same object appear at depth +1 under the hyphen line in encounter order, using normal object field rules.
 
 Decoding:
 - The first field is parsed from the hyphen line. If it is a nested object (- key:), nested fields are at +2 relative to the hyphen line; subsequent fields of the same list item are at +1.
@@ -992,11 +1000,14 @@ items[2]:
 Nested tabular inside a list item:
 ```
 items[1]:
-  - users[2]{id,name}:
-    1,Ada
-    2,Bob
+  -
+    users[2]{id,name}:
+      1,Ada
+      2,Bob
     status: active
 ```
+
+Note: Encoders use this format (bare hyphen with all fields indented) for objects with multiple fields. Older encodings may place the first field on the hyphen line; both are valid for decoders.
 
 Delimiter variations:
 ```
@@ -1222,52 +1233,39 @@ Note: Host-type normalization tests (e.g., BigInt, Date, Set, Map) are language-
 
 ## Appendix D: Document Changelog (Informative)
 
+This appendix summarizes major changes between spec versions. For the complete changelog, see [`CHANGELOG.md`](./CHANGELOG.md) in the specification repository.
+
+### v2.1 (2025-11-23)
+
+- Tightened canonical encoding for objects as list items (§10): bare `-` for multi-field objects, compact `- key[N]{fields}:` only for single-field tabular arrays, to improve visual consistency and LLM readability.
+
 ### v2.0 (2025-11-10)
 
-- Breaking change: Length marker (`#`) prefix in array headers has been completely removed from the specification.
-- The `[#N]` format is no longer valid syntax. All array headers MUST use `[N]` format only.
-- Encoders MUST NOT emit `[#N]` format.
-- Decoders MUST NOT accept `[#N]` format (breaking change from v1.5).
-- Removed all references to length marker from terminology, grammar, conformance requirements, and parsing helpers.
+- Removed `[#N]` length-marker syntax from array headers; `[N]` is now the only valid form.
 
 ### v1.5 (2025-11-08)
 
-- Added optional key folding for encoders: `keyFolding='safe'` mode with `flattenDepth` control (§13.4).
-- Added optional path expansion for decoders: `expandPaths='safe'` mode with conflict resolution tied to existing `strict` option (§13.4).
-- Defined safe-mode requirements for folding: IdentifierSegment validation, no path separator in segments, collision avoidance, no quoting required (§7.3, §13.4).
-- Specified deep-merge semantics for expansion: recursive merge for objects; conflict policy (error in strict mode, LWW when strict=false) for non-objects (§13.4).
-- Added strict-mode error category for path expansion conflicts (§14.5).
-- Both features default to OFF; fully backward-compatible.
+- Added optional key folding (`keyFolding="safe"`) and path expansion (`expandPaths="safe"`) with deep-merge semantics and strict-mode conflict handling (§13.4, §14.5).
 
 ### v1.4 (2025-11-05)
 
-- Removed JavaScript-specific normalization details; replaced with language-agnostic requirements (Section 3).
-- Defined canonical number format for encoders and decoder acceptance rules (Section 2).
-- Added Appendix G with host-type normalization examples for Go, JavaScript, Python, and Rust.
-- Clarified non-strict mode tab handling as implementation-defined (Section 12).
-- Expanded regex notation for cross-language clarity (Section 7.3).
+- Generalized normalization and numeric canonicalization rules, and added host-type normalization guidance (Appendix G).
 
 ### v1.3 (2025-10-31)
 
-- Added numeric precision requirements: JavaScript implementations SHOULD use Number.toString() precision (15-17 digits), all implementations MUST preserve round-trip fidelity (Section 2).
-- Added RFC 5234 core rules (ALPHA, DIGIT, DQUOTE, HTAB, LF, SP) to ABNF grammar definitions (Section 6).
+- Added numeric precision guidance and ABNF core rules for headers and keys (§2, §6).
 
 ### v1.2 (2025-10-29)
 
-- Clarified delimiter scoping behavior between array headers.
-- Tightened strict-mode indentation requirements: leading spaces MUST be exact multiples of indentSize; tabs in indentation MUST error.
-- Defined blank-line and trailing-newline decoding behavior with explicit skipping rules outside arrays.
-- Clarified hyphen-based quoting: "-" or any string starting with "-" MUST be quoted.
-- Clarified BigInt normalization: values outside safe integer range are converted to quoted decimal strings.
-- Clarified row/key disambiguation: uses first unquoted delimiter vs colon position.
+- Tightened delimiter scoping, indentation, blank-line handling, hyphen-based quoting, BigInt normalization, and row/key disambiguation rules (§2, §9, §11-§12).
 
 ### v1.1 (2025-10-29)
 
-Added strict-mode rules, delimiter-aware parsing, and decoder options (indent, strict).
+- Introduced strict-mode validation, delimiter-aware parsing, and decoder options (indent, strict).
 
 ### v1.0 (2025-10-28)
 
-Initial encoding, normalization, and conformance rules.
+- Initial specification: encoding normalization, decoding interpretation, and conformance requirements.
 
 ## Appendix E: Acknowledgments and License
 

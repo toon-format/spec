@@ -1,5 +1,5 @@
 {
-  "version": "1.4",
+  "version": "2.1",
   "category": "encode",
   "description": "Nested and mixed array encoding - arrays of arrays, mixed type arrays, root arrays",
   "tests": [
@@ -50,14 +50,16 @@
     {
       "name": "encodes root-level array of non-uniform objects in list format",
       "input": [{ "id": 1 }, { "id": 2, "name": "Ada" }],
-      "expected": "[2]:\n  - id: 1\n  - id: 2\n    name: Ada",
-      "specSection": "9.4"
+      "expected": "[2]:\n  -\n    id: 1\n  -\n    id: 2\n    name: Ada",
+      "specSection": "9.4",
+      "minSpecVersion": "2.1"
     },
     {
       "name": "encodes root-level array mixing primitive, object, and array of objects in list format",
       "input": ["summary", { "id": 1, "name": "Ada" }, [{ "id": 2 }, { "status": "draft" }]],
-      "expected": "[3]:\n  - summary\n  - id: 1\n    name: Ada\n  - [2]:\n    - id: 2\n    - status: draft",
-      "specSection": "9.4"
+      "expected": "[3]:\n  - summary\n  -\n    id: 1\n    name: Ada\n  - [2]:\n    -\n      id: 2\n    -\n      status: draft",
+      "specSection": "9.4",
+      "minSpecVersion": "2.1"
     },
     {
       "name": "encodes root-level arrays of arrays",
@@ -90,16 +92,18 @@
       "input": {
         "items": [1, { "a": 1 }, "text"]
       },
-      "expected": "items[3]:\n  - 1\n  - a: 1\n  - text",
-      "specSection": "9.4"
+      "expected": "items[3]:\n  - 1\n  -\n    a: 1\n  - text",
+      "specSection": "9.4",
+      "minSpecVersion": "2.1"
     },
     {
       "name": "uses list format for arrays mixing objects and arrays",
       "input": {
         "items": [{ "a": 1 }, [1, 2]]
       },
-      "expected": "items[2]:\n  - a: 1\n  - [2]: 1,2",
-      "specSection": "9.4"
+      "expected": "items[2]:\n  -\n    a: 1\n  - [2]: 1,2",
+      "specSection": "9.4",
+      "minSpecVersion": "2.1"
     }
   ]
 }

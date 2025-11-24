@@ -1,5 +1,5 @@
 {
-  "version": "1.4",
+  "version": "2.1",
   "category": "decode",
   "description": "Nested and mixed array decoding - list format, arrays of arrays, root arrays, mixed types",
   "tests": [
@@ -52,7 +52,7 @@
       "specSection": "9.4"
     },
     {
-      "name": "parses nested tabular arrays as first field on hyphen line",
+      "name": "parses nested tabular arrays as first field on hyphen line (legacy)",
       "input": "items[1]:\n  - users[2]{id,name}:\n    1,Ada\n    2,Bob\n    status: active",
       "expected": {
         "items": [
@@ -65,7 +65,26 @@
           }
         ]
       },
-      "specSection": "10"
+      "specSection": "10",
+      "note": "Still valid for backward compatibility"
+    },
+    {
+      "name": "parses nested tabular arrays in list items with bare hyphen",
+      "input": "items[1]:\n  -\n    users[2]{id,name}:\n      1,Ada\n      2,Bob\n    status: active",
+      "expected": {
+        "items": [
+          {
+            "users": [
+              { "id": 1, "name": "Ada" },
+              { "id": 2, "name": "Bob" }
+            ],
+            "status": "active"
+          }
+        ]
+      },
+      "specSection": "10",
+      "minSpecVersion": "2.1",
+      "note": "Canonical v2.1+ encoding (bare hyphen with all fields indented)"
     },
     {
       "name": "parses objects containing arrays (including empty arrays) in list format",
