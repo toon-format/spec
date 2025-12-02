@@ -100,7 +100,6 @@ Follow [SPEC.md](./SPEC.md) conventions:
 - **GitHub Issues**: For bug reports and feature requests
 - **GitHub Discussions**: For questions and general discussion
 - **Pull Requests**: For code reviews and implementation discussion
-- **[Discord](https://discord.gg/ywXDMFdx)**: For real-time chat with the community
 
 ## Maintainers
 
