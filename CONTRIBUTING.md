@@ -95,12 +95,21 @@ Follow [SPEC.md](./SPEC.md) conventions:
 - **Structure**: Number sections, cross-reference related rules
 - **Line length**: 80-120 characters for readability
 
-## Questions?
+## Communication
 
-1. Check existing issues and discussions
-2. Open an issue with the `question` label
-3. Reach out to maintainers
+- **GitHub Issues**: For bug reports and feature requests
+- **GitHub Discussions**: For questions and general discussion
+- **Pull Requests**: For code reviews and implementation discussion
+- **[Discord](https://discord.gg/ywXDMFdx)**: For real-time chat with the community
+
+## Maintainers
+
+This is a collaborative project. Current maintainers:
+
+- [@johannschopplich](https://github.com/johannschopplich)
+
+All maintainers have equal and consensual decision-making power. For major architectural decisions, please open a discussion issue first.
 
 ## License
 
-By contributing, you agree your contributions will be licensed under the MIT License. Be respectful and constructive – diverse perspectives make TOON better.
+By contributing, you agree your contributions will be licensed under the MIT License.
