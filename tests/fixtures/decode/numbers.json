@@ -90,6 +90,24 @@
       "note": "Exponent +00 results in the integer 5"
     },
     {
+      "name": "parses zero with exponent as number",
+      "input": "value: 0e1",
+      "expected": {
+        "value": 0
+      },
+      "specSection": "4",
+      "note": "Exponent forms with a zero integer part (0e1) are valid numbers"
+    },
+    {
+      "name": "parses negative zero with exponent as number",
+      "input": "value: -0e1",
+      "expected": {
+        "value": 0
+      },
+      "specSection": "4",
+      "note": "Negative zero with exponent (-0e1) decodes to numeric 0"
+    },
+    {
       "name": "parses exponent notation",
       "input": "1e6",
       "expected": 1000000,
@@ -136,6 +154,21 @@
       "name": "treats leading-zeros in array as strings",
       "input": "nums[3]: 05,007,0123",
       "expected": { "nums": ["05", "007", "0123"] },
+      "specSection": "4"
+    },
+    {
+      "name": "treats unquoted negative leading-zero number as string",
+      "input": "-05",
+      "expected": "-05",
+      "specSection": "4",
+      "note": "Negative numbers with leading zeros in the integer part are treated as strings"
+    },
+    {
+      "name": "treats negative leading-zeros in array as strings",
+      "input": "nums[2]: -05,-007",
+      "expected": {
+        "nums": ["-05", "-007"]
+      },
       "specSection": "4"
     }
   ]
