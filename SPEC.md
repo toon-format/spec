@@ -217,7 +217,7 @@ Implementations that fail to conform to any MUST or REQUIRED level requirement a
   - Encoders SHOULD provide an option to choose lossless stringification for out-of-range numbers.
 - Numbers (decoding):
   - Decoders MUST accept decimal and exponent forms on input (e.g., 42, -3.14, 1e-6, -1E+9).
-  - Decoders MUST treat tokens with forbidden leading zeros (e.g., "05", "0001") as strings, not numbers.
+  - Decoders MUST treat tokens with forbidden leading zeros in the integer part (e.g., `"05"`, `"0001"`, `"-05"`, `"-0001"`) as strings, not numbers. This rule does **not** apply to a single zero integer part followed by a fractional or exponent part (e.g., `0.5`, `0e1`, `-0.5`, `-0e1`), which are valid numbers.
   - If a decoded numeric token is not representable in the host's default numeric type without loss, implementations MAY:
     - Return a higher-precision numeric type (e.g., arbitrary-precision integer or decimal), OR
     - Return a string, OR
@@ -232,6 +232,7 @@ Encoders MUST normalize non-JSON values to the JSON data model before encoding. 
 - Number:
   - Finite → number (canonical decimal form per Section 2). -0 → 0.
   - NaN, +Infinity, -Infinity → null.
+- Implementations MAY honor host-language–specific serialization hooks (for example, a `toJSON()` method in JavaScript or an equivalent mechanism) as part of host-type normalization. When supported, such hooks SHOULD be applied before other host-type mappings and their behavior MUST be documented by the implementation.
 - Examples of host-type normalization (non-normative):
   - Date/time objects → ISO 8601 string representation.
   - Set-like collections → array.
@@ -1334,6 +1335,7 @@ Collection Types:
 - `Map`: Convert to object using `String(key)` for keys and normalizing values recursively. Non-string keys are coerced to strings.
 
 Object Types:
+- Objects with a `toJSON()` method: Call `value.toJSON()` and then normalize the returned value recursively before encoding. This allows domain objects to override default normalization behavior in a controlled, deterministic way (similar to `JSON.stringify`). Implementations SHOULD guard against `toJSON()` returning the same object (to avoid infinite recursion) and MAY fall back to default normalization in that case.
 - Plain objects: Enumerate own enumerable string keys in encounter order; normalize values recursively.
 
 Non-Serializable Types:
