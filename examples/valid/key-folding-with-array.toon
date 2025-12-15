@@ -1,4 +1,4 @@
-api.endpoint: https://api.example.com
+api.endpoint: "https://api.example.com"
 api.timeout: 5000
 data.meta.items[3]: widget,gadget,tool
 data.meta.count: 3
