@@ -1,7 +1,8 @@
 server.host: localhost
 server.port: 8080
-database.connection.host: db.example.com
-database.connection.port: 5432
-database.connection.username: admin
+database.connection:
+  host: db.example.com
+  port: 5432
+  username: admin
 app.name: MyApp
 app.version: 1.0.0

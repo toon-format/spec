@@ -1,9 +1,11 @@
-data.id: 42
-data.type: user
-data.attributes.name: Ada Lovelace
-data.attributes.email: ada@example.com
-data.attributes.active: true
-meta.request.id: req_abc123
-meta.request.timestamp: "2025-01-15T10:30:00Z"
-meta.response.duration: 42
-meta.response.cached: false
+data:
+  id: 42
+  type: user
+  attributes.name: Ada Lovelace
+  attributes.email: ada@example.com
+  attributes.active: true
+meta:
+  request.id: req_abc123
+  request.timestamp: "2025-01-15T10:30:00Z"
+  response.duration: 42
+  response.cached: false

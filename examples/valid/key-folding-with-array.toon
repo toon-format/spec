@@ -1,5 +1,6 @@
 api.endpoint: "https://api.example.com"
 api.timeout: 5000
-data.meta.items[3]: widget,gadget,tool
-data.meta.count: 3
+data.meta:
+  items[3]: widget,gadget,tool
+  count: 3
 user.preferences.tags[2]: productivity,development

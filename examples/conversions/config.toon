@@ -1,11 +1,12 @@
 server.host: localhost
 server.port: 8080
 server.timeout: 30000
-database.connection.host: db.example.com
-database.connection.port: 5432
-database.connection.username: admin
-database.connection.database: myapp_prod
-database.pool.min: 2
-database.pool.max: 10
+database:
+  connection.host: db.example.com
+  connection.port: 5432
+  connection.username: admin
+  connection.database: myapp_prod
+  pool.min: 2
+  pool.max: 10
 logging.level: info
 logging.format: json
