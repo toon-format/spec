@@ -6,4 +6,4 @@ server:
   ssl:
     enabled: true
     cert: /path/to/cert.pem
-database.connection.url: postgresql://localhost:5432/mydb
+database.connection.url: "postgresql://localhost:5432/mydb"
