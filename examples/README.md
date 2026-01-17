@@ -88,6 +88,34 @@ Complete, valid TOON files demonstrating core features:
   - Decoder option `expandPaths="safe"` reconstructs nested structure
   - Spec: §13.4 Path Expansion
 
+### XML Constructs (v4.0+)
+
+- [`valid/xml-namespaces.toon`](valid/xml-namespaces.toon) - Namespaced document
+  - Demonstrates `xmlns` and `xmlns:prefix` namespace declarations
+  - Shows qualified names with namespace prefixes
+  - Spec: §23 Namespaces
+
+- [`valid/xml-attributes.toon`](valid/xml-attributes.toon) - XML attributes
+  - Demonstrates attributes as nested key-value pairs
+  - Shows attributes with and without namespace prefixes
+  - Shows elements with attributes and text content using arrays
+  - Spec: §24 Attributes
+
+- [`valid/xml-repeated-elements.toon`](valid/xml-repeated-elements.toon) - Interleaved repeated elements
+  - Demonstrates interleaved elements of different types (XML-specific feature)
+  - Shows how order is preserved when elements are mixed (not representable in JSON)
+  - Spec: §25.4 Preserving Order with Interleaved Elements
+
+- [`valid/xml-mixed-content.toon`](valid/xml-mixed-content.toon) - Mixed content
+  - Demonstrates mixed content with text nodes and elements
+  - Shows arrays where strings are text nodes and objects are elements
+  - Spec: §26 Mixed Content
+
+- [`valid/xml-xhtml.toon`](valid/xml-xhtml.toon) - XHTML example
+  - Complete XHTML document with namespaces and attributes
+  - Demonstrates complex XML document structure
+  - Spec: §22-28 XML Constructs
+
 ## Invalid Examples
 
 Examples that intentionally violate TOON syntax rules:
@@ -119,6 +147,11 @@ Examples that intentionally violate TOON syntax rules:
   - MUST error in strict mode
   - Spec: §6 Header Syntax (delimiter equality requirement)
 
+- [`invalid/xml-undefined-namespace.toon`](invalid/xml-undefined-namespace.toon) - Undefined namespace prefix (v4.0+)
+  - Uses prefix `ex` without corresponding `xmlns:ex` declaration
+  - MUST error in strict mode
+  - Spec: §14.6 Extended Syntax Errors, §23 Namespaces
+
 ## Conversions
 
 Side-by-side JSON ↔ TOON examples showing equivalent representations:
@@ -139,6 +172,22 @@ Side-by-side JSON ↔ TOON examples showing equivalent representations:
   - Regenerated with `keyFolding="safe"`; multi-sibling branches like `data` and `meta` stay fully nested instead of becoming dotted keys (stop condition on display)
   - Shows practical use case for serializing API responses while preserving deterministic structure
   - `expandPaths="safe"` is not required for this file (no folded keys)
+
+- [`conversions/xml-catalog.json`](conversions/xml-catalog.json) + [`conversions/xml-catalog.toon`](conversions/xml-catalog.toon) (v4.0+)
+  - Library catalog with repeated book elements
+  - Demonstrates tabular format for uniform repeated XML elements
+  - Shows attributes and text content in XML structure
+  - Spec: §25 Repeated Elements
+
+- [`conversions/xml-rss.json`](conversions/xml-rss.json) + [`conversions/xml-rss.toon`](conversions/xml-rss.toon) (v4.0+)
+  - RSS feed example with attributes and repeated items
+  - Demonstrates tabular format for RSS item arrays
+  - Spec: §25 Repeated Elements
+
+- [`conversions/xml-interleaved.json`](conversions/xml-interleaved.json) + [`conversions/xml-interleaved.toon`](conversions/xml-interleaved.toon) (v4.0+)
+  - Interleaved repeated elements of different types
+  - Demonstrates list form for preserving element order
+  - Spec: §25.4 Preserving Order with Interleaved Elements
 
 ## Using These Examples
 

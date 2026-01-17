@@ -2,9 +2,9 @@
 
 ## Token-Oriented Object Notation
 
-**Version:** 3.0
+**Version:** 4.0
 
-**Date:** 2025-11-24
+**Date:** 2026-01-15
 
 **Status:** Working Draft
 
@@ -16,11 +16,11 @@
 
 ## Abstract
 
-Token-Oriented Object Notation (TOON) is a line-oriented, indentation-based text format that encodes the JSON data model with explicit structure and minimal quoting. Arrays declare their length and an optional field list once; rows use a single active delimiter (comma, tab, or pipe). Objects use indentation instead of braces; strings are quoted only when required. This specification defines TOON’s concrete syntax, canonical number formatting, delimiter scoping, and strict‑mode validation, and sets conformance requirements for encoders, decoders, and validators. TOON provides a compact, deterministic representation of structured data and is particularly efficient for arrays of uniform objects.
+Token-Oriented Object Notation (TOON) is a line-oriented, indentation-based text format that encodes structured data with explicit structure and minimal quoting. TOON natively supports both JSON and XML constructs in a unified syntax: XML attributes are represented as nested key-value pairs, namespaces use `xmlns` key declarations, repeated elements use array syntax, and mixed content uses arrays where strings are text nodes and objects are elements. Arrays declare their length and an optional field list once; rows use a single active delimiter (comma, tab, or pipe). Objects use indentation instead of braces; strings are quoted only when required. This specification defines TOON's concrete syntax, canonical number formatting, delimiter scoping, strict‑mode validation, and sets conformance requirements for encoders, decoders, and validators. TOON provides a compact, deterministic representation of structured data and is particularly efficient for arrays of uniform objects.
 
 ## Status of This Document
 
-This document is a Working Draft v3.0 and may be updated, replaced, or obsoleted. Implementers should monitor the canonical repository at https://github.com/toon-format/spec for changes.
+This document is a Working Draft v4.0 and may be updated, replaced, or obsoleted. Implementers should monitor the canonical repository at https://github.com/toon-format/spec for changes.
 
 This specification is stable for implementation but not yet finalized. Breaking changes may occur in future major versions.
 
@@ -31,6 +31,12 @@ https://www.rfc-editor.org/rfc/rfc2119
 
 **[RFC8174]** Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words", BCP 14, RFC 8174, May 2017.
 https://www.rfc-editor.org/rfc/rfc8174
+
+**[XML1.0]** Bray, T., Paoli, J., Sperberg-McQueen, C. M., Maler, E., and F. Yergeau, "Extensible Markup Language (XML) 1.0 (Fifth Edition)", W3C Recommendation, November 2008.
+https://www.w3.org/TR/xml/
+
+**[XMLNS]** Bray, T., Hollander, D., Layman, A., Tobin, R., and H. Thompson, "Namespaces in XML 1.0 (Third Edition)", W3C Recommendation, December 2009.
+https://www.w3.org/TR/xml-names/
 
 ## Informative References
 
@@ -79,6 +85,13 @@ https://www.iso.org/standard/70907.html
 19. [TOON Core Profile (Normative Subset)](#19-toon-core-profile-normative-subset)
 20. [Versioning and Extensibility](#20-versioning-and-extensibility)
 21. [Intellectual Property Considerations](#21-intellectual-property-considerations)
+22. [XML Constructs](#22-xml-constructs)
+23. [Namespaces](#23-namespaces)
+24. [Attributes](#24-attributes)
+25. [Repeated Elements](#25-repeated-elements)
+26. [Mixed Content](#26-mixed-content)
+27. [CDATA and Text Content](#27-cdata-and-text-content)
+28. [XML Encoding and Decoding](#28-xml-encoding-and-decoding)
 
 **Appendices:**
 - [Appendix A: Examples (Informative)](#appendix-a-examples-informative)
@@ -88,12 +101,13 @@ https://www.iso.org/standard/70907.html
 - [Appendix E: Acknowledgments and License](#appendix-e-acknowledgments-and-license)
 - [Appendix F: Cross-check With Reference Behavior (Informative)](#appendix-f-cross-check-with-reference-behavior-informative)
 - [Appendix G: Host Type Normalization Examples (Informative)](#appendix-g-host-type-normalization-examples-informative)
+- [Appendix H: XML Examples (Informative)](#appendix-h-xml-examples-informative)
 
 ## Introduction (Informative)
 
 ### Purpose and scope
 
-TOON (Token-Oriented Object Notation) is a line-oriented, indentation-based text format that encodes the JSON data model with explicit structure and minimal quoting. It is designed as a compact, deterministic representation of structured data, particularly well-suited to arrays of uniform objects. TOON is often used as a translation layer: produce data as JSON in code, encode to TOON for downstream consumption (e.g., LLM prompts), and decode back to JSON if needed.
+TOON (Token-Oriented Object Notation) is a line-oriented, indentation-based text format that encodes structured data with explicit structure and minimal quoting. TOON provides a unified syntax that naturally represents both JSON and XML data models: XML attributes are represented as nested key-value pairs, namespaces use `xmlns` key declarations, repeated elements use array syntax, and mixed content uses arrays where strings are text nodes and objects are elements. It is designed as a compact, deterministic representation of structured data, particularly well-suited to arrays of uniform objects and XML document serialization. TOON is often used as a translation layer: produce data as JSON or XML in code, encode to TOON for downstream consumption (e.g., LLM prompts), and decode back to JSON or XML if needed.
 
 ### Applicability and non‑goals
 
@@ -101,30 +115,44 @@ Use TOON when:
 - arrays of objects share the same fields (uniform tabular data),
 - deterministic, minimally quoted text is desirable,
 - explicit lengths and fixed row widths help detect truncation or malformed data,
-- you want unambiguous, human-readable structure without repeating keys.
+- you want unambiguous, human-readable structure without repeating keys,
+- you need to serialize XML documents while preserving namespace, attribute, and ordering semantics,
 
 TOON is not intended to replace:
-- JSON for non-uniform or deeply nested structures where repeated keys are not dominant,
+- JSON for non-uniform or deeply nested structures where arrays of objects are not dominant,
 - CSV for flat, strictly tabular data where maximum compactness is required and nesting is not needed,
-- general-purpose storage or public APIs. TOON carries the JSON data model; it is a transport/authoring format with explicit structure, not an extended type system or schema language.
+- general-purpose storage or public APIs. TOON carries the JSON and XML data models; it is a transport/authoring format with explicit structure, not an extended type system or schema language.
 
 Out of scope:
-- comments and annotations,
+- comments and annotations (including XML comments),
 - alternative number systems or locale-specific formatting,
-- user-defined escape sequences or control directives.
+- user-defined escape sequences or control directives,
+- DOCTYPE declarations and DTD internal subsets,
+- processing instructions.
 
-### Relationship to JSON, CSV, and YAML (Informative)
+### Relationship to JSON, CSV, YAML, and XML (Informative)
 
 - **JSON**: TOON preserves the JSON data model. It is more compact for uniform arrays of objects by declaring length and fields once. For non-uniform or deeply nested data, JSON may be more efficient.
 - **CSV/TSV**: CSV is typically more compact for flat tables but lacks nesting and type awareness. TOON adds explicit lengths, per-array delimiter scoping, field lists, and deterministic quoting, while remaining lightweight.
 - **YAML**: TOON uses indentation and hyphen markers but is more constrained and deterministic: no comments, explicit array headers with lengths, fixed quoting rules, and a narrow escape set.
+- **XML**: TOON 4.0 can encode XML element structure, attributes, namespaces, and mixed content. Comments, processing instructions, and DOCTYPE declarations are not preserved. Namespaces are preserved via explicit declarations, attributes are represented as nested key-value pairs, and repeated elements are handled via array syntax. Mixed content uses arrays where strings are text nodes and objects are elements.
 
 ### Example (Informative)
 
+JSON-style:
 ```
 users[2]{id,name,role}:
   1,Alice,admin
   2,Bob,user
+```
+
+XML-style (with namespace and attributes):
+```toon
+catalog:
+  xmlns: "http://example.com/catalog"
+  book[2]{id,title,author}:
+    1,The Great Gatsby,F. Scott Fitzgerald
+    2,1984,George Orwell
 ```
 
 ### Document roadmap
@@ -135,6 +163,8 @@ Normative rules are organized as follows:
 - Strings and keys (§7); objects (§8); arrays and their sub-forms (§9); objects as list items (§10); delimiter rules (§11).
 - Indentation and whitespace (§12); conformance and options (§13).
 - Strict-mode errors (authoritative checklist) (§14).
+- XML extensions: data model (§22), namespaces (§23), attributes (§24), repeated elements (§25), mixed content (§26), CDATA/text (§27).
+- XML encoding/decoding (§28).
 
 Appendices are informative unless stated otherwise and provide examples, parsing helpers, and implementation guidance.
 
@@ -146,7 +176,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 Audience: implementers of encoders/decoders/validators; tool authors; practitioners embedding TOON in LLM prompts.
 
-All normative text in this specification is contained in Sections 1-16 and Section 19. All appendices are informative except where explicitly marked normative. Examples throughout this document are informative unless explicitly stated otherwise.
+All normative text in this specification is contained in Sections 1-16, Sections 19, and Sections 22-28. All appendices are informative except where explicitly marked normative. Examples throughout this document are informative unless explicitly stated otherwise.
 
 Implementations that fail to conform to any MUST or REQUIRED level requirement are non-conformant. Implementations that conform to all MUST and REQUIRED level requirements but fail to conform to SHOULD or RECOMMENDED level requirements are said to be "not fully conformant" but are still considered conformant.
 
@@ -175,9 +205,8 @@ Implementations that fail to conform to any MUST or REQUIRED level requirement a
 ### 1.6 Type Terms
 
 - Primitive: string, number, boolean, or null.
-- Object: Mapping from string keys to `JsonValue`.
-- Array: Ordered sequence of `JsonValue`.
-- `JsonValue`: Primitive | Object | Array.
+- Object: Mapping from string keys to values. Keys are unique within an object; repeated elements use array syntax (see §25).
+- Array: Ordered sequence of values.
 
 ### 1.7 Conformance Terms
 
@@ -194,9 +223,18 @@ Implementations that fail to conform to any MUST or REQUIRED level requirement a
 - Path separator: The character used to join/split key segments during folding and expansion. Fixed to `"."` (U+002E, FULL STOP) in v1.5.
 - Note: Unquoted keys in TOON remain permissive per §7.3 (`^[A-Za-z_][A-Za-z0-9_.]*$`, allowing dots). IdentifierSegment is a stricter pattern used only for safe folding and expansion eligibility checks.
 
+### 1.10 XML-Related Terms
+
+- Namespace prefix: A short identifier bound to a namespace URI via an `xmlns` key declaration (e.g., `soap` in `soap:Envelope`).
+- Qualified name (QName): A name optionally prefixed with a namespace prefix and colon (e.g., `soap:Body`, `xml:lang`).
+- Attribute: In XML context, attributes are represented as nested key-value pairs within the element object.
+- Mixed content: Element content containing both text and child elements interleaved, represented as arrays where strings are text nodes and objects are elements.
+
 ## 2. Data Model
 
-- TOON models data as:
+### 2.1 JSON Data Model
+
+- TOON models JSON data as:
   - `JsonPrimitive`: string | number | boolean | null
   - `JsonObject`: { [string]: `JsonValue` }
   - `JsonArray`: `JsonValue`[]
@@ -225,6 +263,28 @@ Implementations that fail to conform to any MUST or REQUIRED level requirement a
   - Implementations MUST document their policy for handling out-of-range or non-representable numbers. A lossless-first policy is RECOMMENDED for libraries intended for data interchange or validation.
 - Null: Represented as the literal null.
 
+### 2.2 XML Data Model
+
+TOON supports the XML infoset through the following constructs:
+
+- `XmlElement`: An element with:
+  - A qualified name (local name with optional namespace prefix)
+  - Zero or more attributes (name-value pairs)
+  - Zero or more child nodes (elements or text)
+  - An optional namespace context (inherited or declared)
+- `XmlAttribute`: A name-value pair where the value is always a string. Attribute names MAY be qualified.
+- `XmlText`: Character data content within an element.
+- `XmlNamespace`: A binding from a prefix (or default) to a namespace URI.
+
+These are represented in TOON using the following conventions:
+- Elements map to object keys (with namespace prefix if applicable)
+- Attributes map to nested key-value pairs within the element object
+- Namespace declarations use `xmlns` or `xmlns:prefix` keys
+- Text content maps to direct string values; mixed content uses arrays
+- Repeated elements are represented using array syntax (§25)
+
+Note: XML comments, processing instructions, and DOCTYPE declarations are not supported. When encoding XML documents that contain these constructs, they are dropped.
+
 ## 3. Encoding Normalization (Reference Encoder)
 
 Encoders MUST normalize non-JSON values to the JSON data model before encoding. The mapping from host-specific types to JSON model is implementation-defined and MUST be documented.
@@ -238,6 +298,21 @@ Encoders MUST normalize non-JSON values to the JSON data model before encoding. 
   - Set-like collections → array.
   - Map-like collections → object (with string keys).
   - Undefined, function, symbol, or unrecognized types → null.
+
+### 3.1 XML Normalization
+
+When encoding XML documents, encoders MUST normalize as follows:
+- XML elements → objects with element name as key
+- XML attributes → nested key-value pairs within the element object
+- XML namespace declarations → `xmlns` or `xmlns:prefix` keys
+- XML text content → direct string value (when element has only text) or array items (for mixed content)
+- XML comments → dropped (not preserved)
+- XML processing instructions → dropped (not preserved)
+- DOCTYPE declarations → dropped (not preserved)
+- Whitespace-only text nodes → preserved
+- Adjacent text nodes → merged into single text content
+- Mixed content → arrays where strings are text nodes and objects are elements
+- CDATA sections → quoted strings with escape sequences (e.g., `\n` for newlines); CDATA markers not preserved
 
 See Appendix G for non-normative language-specific examples (Go, JavaScript, Python, Rust).
 
@@ -262,6 +337,15 @@ Decoders map text tokens to host values:
 - Keys:
   - Decoded as strings (quoted keys MUST be unescaped per Section 7.1).
   - A colon MUST follow a key; missing colon MUST error.
+  - Empty field names in tabular headers represent text content (§26.4).
+
+### 4.1 Extended Syntax Features
+
+TOON supports the following extended syntax features:
+- Namespace declarations use `xmlns` or `xmlns:prefix` keys (§23).
+- Repeated elements use array syntax `key[N]:` (§25).
+- Mixed content uses arrays where strings are text nodes and objects are elements (§26).
+- Empty field names in tabular headers represent text content (§26.4).
 
 ## 5. Concrete Syntax and Root Form
 
@@ -277,7 +361,7 @@ TOON is a deterministic, line-oriented, indentation-based notation.
     - Tabular form when uniform and primitive-only: key[N<delim?>]{f1<delim>f2}: then one row per line.
     - Otherwise: expanded list items: key[N<delim?>]: with "- …" items (see Sections 9.4 and 10).
 - Root form discovery:
-  - If the first non-empty depth-0 line is a valid root array header per Section 6 (must include a colon), decode a root array.
+  - If the first non-empty depth-0 line is a valid root array header per Section 6 (MUST include a colon), decode a root array.
   - Else if the document has exactly one non-empty line and it is neither a valid array header nor a key-value line (quoted or unquoted key), decode a single primitive (examples: `hello`, `42`, `true`).
   - Otherwise, decode an object.
   - An empty document (no non-empty lines after ignoring trailing newline(s) and ignorable blank lines) decodes to an empty object `{}`.
@@ -290,7 +374,7 @@ TOON is a deterministic, line-oriented, indentation-based notation.
 
 ## 6. Header Syntax (Normative)
 
-Array headers declare length and active delimiter, and optionally field names.
+Array headers declare length and active delimiter, and optionally attributes and field names.
 
 General forms:
 - Root header (no key): [N<delim?>]:
@@ -337,15 +421,16 @@ fieldname     = key
 header        = [ key ] bracket-seg [ fields-seg ] ":"
 key           = unquoted-key / quoted-key
 
-; Unquoted keys must match identifier pattern
-unquoted-key  = ( ALPHA / "_" ) *( ALPHA / DIGIT / "_" / "." )
+; Unquoted keys must match identifier pattern (extended for namespaces)
+unquoted-key  = [ ns-prefix ] ( ALPHA / "_" ) *( ALPHA / DIGIT / "_" / "." )
+ns-prefix     = ( ALPHA / "_" ) *( ALPHA / DIGIT / "_" ) ":"
 
 ; Quoted keys use only escapes from Section 7.1
 ; (Exact escaped-char repertoire is defined in Section 7.1)
 ; quoted-key   = DQUOTE *(escaped-char / safe-char) DQUOTE
 ```
 
-Note: The ABNF grammar above cannot enforce that the delimiter used in the fields segment (braces) matches the delimiter declared in the bracket segment. This equality requirement is normative per the prose in lines 311-312 above and MUST be enforced by implementations. Mismatched delimiters between bracket and brace segments MUST error in strict mode.
+Note: The ABNF grammar above cannot enforce that the delimiter used in the fields segment (braces) matches the delimiter declared in the bracket segment. This equality requirement is normative per the prose above and MUST be enforced by implementations. Mismatched delimiters between bracket and brace segments MUST error in strict mode.
 
 Note: The grammar above specifies header syntax. TOON's grammar is deliberately designed to prioritize human readability and token efficiency over strict LR(1) parseability. This requires some context-sensitive parsing (particularly for tabular row disambiguation in Section 9.3), which is a deliberate design tradeoff. Reference implementations demonstrate that deterministic parsing is achievable with modest lookahead.
 
@@ -372,6 +457,8 @@ Decoders MUST reject any other escape sequence and unterminated strings.
 
 Tabs are allowed inside quoted strings and as a declared delimiter; they MUST NOT be used for indentation (Section 12).
 
+Note: Strings with leading or trailing whitespace (e.g., `"Welcome to "`) MUST be quoted to preserve the whitespace.
+
 ### 7.2 Quoting Rules for String Values (Encoding)
 
 A string value MUST be quoted if any of the following is true:
@@ -395,6 +482,7 @@ Otherwise, the string MAY be emitted without quotes. Unicode, emoji, and strings
 
 Object keys and tabular field names:
 - MAY be unquoted only if they match: ^[A-Za-z_][A-Za-z0-9_.]*$.
+- Keys MAY include a namespace prefix: ^([A-Za-z_][A-Za-z0-9_]*:)?[A-Za-z_][A-Za-z0-9_.]*$
 - Otherwise, they MUST be quoted and escaped per Section 7.1.
 
 Keys requiring quoting per the above rules MUST be quoted in all contexts, including array headers (e.g., "my-key"[N]:).
@@ -594,6 +682,7 @@ Options:
   - delimiter (document delimiter; default: comma; alternatives: tab, pipe)
   - keyFolding (default: `"off"`; alternatives: `"safe"`)
   - flattenDepth (default: Infinity when keyFolding is `"safe"`; non-negative integer ≥ 0; values 0 or 1 have no practical folding effect)
+  - preserveNamespaces (default: `true`; when false, namespace prefixes are stripped)
 - Decoder options:
   - indent (default: 2 spaces)
   - strict (default: `true`)
@@ -690,6 +779,8 @@ Conforming encoders MUST:
 - [ ] Emit no trailing spaces or trailing newline (§12)
 - [ ] When `keyFolding="safe"`, folding MUST comply with §13.4 (IdentifierSegment validation, no separator in segments, collision avoidance, no quoting required)
 - [ ] When `flattenDepth` is set, folding MUST stop at the configured segment count (§13.4)
+- [ ] Support namespace declarations via `xmlns` keys (§23)
+- [ ] Support repeated elements using array syntax (§25)
 
 ### 13.2 Decoder Conformance Checklist
 
@@ -703,6 +794,8 @@ Conforming decoders MUST:
 - [ ] When `expandPaths="safe"`, expansion MUST follow §13.4 (IdentifierSegment-only segments, deep merge, conflict rules)
 - [ ] When `expandPaths="safe"` with `strict=true`, MUST error on expansion conflicts per §14.5
 - [ ] When `expandPaths="safe"` with `strict=false`, apply LWW conflict resolution (§13.4)
+- [ ] Parse `xmlns` and `xmlns:prefix` keys as namespace declarations (§23)
+- [ ] Handle empty field names in tabular headers as text content (§26.4)
 
 ### 13.3 Validator Conformance Checklist
 
@@ -712,6 +805,7 @@ Validators SHOULD verify:
 - [ ] Delimiter consistency between headers and rows
 - [ ] Array length counts match declared [N]
 - [ ] All strict-mode requirements (§14)
+- [ ] Namespace prefix resolution (prefixes declared via `xmlns:prefix` keys)
 
 ## 14. Strict Mode Errors and Diagnostics (Authoritative Checklist)
 
@@ -753,7 +847,12 @@ See §13.4 for complete conflict definitions, deep-merge semantics, and examples
 
 Note (informative): Implementations MAY expose conflict diagnostics via out-of-band mechanisms (e.g., debug hooks, verbose CLI flags, or separate validation APIs), but such facilities are non-normative and MUST NOT affect default decode behavior or output.
 
-### 14.6 Recommended Error Messages and Validator Diagnostics (Informative)
+### 14.6 Extended Syntax Errors
+
+Decoders MUST error on:
+- Undefined namespace prefix (prefix used without corresponding `xmlns:prefix` key declaration on element or ancestor).
+
+### 14.7 Recommended Error Messages and Validator Diagnostics (Informative)
 
 Validators SHOULD additionally report:
 - Trailing spaces, trailing newlines (encoding invariants).
@@ -769,6 +868,7 @@ Recommended error messages:
 - "Expected N tabular rows, but got M"
 - "Expected N list array items, but got M"
 - "Expected K values in row, but got L"
+- "Undefined namespace prefix: 'foo' (no xmlns:foo declaration found)"
 
 ## 15. Security Considerations
 
@@ -778,12 +878,16 @@ Recommended error messages:
 - Encoders SHOULD avoid excessive memory on large inputs; implement streaming/tabular row emission where feasible.
 - Unicode:
   - Encoders SHOULD avoid altering Unicode beyond required escaping; decoders SHOULD accept valid UTF-8 in quoted strings/keys (with only the five escapes).
+- XML-specific:
+  - Namespace URI validation is implementation-defined; decoders SHOULD validate URI syntax.
+  - XML entity injection is mitigated by TOON's escaping rules; decoders MUST NOT interpret XML entities in string values.
 
 ## 16. Internationalization
 
 - Full Unicode is supported in keys and values, subject to quoting and escaping rules.
 - Encoders MUST NOT apply locale-dependent formatting for numbers or booleans (e.g., no thousands separators).
 - ISO 8601 strings SHOULD be used for Date normalization.
+- XML namespace URIs SHOULD use IRI/URI encoding as appropriate.
 
 ## 17. Interoperability and Mappings (Informative)
 
@@ -890,6 +994,53 @@ server:
   tags[2]: web,api
 ```
 
+### 17.4 XML Interoperability
+
+TOON provides XML element, attribute, and namespace support (excluding comments, processing instructions, and DOCTYPE declarations).
+
+Key mappings:
+- XML elements → object keys (with optional namespace prefix)
+- XML attributes → nested key-value pairs within the element object
+- XML namespace declarations → `xmlns` and `xmlns:prefix` keys
+- XML text content → direct string value or array for mixed content
+- Repeated elements → arrays (`key[N]:` syntax)
+- Mixed content → arrays where strings are text nodes and objects are elements
+- XML comments → dropped (not preserved)
+- Processing instructions → dropped (not preserved)
+- DOCTYPE declarations → dropped (not preserved)
+
+See §22-28 for complete specification.
+
+Example: XML to TOON Conversion
+
+XML:
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog xmlns="http://example.com/catalog">
+  <book id="1">
+    <title>The Great Gatsby</title>
+    <author>F. Scott Fitzgerald</author>
+  </book>
+  <book id="2">
+    <title>1984</title>
+    <author>George Orwell</author>
+  </book>
+</catalog>
+```
+
+TOON:
+```toon
+catalog:
+  xmlns: "http://example.com/catalog"
+  book[2]:
+    - id: 1
+      title: The Great Gatsby
+      author: F. Scott Fitzgerald
+    - id: 2
+      title: 1984
+      author: George Orwell
+```
+
 ## 18. IANA Considerations
 
 ### 18.1 Media Type Registration
@@ -912,6 +1063,7 @@ Required parameters: None
 
 Optional parameters:
 - charset: Although TOON is always UTF-8, the charset parameter MAY be specified as "charset=utf-8". If absent, UTF-8 MUST be assumed.
+- mode: MAY be "json" or "xml" to indicate the data model mode. If absent, auto-detection applies.
 
 Encoding considerations: 8-bit. TOON documents are UTF-8 encoded text with LF (U+000A) line endings.
 
@@ -921,7 +1073,7 @@ Interoperability considerations: See Section 17.
 
 Published specification: This document.
 
-Applications: LLM-based applications, prompt engineering tools, data serialization for AI contexts, configuration management systems.
+Applications: LLM-based applications, prompt engineering tools, data serialization for AI contexts, configuration management systems, XML document serialization.
 
 Fragment identifier considerations: None defined.
 
@@ -939,6 +1091,628 @@ Change controller: Community-maintained. See repository at https://github.com/to
 ### 18.3 Implementation Status
 
 Implementers SHOULD be aware that the media type designation `text/toon` is provisional and MAY be subject to change before formal IANA registration. Early implementers are encouraged to monitor the specification repository for updates.
+
+---
+
+## 22. XML Constructs
+
+TOON natively supports XML constructs as part of its unified syntax. These features enable encoding of XML documents while maintaining TOON's compact, line-oriented format.
+
+### 22.1 Document Structure
+
+When serializing to XML, a TOON document maps to:
+- XML declaration (`<?xml version="1.0" encoding="UTF-8"?>` always emitted)
+- Root element (the root object key)
+- Namespace declarations as `xmlns` keys on elements
+
+Note: XML comments, processing instructions, and DOCTYPE declarations are not supported and will be dropped during XML-to-TOON encoding.
+
+Example:
+```toon
+html:
+  xmlns: "http://www.w3.org/1999/xhtml"
+  lang: en
+  head:
+    title: Document Title
+  body:
+    p: Hello, World!
+```
+
+### 22.2 Element Representation
+
+XML elements are represented as object keys with their content as values:
+
+Simple text-only element:
+```toon
+title: Document Title
+```
+Represents: `<title>Document Title</title>`
+
+Element with children:
+```toon
+body:
+  p: First paragraph
+  p: Second paragraph
+```
+Represents:
+```xml
+<body>
+  <p>First paragraph</p>
+  <p>Second paragraph</p>
+</body>
+```
+
+Empty element:
+```toon
+br:
+```
+Represents: `<br/>` or `<br></br>`
+
+### 22.3 Qualified Names
+
+Element and attribute names MAY include namespace prefixes:
+```toon
+soap:Envelope:
+  xmlns:soap: "http://schemas.xmlsoap.org/soap/envelope/"
+  soap:Body:
+    content: Hello
+```
+
+The qualified name format is: `[prefix:]localName`
+
+Requirements:
+- The prefix MUST be declared via an `xmlns:prefix` key on the element or an ancestor.
+- The prefix MUST match the pattern `[A-Za-z_][A-Za-z0-9_]*`.
+- The local name MUST match the pattern `[A-Za-z_][A-Za-z0-9_.]*`.
+- In strict mode, use of an undeclared prefix MUST error.
+
+## 23. Namespaces
+
+XML namespaces are declared using `xmlns` keys, consistent with XML's own namespace declaration syntax.
+
+### 23.1 Namespace Declaration Syntax
+
+Default namespace:
+```toon
+element:
+  xmlns: uri
+```
+
+Prefixed namespace:
+```toon
+element:
+  xmlns:prefix: uri
+```
+
+Examples:
+```toon
+root:
+  xmlns: "http://www.w3.org/1999/xhtml"
+  xmlns:soap: "http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:xsi: "http://www.w3.org/2001/XMLSchema-instance"
+  content: value
+```
+
+### 23.2 Namespace Scope
+
+Namespace declarations follow XML scoping rules:
+- A namespace declaration on an element applies to that element and all descendants.
+- Descendant elements MAY override namespace declarations.
+- Prefixes MUST be declared before use (on the same element or an ancestor).
+
+```toon
+root:
+  xmlns: "http://example.com/default"
+  xmlns:ex: "http://example.com/other"
+  child:
+    xmlns:local: "http://example.com/local"
+    local:element: value
+  sibling:
+    ex:element: uses parent namespace
+```
+
+In this example, the `local` prefix is only valid within `child` and its descendants.
+
+### 23.3 Built-in Namespaces
+
+The following namespace prefixes are predefined and MUST NOT be redeclared:
+- `xml`: `http://www.w3.org/XML/1998/namespace`
+- `xmlns`: `http://www.w3.org/2000/xmlns/`
+
+The `xml` prefix is available without explicit declaration:
+```toon
+element:
+  xml:lang: en
+  xml:space: preserve
+```
+
+### 23.4 Namespace URI Encoding
+
+Namespace URIs:
+- MUST be quoted if they contain characters requiring quoting per §7.2.
+- MAY contain any valid URI/IRI characters.
+- Are compared as strings (no URI normalization is performed by TOON).
+
+Example with quoting:
+```toon
+root:
+  xmlns:ex: "http://example.com/path?query=value&other=true"
+  content: value
+```
+
+### 23.5 Default Namespace
+
+The default namespace (declared with `xmlns` without a prefix) applies to:
+- Unprefixed element names
+- Does NOT apply to unprefixed attribute names (per XML Namespaces specification)
+
+Example:
+```toon
+html:
+  xmlns: "http://www.w3.org/1999/xhtml"
+  body:
+    class: container
+    p: Content
+```
+
+Here, `html`, `body`, and `p` are in the default namespace. The `class` key has no namespace (attributes without prefixes have no namespace, per XML spec).
+
+## 24. Attributes
+
+XML attributes are represented as nested key-value pairs within the element object.
+
+### 24.1 Attribute Syntax
+
+```toon
+elementName:
+  attr1: value1
+  attr2: value2
+```
+
+Where:
+- `attr1`, `attr2` are attribute names (MAY include namespace prefix)
+- `value1`, `value2` are attribute values (always strings in XML)
+
+Examples:
+```toon
+element:
+  id: 123
+  class: container primary
+  "data-value": "quoted: value"
+```
+
+Represents:
+```xml
+<element id="123" class="container primary" data-value="quoted: value"/>
+```
+
+### 24.2 Attribute with Content
+
+Elements with both attributes and child elements:
+```toon
+element:
+  id: 1
+  name: example
+  child: content
+```
+
+Note: When decoding to XML, the distinction between attributes and child elements is determined by convention or schema. By default, keys with primitive values that match common attribute patterns (e.g., `id`, `class`, `name`, `type`, `href`, `src`, `xmlns`, `xmlns:*`, `xml:*`) are treated as attributes. All other keys are treated as child elements.
+
+Represents:
+```xml
+<element id="1" name="example">
+  <child>content</child>
+</element>
+```
+
+### 24.3 Elements with Attributes and Text Content
+
+When an element has both attributes and text content (no child elements), use an array where attribute key-value pairs and text content are list items:
+
+```toon
+a:
+  - href: /
+  - our site
+```
+
+Represents: `<a href="/">our site</a>`
+
+The array items are processed as follows:
+- Items that are key-value pairs (e.g., `href: /`) become attributes
+- Items that are plain strings become text content
+
+Example with multiple attributes:
+```toon
+input:
+  - type: text
+  - name: username
+  - placeholder: "Enter your name"
+```
+
+Represents: `<input type="text" name="username" placeholder="Enter your name"/>`
+
+### 24.4 Qualified Attributes
+
+Attributes MAY have namespace prefixes:
+```toon
+a:
+  - xmlns:xlink: "http://www.w3.org/1999/xlink"
+  - xlink:href: "http://example.com"
+  - xlink:title: Example Link
+  - Click here
+```
+
+Note: Unlike elements, attributes without a prefix have NO namespace (they are in no namespace), not the default namespace. This follows the XML Namespaces specification.
+
+### 24.5 Attribute Value Types
+
+In XML, all attribute values are strings. However, TOON preserves type information for round-trip fidelity:
+- Numeric-looking values are encoded as unquoted when possible
+- Boolean-looking values (`true`, `false`) are encoded as unquoted
+- When decoding to XML, all attribute values MUST be coerced to strings (numeric and boolean values are converted to their string representations)
+
+### 24.6 Attribute Quoting
+
+Attribute values follow standard TOON quoting rules (§7.2). Additionally:
+- Values containing `<` or `>` SHOULD be quoted (for XML safety).
+- Values containing `&` SHOULD be quoted.
+- Values containing spaces or special characters MUST be quoted.
+
+## 25. Repeated Elements
+
+XML allows multiple child elements with the same name. TOON represents repeated elements using standard array syntax.
+
+### 25.1 Array Syntax for Repeated Elements
+
+Repeated elements use the standard array syntax `key[N]:`:
+
+```toon
+items:
+  item[3]: a,b,c
+```
+
+Represents:
+```xml
+<items>
+  <item>a</item>
+  <item>b</item>
+  <item>c</item>
+</items>
+```
+
+### 25.2 List Form for Complex Elements
+
+For elements with attributes or children, use list form:
+
+```toon
+books:
+  book[2]:
+    - id: 1
+      title: First Book
+      author: Author One
+    - id: 2
+      title: Second Book
+      author: Author Two
+```
+
+Represents:
+```xml
+<books>
+  <book id="1">
+    <title>First Book</title>
+    <author>Author One</author>
+  </book>
+  <book id="2">
+    <title>Second Book</title>
+    <author>Author Two</author>
+  </book>
+</books>
+```
+
+### 25.3 Tabular Form for Uniform Elements
+
+When repeated elements are uniform with primitive children, use tabular form:
+
+```toon
+items:
+  item[3]{name,price}:
+    Widget,9.99
+    Gadget,14.50
+    Gizmo,19.99
+```
+
+With attributes as regular fields:
+```toon
+items:
+  item[3]{id,name,price}:
+    1,Widget,9.99
+    2,Gadget,14.50
+    3,Gizmo,19.99
+```
+
+### 25.4 Preserving Order with Interleaved Elements
+
+When elements of different types are interleaved, use list-style syntax with duplicate keys:
+
+```toon
+root:
+  - a: first
+  - b: second
+  - a: third
+  - b: fourth
+```
+
+Represents:
+```xml
+<root>
+  <a>first</a>
+  <b>second</b>
+  <a>third</a>
+  <b>fourth</b>
+</root>
+```
+
+Each list item is a single-key object representing one element. The order is preserved.
+
+### 25.5 Implicit Repeated Element Detection
+
+When decoding, if a key appears multiple times at the same object level, decoders SHOULD combine them into an array:
+
+```toon
+root:
+  item: first
+  item: second
+  item: third
+```
+
+Decoded as:
+```json
+{
+  "root": {
+    "item": ["first", "second", "third"]
+  }
+}
+```
+
+Encoders SHOULD use explicit array syntax for clarity.
+
+## 26. Mixed Content
+
+XML mixed content contains both text and child elements interleaved. TOON represents mixed content as arrays where string items are text nodes and object items are elements.
+
+### 26.1 Mixed Content Arrays
+
+Mixed content is represented as an array:
+
+```toon
+p[5]:
+  - "This is "
+  - em: emphasized
+  - " and "
+  - strong: bold
+  - " text."
+```
+
+Represents:
+```xml
+<p>This is <em>emphasized</em> and <strong>bold</strong> text.</p>
+```
+
+String items become text nodes. Single-key object items become child elements.
+
+### 26.2 Elements with Text and Attributes
+
+When an element has text content and attributes, use an array where the attribute keys and text content are list items:
+
+```toon
+span:
+  - class: highlight
+  - Highlighted text
+```
+
+Represents: `<span class="highlight">Highlighted text</span>`
+
+For mixed content with both text nodes and child elements:
+```toon
+p:
+  - id: intro
+  - "Welcome to "
+  - a:
+      - href: /
+      - our site
+  - "!"
+```
+
+Represents: `<p id="intro">Welcome to <a href="/">our site</a>!</p>`
+
+### 26.3 Text-Only Elements
+
+Elements with only text content use direct value syntax:
+
+```toon
+title: Document Title
+```
+
+Represents: `<title>Document Title</title>`
+
+### 26.4 Tabular Form with Text Content
+
+In tabular form, an empty field name represents text content:
+
+```toon
+items:
+  item[2]{id,,price}:
+    1,Widget,9.99
+    2,Gadget,24.99
+```
+
+Represents:
+```xml
+<items>
+  <item id="1">Widget<price>9.99</price></item>
+  <item id="2">Gadget<price>24.99</price></item>
+</items>
+```
+
+The empty field between `id` and `price` captures the element's text content.
+
+### 26.5 Whitespace in Mixed Content
+
+Whitespace handling:
+- Leading/trailing whitespace in text strings is preserved
+- Empty strings represent empty text nodes
+- Whitespace-only strings are preserved
+
+## 27. CDATA and Text Content
+
+### 27.1 Text Content Representation
+
+Text content in XML elements is represented using:
+- Direct value for text-only elements: `element: text`
+- Arrays for mixed content: `element[N]:` with strings (text) and objects (elements)
+- Empty field name in tabular form for text content: `{id,,price}` (see §26.4)
+
+### 27.2 CDATA Sections
+
+**XML to TOON (Encoding):**
+
+CDATA sections are normalized to quoted strings with escape sequences for special characters:
+
+XML input:
+```xml
+<script><![CDATA[
+  function test() {
+    return a < b && c > d;
+  }
+]]></script>
+```
+
+TOON output:
+```toon
+script: "\n  function test() {\n    return a < b && c > d;\n  }\n"
+```
+
+The CDATA markers are not preserved—content becomes a regular TOON string.
+
+**TOON to XML (Decoding):**
+
+When decoding to XML, implementations SHOULD emit CDATA sections for content that:
+- Contains `<`, `>`, or `&` characters
+- Contains newlines or is multiline
+
+TOON input:
+```toon
+script: "\n  function test() {\n    return a < b && c > d;\n  }\n"
+```
+
+XML output:
+```xml
+<script><![CDATA[
+  function test() {
+    return a < b && c > d;
+  }
+]]></script>
+```
+
+Simple content without special characters uses regular text nodes:
+```toon
+title: Hello World
+```
+
+Becomes: `<title>Hello World</title>`
+
+### 27.3 Entity References
+
+XML entity references are resolved during encoding to TOON:
+- `&lt;` → `<`
+- `&gt;` → `>`
+- `&amp;` → `&`
+- `&apos;` → `'`
+- `&quot;` → `"`
+- Numeric entities (`&#123;`, `&#x7B;`) → corresponding Unicode character
+
+TOON text values contain the resolved characters, not entity references.
+
+When decoding TOON to XML, implementations MUST escape characters as needed for valid XML.
+
+### 27.4 Whitespace Normalization
+
+All whitespace is preserved in text content. Implementations MUST NOT normalize whitespace (collapse runs or trim leading/trailing whitespace).
+
+## 28. XML Encoding and Decoding
+
+### 28.1 XML to TOON Encoding
+
+When encoding an XML document to TOON:
+
+1. **Comments, Processing Instructions, DOCTYPE**: These are dropped and not preserved.
+
+2. **Root Element**: Encode as root object key.
+
+3. **Namespace Declarations**: Include as `xmlns` or `xmlns:prefix` keys:
+   - `xmlns: uri` for default namespace
+   - `xmlns:prefix: uri` for prefixed namespaces
+
+4. **Elements**: For each child element:
+   - If repeated: use `key[N]:` array syntax or list form for interleaved
+   - If text-only: use direct value syntax
+   - If mixed content: use array with strings (text) and objects (elements)
+   - Otherwise: recurse with nested object
+
+5. **Attributes**: Emit as nested key-value pairs within the element object.
+
+6. **Text Content**:
+   - Text-only element: direct value syntax
+   - Mixed content: array where strings are text nodes, objects are elements
+
+7. **Whitespace**: Preserve significant whitespace; normalize if option enabled.
+
+### 28.2 TOON to XML Decoding
+
+When decoding TOON to XML:
+
+1. **XML Declaration**: Always emit `<?xml version="1.0" encoding="UTF-8"?>`.
+
+2. **Elements**: For each object key:
+   - If value is array: check if mixed content (strings + objects) or repeated elements
+   - Otherwise: emit single element with content
+
+3. **Namespace Declarations**: For each `xmlns` or `xmlns:prefix` key:
+   - Emit as `xmlns` or `xmlns:prefix` attribute on the element
+   - MUST validate that all used prefixes are declared
+
+4. **Attributes**: Keys with primitive values that match common attribute patterns (e.g., `id`, `class`, `name`, `type`, `href`, `src`, `xmlns`, `xmlns:*`, `xml:*`) are emitted as XML attributes. See §24.2 for details.
+
+5. **Text Content**:
+   - Direct string value: emit as text node or CDATA section
+   - Array with strings and objects: emit as mixed content (text and elements interleaved)
+   - Content with `<`, `>`, `&`, or newlines SHOULD use CDATA sections
+
+6. **Entity Escaping**: For non-CDATA text, implementations MUST escape `<`, `>`, `&`, `'`, `"` as appropriate.
+
+### 28.3 Encoding Options
+
+When targeting XML output:
+- `preserveNamespaces` (boolean, default: true): Preserve namespace prefixes
+
+### 28.4 Decoding Options
+
+When decoding from XML:
+- Attribute values with numeric or boolean types are always coerced to strings (this is the default behavior and not configurable)
+
+### 28.5 Validation
+
+In strict mode, decoders MUST validate:
+- All namespace prefixes are declared via `xmlns:prefix` key on the element or an ancestor
+- Mixed content arrays contain only strings (text) and single-key objects (elements)
+
+### 28.6 Error Handling
+
+XML-specific errors:
+- `UndefinedNamespacePrefix`: Prefix used without `xmlns:prefix` declaration
+- `InvalidMixedContent`: Array contains invalid item types for mixed content
+
+---
 
 ## Appendix A: Examples (Informative)
 
@@ -1143,7 +1917,7 @@ Output: `{"a": 2}`
 
 ## Appendix B: Parsing Helpers (Informative)
 
-These sketches illustrate structure and common decoding helpers. They are informative; normative behavior is defined in Sections 4–12 and 14.
+These sketches illustrate structure and common decoding helpers. They are informative; normative behavior is defined in Sections 4–12, 14, and 22-28.
 
 ### B.1 Decoding Overview
 
@@ -1200,6 +1974,11 @@ These sketches illustrate structure and common decoding helpers. They are inform
 - Outside arrays/tabular rows:
   - Blank lines SHOULD be ignored (do not affect root-form detection or object boundaries).
 
+### B.7 Text Content Parsing
+
+- Empty field names in tabular headers indicate text content.
+- Arrays containing strings and single-key objects represent mixed content.
+
 ## Appendix C: Test Suite and Compliance (Informative)
 
 ### Reference Test Suite
@@ -1207,7 +1986,7 @@ These sketches illustrate structure and common decoding helpers. They are inform
 A language-agnostic reference test suite is maintained at:
 https://github.com/toon-format/spec/tree/main/tests
 
-The test suite is versioned alongside this specification. Implementations are encouraged to validate against this test suite, but conformance is determined solely by adherence to the normative requirements in Sections 1-16 and Section 19 of this specification. Test coverage does not define the specification; the specification defines conformance.
+The test suite is versioned alongside this specification. Implementations are encouraged to validate against this test suite, but conformance is determined solely by adherence to the normative requirements in Sections 1-16, 19, and 22-28 of this specification. Test coverage does not define the specification; the specification defines conformance.
 
 The reference test suite provides validation for implementations but is not exhaustive. Implementers remain responsible for ensuring their implementations conform to all normative requirements.
 
@@ -1223,12 +2002,27 @@ The reference test suite covers:
 - Whitespace invariants (no trailing spaces/newline).
 - Canonical number formatting (no exponent, no trailing zeros, no leading zeros).
 - Decoder strict-mode errors: count mismatches, invalid escapes, missing colon, delimiter mismatches, indentation errors, blank-line handling.
+- Extended syntax: namespace declarations, repeated keys, mixed content.
 
 Note: Host-type normalization tests (e.g., BigInt, Date, Set, Map) are language-specific and maintained in implementation repositories. See Appendix G for normalization guidance.
 
 ## Appendix D: Document Changelog (Informative)
 
 This appendix summarizes major changes between spec versions. For the complete changelog, see [`CHANGELOG.md`](./CHANGELOG.md) in the specification repository.
+
+### v4.0 (2026-01-15)
+
+- Added unified XML construct support (§22).
+- Added namespace declarations via `xmlns` attributes (§23).
+- Added attributes as nested key-value pairs within element objects (§24).
+- Added repeated elements support using array syntax (§25).
+- Added mixed content support using arrays (strings for text, objects for elements) (§26).
+- Added CDATA and text content handling (§27).
+- Added XML encoding/decoding rules (§28).
+- Added extended syntax strict-mode errors (§14.6).
+- Added empty field name syntax for text content in tabular form.
+- Added array-based syntax for elements with both attributes and text content (§24.3).
+- XML comments, processing instructions, and DOCTYPE declarations are not supported and are dropped during encoding.
 
 ### v3.0 (2025-11-24)
 
@@ -1291,6 +2085,7 @@ This specification and reference implementation are released under the MIT Licen
   - Objects-as-list-items parsing (+2 nested object rule; +1 siblings).
   - Whitespace invariants for encoding and strict-mode indentation enforcement for decoding.
   - Blank-line handling and trailing-newline acceptance.
+  - Extended syntax: namespace resolution, repeated elements, mixed content.
 
 ## Appendix G: Host Type Normalization Examples (Informative)
 
@@ -1313,6 +2108,9 @@ Collection Types:
 
 Struct Types:
 - Structs with exported fields: Convert to object using JSON struct tags if present.
+
+XML Types:
+- `encoding/xml` structs: Convert using XML struct tags for element/attribute mapping.
 
 Non-Serializable Types:
 - `nil`: Maps to `null`.
@@ -1338,6 +2136,10 @@ Object Types:
 - Objects with a `toJSON()` method: Call `value.toJSON()` and then normalize the returned value recursively before encoding. This allows domain objects to override default normalization behavior in a controlled, deterministic way (similar to `JSON.stringify`). Implementations SHOULD guard against `toJSON()` returning the same object (to avoid infinite recursion) and MAY fall back to default normalization in that case.
 - Plain objects: Enumerate own enumerable string keys in encounter order; normalize values recursively.
 
+XML Types:
+- DOM `Element`: Convert using element name as key with attributes as nested key-value pairs, children recursively.
+- DOM `Document`: Extract root element and process.
+
 Non-Serializable Types:
 - `undefined`, `function`, `Symbol`: Convert to `null`.
 
@@ -1359,6 +2161,10 @@ Collection Types:
 
 Object Types:
 - Custom objects: Extract attributes via `__dict__` or implement custom serialization; convert to object (dict) with string keys.
+
+XML Types:
+- `xml.etree.ElementTree.Element`: Convert using tag as key with attributes as nested key-value pairs, text content as direct value or array items, children recursively.
+- `lxml.etree` elements: Similar conversion with namespace support.
 
 Non-Serializable Types:
 - `None`: Maps to `null`.
@@ -1384,6 +2190,9 @@ Enum Types:
 - Unit variants: Convert to string of variant name (e.g., `Color::Red` → `"Red"`).
 - Tuple/struct variants: Typically convert to object with `"type"` field and data fields per `serde` conventions.
 
+XML Types:
+- `quick-xml` or `xml-rs` elements: Convert using element name, attributes, and children.
+
 Non-Serializable Types:
 - `Option::None`: Convert to `null`.
 - `Option::Some(T)`: Unwrap and normalize `T`.
@@ -1396,6 +2205,7 @@ Implementations in any language SHOULD:
    - Large or arbitrary-precision numbers (lossless string vs. approximate number)
    - Date/time representations (ISO 8601 format details)
    - Collection type mappings (order preservation for sets)
+   - XML DOM or SAX event mappings
 2. Provide configuration options where multiple strategies are reasonable (e.g., lossless vs. approximate numeric encoding).
 3. Ensure that normalization is deterministic: encoding the same host value twice MUST produce identical TOON output.
 
@@ -1435,3 +2245,202 @@ This specification is released under the MIT License (see repository and Appendi
 Implementers should be aware that this is a community specification and not a formal standards-track document from a recognized standards body (such as IETF, W3C, or ISO). No formal patent review process has been conducted. Implementers are responsible for conducting their own intellectual property due diligence as appropriate for their use case.
 
 The MIT License permits free use, modification, and distribution of both this specification and conforming implementations, subject to the license terms.
+
+## Appendix H: XML Examples (Informative)
+
+This appendix provides comprehensive examples of XML to TOON conversion.
+
+### H.1 Namespaced Document
+
+XML:
+```xml
+<?xml version="1.0"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+               xmlns:m="http://example.com/messages">
+  <soap:Header>
+    <m:Auth token="abc123"/>
+  </soap:Header>
+  <soap:Body>
+    <m:GetUser>
+      <m:id>42</m:id>
+    </m:GetUser>
+  </soap:Body>
+</soap:Envelope>
+```
+
+TOON:
+```toon
+soap:Envelope:
+  xmlns:soap: "http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:m: "http://example.com/messages"
+  soap:Header:
+    m:Auth:
+      token: abc123
+  soap:Body:
+    m:GetUser:
+      m:id: 42
+```
+
+### H.2 Repeated Elements
+
+XML:
+```xml
+<library>
+  <book id="1">
+    <title>1984</title>
+    <author>George Orwell</author>
+  </book>
+  <book id="2">
+    <title>Brave New World</title>
+    <author>Aldous Huxley</author>
+  </book>
+  <book id="3">
+    <title>Fahrenheit 451</title>
+    <author>Ray Bradbury</author>
+  </book>
+</library>
+```
+
+TOON (tabular form):
+```toon
+library:
+  book[3]{id,title,author}:
+    1,1984,George Orwell
+    2,Brave New World,Aldous Huxley
+    3,Fahrenheit 451,Ray Bradbury
+```
+
+Alternative (list form):
+```toon
+library:
+  book[3]:
+    - id: 1
+      title: 1984
+      author: George Orwell
+    - id: 2
+      title: Brave New World
+      author: Aldous Huxley
+    - id: 3
+      title: Fahrenheit 451
+      author: Ray Bradbury
+```
+
+### H.3 Mixed Content
+
+XML:
+```xml
+<article>
+  <p>This is <em>emphasized</em> and <strong>bold</strong> text.</p>
+  <p>Another <a href="http://example.com">link</a> here.</p>
+</article>
+```
+
+TOON:
+```toon
+article:
+  p[2]:
+    - [5]:
+        - "This is "
+        - em: emphasized
+        - " and "
+        - strong: bold
+        - " text."
+    - [3]:
+        - "Another "
+        - a:
+            - href: "http://example.com"
+            - link
+        - " here."
+```
+
+### H.4 XHTML Document
+
+XML:
+```xml
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>Page Title</title>
+    <meta charset="UTF-8"/>
+  </head>
+  <body class="main">
+    <h1>Hello World</h1>
+    <p>Welcome to <a href="/">our site</a>.</p>
+  </body>
+</html>
+```
+
+TOON:
+```toon
+html:
+  xmlns: "http://www.w3.org/1999/xhtml"
+  lang: en
+  head:
+    title: Page Title
+    meta:
+      charset: UTF-8
+  body:
+    class: main
+    h1: Hello World
+    p[3]:
+      - "Welcome to "
+      - a:
+          - href: /
+          - our site
+      - .
+```
+
+### H.5 RSS Feed
+
+XML:
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Example Feed</title>
+    <link>http://example.com</link>
+    <item>
+      <title>First Post</title>
+      <link>http://example.com/1</link>
+    </item>
+    <item>
+      <title>Second Post</title>
+      <link>http://example.com/2</link>
+    </item>
+  </channel>
+</rss>
+```
+
+TOON (tabular form):
+```toon
+rss:
+  version: 2.0
+  channel:
+    title: Example Feed
+    link: "http://example.com"
+    item[2]{title,link}:
+      First Post,"http://example.com/1"
+      Second Post,"http://example.com/2"
+```
+
+### H.6 Interleaved Elements
+
+XML:
+```xml
+<root>
+  <a>first</a>
+  <b>second</b>
+  <a>third</a>
+  <c>fourth</c>
+  <b>fifth</b>
+</root>
+```
+
+TOON:
+```toon
+root:
+  - a: first
+  - b: second
+  - a: third
+  - c: fourth
+  - b: fifth
+```

@@ -1,0 +1,5 @@
+root:
+  - a: first
+  - b: second
+  - a: third
+  - b: fourth

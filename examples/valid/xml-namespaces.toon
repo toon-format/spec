@@ -1,0 +1,9 @@
+soap:Envelope:
+  xmlns:soap: "http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:m: "http://example.com/messages"
+  soap:Header:
+    m:Auth:
+      token: abc123
+  soap:Body:
+    m:GetUser:
+      m:id: 42

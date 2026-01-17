@@ -1,0 +1,5 @@
+library:
+  book[3]{id,title,author}:
+    1,1984,George Orwell
+    2,Brave New World,Aldous Huxley
+    3,Fahrenheit 451,Ray Bradbury

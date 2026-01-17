@@ -1,0 +1,8 @@
+rss:
+  version: 2.0
+  channel:
+    title: Example Feed
+    link: "http://example.com"
+    item[2]{title,link}:
+      First Post,"http://example.com/1"
+      Second Post,"http://example.com/2"

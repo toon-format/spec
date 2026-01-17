@@ -1,0 +1,14 @@
+article:
+  p[2]:
+    - [5]:
+        - "This is "
+        - em: emphasized
+        - " and "
+        - strong: bold
+        - " text."
+    - [3]:
+        - "Another "
+        - a:
+            - href: "http://example.com"
+            - link
+        - " here."

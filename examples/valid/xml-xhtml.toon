@@ -1,0 +1,16 @@
+html:
+  xmlns: "http://www.w3.org/1999/xhtml"
+  lang: en
+  head:
+    title: Page Title
+    meta:
+      charset: UTF-8
+  body:
+    class: main
+    h1: Hello World
+    p[3]:
+      - "Welcome to "
+      - a:
+          - href: /
+          - our site
+      - .

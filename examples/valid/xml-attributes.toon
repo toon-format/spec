@@ -1,0 +1,10 @@
+element:
+  id: 123
+  class: container primary
+  "data-value": "quoted: value"
+
+a:
+  - xmlns:xlink: "http://www.w3.org/1999/xlink"
+  - xlink:href: "http://example.com"
+  - xlink:title: Example Link
+  - Click here

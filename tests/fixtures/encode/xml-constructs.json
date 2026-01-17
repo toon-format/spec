@@ -1,0 +1,174 @@
+{
+  "version": "4.0",
+  "category": "encode",
+  "description": "XML construct encoding - namespaces, attributes, repeated elements, mixed content",
+  "tests": [
+    {
+      "name": "encodes simple XML elements",
+      "input": {
+        "note": {
+          "to": "Alice",
+          "from": "Bob",
+          "message": "Hello!"
+        }
+      },
+      "expected": "note:\n  to: Alice\n  from: Bob\n  message: Hello!",
+      "specSection": "22"
+    },
+    {
+      "name": "encodes elements with attributes as nested key-value pairs",
+      "input": {
+        "element": {
+          "id": 123,
+          "class": "container primary",
+          "data-value": "quoted: value"
+        }
+      },
+      "expected": "element:\n  id: 123\n  class: \"container primary\"\n  \"data-value\": \"quoted: value\"",
+      "specSection": "24.1"
+    },
+    {
+      "name": "encodes default namespace declaration",
+      "input": {
+        "root": {
+          "xmlns": "http://www.w3.org/1999/xhtml",
+          "lang": "en"
+        }
+      },
+      "expected": "root:\n  xmlns: \"http://www.w3.org/1999/xhtml\"\n  lang: en",
+      "specSection": "23.1"
+    },
+    {
+      "name": "encodes prefixed namespace declaration",
+      "input": {
+        "soap:Envelope": {
+          "xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/",
+          "xmlns:m": "http://example.com/messages"
+        }
+      },
+      "expected": "soap:Envelope:\n  xmlns:soap: \"http://schemas.xmlsoap.org/soap/envelope/\"\n  xmlns:m: \"http://example.com/messages\"",
+      "specSection": "23.1"
+    },
+    {
+      "name": "encodes elements with attributes and text content using array",
+      "input": {
+        "a": [
+          { "href": "/" },
+          "our site"
+        ]
+      },
+      "expected": "a:\n  - href: /\n  - our site",
+      "specSection": "24.3"
+    },
+    {
+      "name": "encodes elements with multiple attributes and text content",
+      "input": {
+        "input": [
+          { "type": "text" },
+          { "name": "username" },
+          { "placeholder": "Enter your name" }
+        ]
+      },
+      "expected": "input:\n  - type: text\n  - name: username\n  - placeholder: \"Enter your name\"",
+      "specSection": "24.3"
+    },
+    {
+      "name": "encodes repeated elements using array syntax",
+      "input": {
+        "library": {
+          "book": [
+            { "id": 1, "title": "1984", "author": "George Orwell" },
+            { "id": 2, "title": "Brave New World", "author": "Aldous Huxley" },
+            { "id": 3, "title": "Fahrenheit 451", "author": "Ray Bradbury" }
+          ]
+        }
+      },
+      "expected": "library:\n  book[3]{id,title,author}:\n    1,1984,George Orwell\n    2,Brave New World,Aldous Huxley\n    3,Fahrenheit 451,Ray Bradbury",
+      "specSection": "25"
+    },
+    {
+      "name": "encodes mixed content with text and elements",
+      "input": {
+        "article": {
+          "p": [
+            [
+              "This is ",
+              { "em": "emphasized" },
+              " and ",
+              { "strong": "bold" },
+              " text."
+            ],
+            [
+              "Another ",
+              {
+                "a": [
+                  { "href": "http://example.com" },
+                  "link"
+                ]
+              },
+              " here."
+            ]
+          ]
+        }
+      },
+      "expected": "article:\n  p[2]:\n    - [5]:\n        - \"This is \"\n        - em: emphasized\n        - \" and \"\n        - strong: bold\n        - \" text.\"\n    - [3]:\n        - \"Another \"\n        - a:\n            - href: \"http://example.com\"\n            - link\n        - \" here.\"",
+      "specSection": "26"
+    },
+    {
+      "name": "encodes elements with namespace prefixes",
+      "input": {
+        "soap:Envelope": {
+          "xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/",
+          "xmlns:m": "http://example.com/messages",
+          "soap:Header": {
+            "m:Auth": {
+              "token": "abc123"
+            }
+          }
+        }
+      },
+      "expected": "soap:Envelope:\n  xmlns:soap: \"http://schemas.xmlsoap.org/soap/envelope/\"\n  xmlns:m: \"http://example.com/messages\"\n  soap:Header:\n    m:Auth:\n      token: abc123",
+      "specSection": "22.3"
+    },
+    {
+      "name": "encodes attributes with namespace prefixes",
+      "input": {
+        "a": [
+          { "xmlns:xlink": "http://www.w3.org/1999/xlink" },
+          { "xlink:href": "http://example.com" },
+          { "xlink:title": "Example Link" },
+          "Click here"
+        ]
+      },
+      "expected": "a:\n  - xmlns:xlink: \"http://www.w3.org/1999/xlink\"\n  - xlink:href: \"http://example.com\"\n  - xlink:title: Example Link\n  - Click here",
+      "specSection": "24.4"
+    },
+    {
+      "name": "encodes empty field names in tabular form for text content",
+      "input": {
+        "items": {
+          "item": [
+            { "id": 1, "": "Widget", "price": 9.99 },
+            { "id": 2, "": "Gadget", "price": 24.99 }
+          ]
+        }
+      },
+      "expected": "items:\n  item[2]{id,,price}:\n    1,Widget,9.99\n    2,Gadget,24.99",
+      "specSection": "26.4"
+    },
+    {
+      "name": "encodes interleaved repeated elements using list form",
+      "input": {
+        "root": [
+          { "a": "first" },
+          { "b": "second" },
+          { "a": "third" },
+          { "c": "fourth" },
+          { "b": "fifth" }
+        ]
+      },
+      "expected": "root:\n  - a: first\n  - b: second\n  - a: third\n  - c: fourth\n  - b: fifth",
+      "specSection": "25.4"
+    }
+  ]
+}

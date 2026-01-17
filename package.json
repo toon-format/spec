@@ -1,7 +1,7 @@
 {
   "name": "@toon-format/spec",
   "type": "module",
-  "version": "3.0.1",
+  "version": "4.0.0",
   "packageManager": "pnpm@10.19.0",
   "description": "Official specification for Token-Oriented Object Notation (TOON)",
   "author": "Johann Schopplich <hello@johannschopplich.com>",
