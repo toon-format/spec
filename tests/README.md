@@ -162,7 +162,7 @@ The fixture format is language-agnostic JSON, so you can load and iterate it usi
 | `delimiters.json` | Tab and pipe delimiter options | §11 |
 | `whitespace.json` | Formatting invariants and indentation | §12 |
 | `key-folding.json` | Key folding with safe mode, depth control, collision avoidance | §13.4 |
-| `xml-constructs.json` | XML constructs: namespaces, attributes, repeated elements, mixed content | §22-29 |
+| `xml-constructs.json` | XML constructs: namespaces, attributes, repeated elements, mixed content | §22-28 |
 
 ### Decoding Tests (`fixtures/decode/`)
 
@@ -181,7 +181,7 @@ The fixture format is language-agnostic JSON, so you can load and iterate it usi
 | `indentation-errors.json` | Strict mode indentation validation | §14.3, §12 |
 | `blank-lines.json` | Blank line handling in arrays | §14.4, §12 |
 | `path-expansion.json` | Path expansion with safe mode, deep merge, strict-mode conflicts | §13.4, §14.5 |
-| `xml-constructs.json` | XML constructs: namespaces, attributes, repeated elements, mixed content, undefined prefix errors | §22-29, §14.6 |
+| `xml-constructs.json` | XML constructs: namespaces, attributes, repeated elements, mixed content, undefined prefix errors | §22-28, §14.6 |
 
 ## Validating Fixtures
 

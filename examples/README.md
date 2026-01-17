@@ -114,7 +114,7 @@ Complete, valid TOON files demonstrating core features:
 - [`valid/xml-xhtml.toon`](valid/xml-xhtml.toon) - XHTML example
   - Complete XHTML document with namespaces and attributes
   - Demonstrates complex XML document structure
-  - Spec: §22-29 XML Constructs
+  - Spec: §22-28 XML Constructs
 
 ## Invalid Examples
 

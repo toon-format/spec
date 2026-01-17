@@ -272,7 +272,7 @@ TOON supports the XML infoset through the following constructs:
   - Zero or more attributes (name-value pairs)
   - Zero or more child nodes (elements or text)
   - An optional namespace context (inherited or declared)
-- `XmlAttribute`: A name-value pair where the value is always a string. Attribute names may be qualified.
+- `XmlAttribute`: A name-value pair where the value is always a string. Attribute names MAY be qualified.
 - `XmlText`: Character data content within an element.
 - `XmlNamespace`: A binding from a prefix (or default) to a namespace URI.
 
@@ -309,7 +309,7 @@ When encoding XML documents, encoders MUST normalize as follows:
 - XML comments → dropped (not preserved)
 - XML processing instructions → dropped (not preserved)
 - DOCTYPE declarations → dropped (not preserved)
-- Whitespace-only text nodes → preserved unless `normalizeWhitespace` option is enabled
+- Whitespace-only text nodes → preserved
 - Adjacent text nodes → merged into single text content
 - Mixed content → arrays where strings are text nodes and objects are elements
 - CDATA sections → quoted strings with escape sequences (e.g., `\n` for newlines); CDATA markers not preserved
@@ -361,7 +361,7 @@ TOON is a deterministic, line-oriented, indentation-based notation.
     - Tabular form when uniform and primitive-only: key[N<delim?>]{f1<delim>f2}: then one row per line.
     - Otherwise: expanded list items: key[N<delim?>]: with "- …" items (see Sections 9.4 and 10).
 - Root form discovery:
-  - If the first non-empty depth-0 line is a valid root array header per Section 6 (must include a colon), decode a root array.
+  - If the first non-empty depth-0 line is a valid root array header per Section 6 (MUST include a colon), decode a root array.
   - Else if the document has exactly one non-empty line and it is neither a valid array header nor a key-value line (quoted or unquoted key), decode a single primitive (examples: `hello`, `42`, `true`).
   - Otherwise, decode an object.
   - An empty document (no non-empty lines after ignoring trailing newline(s) and ignorable blank lines) decodes to an empty object `{}`.
@@ -1150,7 +1150,7 @@ Represents: `<br/>` or `<br></br>`
 
 ### 22.3 Qualified Names
 
-Element and attribute names may include namespace prefixes:
+Element and attribute names MAY include namespace prefixes:
 ```toon
 soap:Envelope:
   xmlns:soap: "http://schemas.xmlsoap.org/soap/envelope/"
@@ -1197,8 +1197,8 @@ root:
 
 Namespace declarations follow XML scoping rules:
 - A namespace declaration on an element applies to that element and all descendants.
-- Descendant elements may override namespace declarations.
-- Prefixes must be declared before use (on the same element or an ancestor).
+- Descendant elements MAY override namespace declarations.
+- Prefixes MUST be declared before use (on the same element or an ancestor).
 
 ```toon
 root:
@@ -1270,7 +1270,7 @@ elementName:
 ```
 
 Where:
-- `attr1`, `attr2` are attribute names (may include namespace prefix)
+- `attr1`, `attr2` are attribute names (MAY include namespace prefix)
 - `value1`, `value2` are attribute values (always strings in XML)
 
 Examples:
@@ -1333,7 +1333,7 @@ Represents: `<input type="text" name="username" placeholder="Enter your name"/>`
 
 ### 24.4 Qualified Attributes
 
-Attributes may have namespace prefixes:
+Attributes MAY have namespace prefixes:
 ```toon
 a:
   - xmlns:xlink: "http://www.w3.org/1999/xlink"
@@ -1349,7 +1349,7 @@ Note: Unlike elements, attributes without a prefix have NO namespace (they are i
 In XML, all attribute values are strings. However, TOON preserves type information for round-trip fidelity:
 - Numeric-looking values are encoded as unquoted when possible
 - Boolean-looking values (`true`, `false`) are encoded as unquoted
-- All values decode to strings when targeting XML output
+- When decoding to XML, all attribute values MUST be coerced to strings (numeric and boolean values are converted to their string representations)
 
 ### 24.6 Attribute Quoting
 
@@ -1561,7 +1561,7 @@ The empty field between `id` and `price` captures the element's text content.
 Whitespace handling:
 - Leading/trailing whitespace in text strings is preserved
 - Empty strings represent empty text nodes
-- Whitespace-only strings are preserved unless `normalizeWhitespace` option is enabled
+- Whitespace-only strings are preserved
 
 ## 27. CDATA and Text Content
 
@@ -1599,7 +1599,6 @@ The CDATA markers are not preserved—content becomes a regular TOON string.
 When decoding to XML, implementations SHOULD emit CDATA sections for content that:
 - Contains `<`, `>`, or `&` characters
 - Contains newlines or is multiline
-- Exceeds a configurable length threshold (see `cdataThreshold` option)
 
 TOON input:
 ```toon
@@ -1638,11 +1637,7 @@ When decoding TOON to XML, implementations MUST escape characters as needed for 
 
 ### 27.4 Whitespace Normalization
 
-By default, all whitespace is preserved in text content. The `normalizeWhitespace` encoder option enables whitespace normalization:
-- Collapse runs of whitespace to single spaces
-- Trim leading/trailing whitespace from text nodes
-
-This option is informative and implementation-defined.
+All whitespace is preserved in text content. Implementations MUST NOT normalize whitespace (collapse runs or trim leading/trailing whitespace).
 
 ## 28. XML Encoding and Decoding
 
@@ -1684,7 +1679,7 @@ When decoding TOON to XML:
 
 3. **Namespace Declarations**: For each `xmlns` or `xmlns:prefix` key:
    - Emit as `xmlns` or `xmlns:prefix` attribute on the element
-   - Validate that all used prefixes are declared
+   - MUST validate that all used prefixes are declared
 
 4. **Attributes**: Keys with primitive values that match common attribute patterns (e.g., `id`, `class`, `name`, `type`, `href`, `src`, `xmlns`, `xmlns:*`, `xml:*`) are emitted as XML attributes. See §24.2 for details.
 
@@ -1693,19 +1688,17 @@ When decoding TOON to XML:
    - Array with strings and objects: emit as mixed content (text and elements interleaved)
    - Content with `<`, `>`, `&`, or newlines SHOULD use CDATA sections
 
-6. **Entity Escaping**: For non-CDATA text, escape `<`, `>`, `&`, `'`, `"` as appropriate.
+6. **Entity Escaping**: For non-CDATA text, implementations MUST escape `<`, `>`, `&`, `'`, `"` as appropriate.
 
 ### 28.3 Encoding Options
 
 When targeting XML output:
 - `preserveNamespaces` (boolean, default: true): Preserve namespace prefixes
-- `normalizeWhitespace` (boolean, default: false): Normalize whitespace in text
-- `cdataThreshold` (number, default: 0): Character count threshold for CDATA. Content exceeding this length or containing special characters (`<`, `>`, `&`, newlines) is emitted as CDATA. Set to -1 to always use entity escaping instead of CDATA.
 
 ### 28.4 Decoding Options
 
 When decoding from XML:
-- `coerceAttributeTypes` (boolean, default: false): Coerce numeric/boolean attribute values
+- Attribute values with numeric or boolean types are always coerced to strings (this is the default behavior and not configurable)
 
 ### 28.5 Validation
 

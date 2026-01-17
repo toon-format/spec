@@ -5,6 +5,56 @@ All notable changes to the TOON specification will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0] - 2026-01-15
+
+### Added
+
+- **XML Construct Support** (§22-28): TOON now natively supports XML constructs in a unified syntax:
+  - **Namespaces** (§23): Declare namespaces using `xmlns` and `xmlns:prefix` keys, consistent with XML namespace declaration syntax
+  - **Attributes** (§24): Represent XML attributes as nested key-value pairs within element objects
+  - **Repeated Elements** (§25): Use standard array syntax `key[N]:` for repeated XML elements, with support for interleaved elements using list form
+  - **Mixed Content** (§26): Represent mixed content (text and elements interleaved) using arrays where strings are text nodes and objects are elements
+  - **CDATA and Text Content** (§27): Handle CDATA sections, entity references, and whitespace normalization
+  - **XML Encoding/Decoding** (§28): Complete rules for converting between XML and TOON formats
+- **Extended Syntax Features** (§4.1):
+  - Namespace declarations via `xmlns` and `xmlns:prefix` keys
+  - Empty field names in tabular headers to represent text content (§26.4)
+  - Array-based syntax for elements with both attributes and text content (§24.3)
+- **XML-Related Terms** (§1.10): Added terminology for namespace prefixes, qualified names (QName), attributes, and mixed content
+- **XML Data Model** (§2.2): Extended data model to support XML infoset constructs
+- **XML Normalization** (§3.1): Rules for normalizing XML documents to TOON format
+- **Extended Syntax Errors** (§14.6): Strict-mode validation for undefined namespace prefixes
+- **XML Interoperability** (§17.4): Mapping guide for XML to TOON conversion
+- **XML Examples** (Appendix H): Comprehensive examples demonstrating XML constructs in TOON
+- **Encoder Options** (§13, §28.3):
+  - `preserveNamespaces` (boolean, default: true): Preserve namespace prefixes when encoding
+- **Decoder Options** (§28.4):
+  - Attribute values are always coerced to strings when decoding to XML (numeric and boolean values converted to string representations)
+- **Grammar Extensions** (§6): ABNF grammar updated to support namespace prefixes in keys (`ns-prefix` production)
+- **Key Encoding** (§7.3): Keys may include namespace prefixes following pattern `^([A-Za-z_][A-Za-z0-9_]*:)?[A-Za-z_][A-Za-z0-9_.]*$`
+- **Media Type Registration** (§18.1): Added optional `mode` parameter (`json` or `xml`) to `text/toon` media type (auto-detection applies if absent)
+
+### Changed
+
+- **Abstract** (§Abstract): Updated to reflect unified JSON and XML support
+- **Purpose and Scope** (§Introduction): Expanded to include XML document serialization use cases
+- **Data Model** (§2): Restructured into JSON Data Model (§2.1) and XML Data Model (§2.2)
+- **Type Terms** (§1.6): Updated object and array definitions to support XML constructs
+- **Conformance Checklists** (§13): Added XML-related requirements for encoders, decoders, and validators
+- **Strict Mode Errors** (§14): Added extended syntax error validation (undefined namespace prefixes)
+- **IANA Considerations** (§18): Updated media type registration to include XML mode
+
+### Removed
+
+- None (backward compatible with v3.0)
+
+### Notes
+
+- XML comments, processing instructions, and DOCTYPE declarations are not supported and are dropped during XML-to-TOON encoding
+- The default namespace applies to unprefixed element names but NOT to unprefixed attribute names (per XML Namespaces specification)
+- Built-in namespaces (`xml` and `xmlns`) are predefined and MUST NOT be redeclared
+- All XML support is additive and does not break existing JSON functionality
+
 ## [3.0] - 2025-11-24
 
 ### Breaking Changes
