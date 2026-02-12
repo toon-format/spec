@@ -1,0 +1,17 @@
+{
+  "status": "success",
+  "pagination": {
+    "page": 1,
+    "perPage": 10,
+    "total": 42,
+    "hasNext": true
+  },
+  "users": [
+    {"id": 1, "name": "Alice Johnson", "email": "alice@example.com", "role": "admin", "active": true},
+    {"id": 2, "name": "Bob Smith", "email": "bob@example.com", "role": "user", "active": true},
+    {"id": 3, "name": "Carol White", "email": "carol@example.com", "role": "user", "active": false},
+    {"id": 4, "name": "Dave Brown", "email": "dave@example.com", "role": "moderator", "active": true},
+    {"id": 5, "name": "Eve Davis", "email": "eve@example.com", "role": "user", "active": true}
+  ],
+  "filters": ["active", "role", "created_date"]
+}
