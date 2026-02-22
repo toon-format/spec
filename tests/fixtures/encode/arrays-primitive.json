@@ -36,6 +36,22 @@
       "specSection": "9.1"
     },
     {
+      "name": "encodes empty string keys for inline arrays",
+      "input": {
+        "": [1, 2, 3]
+      },
+      "expected": "\"\"[3]: 1,2,3",
+      "specSection": "9.1"
+    },
+    {
+      "name": "encodes empty string keys for empty arrays",
+      "input": {
+        "": []
+      },
+      "expected": "\"\"[0]:",
+      "specSection": "9.1"
+    },
+    {
       "name": "encodes empty string in single-item array",
       "input": {
         "items": [""]

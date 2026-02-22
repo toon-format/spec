@@ -57,6 +57,17 @@
       },
       "expected": "items[2]{\"order:id\",\"full name\"}:\n  1,Ada\n  2,Bob",
       "specSection": "9.3"
+    },
+    {
+      "name": "encodes tabular arrays with empty string keys",
+      "input": {
+        "": [
+          { "id": 1, "name": "Ada" },
+          { "id": 2, "name": "Bob" }
+        ]
+      },
+      "expected": "\"\"[2]{id,name}:\n  1,Ada\n  2,Bob",
+      "specSection": "9.3"
     }
   ]
 }

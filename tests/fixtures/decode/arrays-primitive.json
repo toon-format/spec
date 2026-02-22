@@ -92,6 +92,14 @@
       "specSection": "9.1"
     },
     {
+      "name": "parses quoted empty string key with inline array",
+      "input": "\"\"[3]: 1,2,3",
+      "expected": {
+        "": [1, 2, 3]
+      },
+      "specSection": "9.1"
+    },
+    {
       "name": "parses quoted key containing brackets with inline array",
       "input": "\"key[test]\"[3]: 1,2,3",
       "expected": {
@@ -104,6 +112,14 @@
       "input": "\"x-custom\"[0]:",
       "expected": {
         "x-custom": []
+      },
+      "specSection": "9.1"
+    },
+    {
+      "name": "parses quoted empty string key with empty array",
+      "input": "\"\"[0]:",
+      "expected": {
+        "": []
       },
       "specSection": "9.1"
     }

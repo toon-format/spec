@@ -59,6 +59,17 @@
       "specSection": "9.3"
     },
     {
+      "name": "parses quoted empty string key with tabular array format",
+      "input": "\"\"[2]{id,name}:\n  1,Ada\n  2,Bob",
+      "expected": {
+        "": [
+          { "id": 1, "name": "Ada" },
+          { "id": 2, "name": "Bob" }
+        ]
+      },
+      "specSection": "9.3"
+    },
+    {
       "name": "treats unquoted colon as terminator for tabular rows and start of key-value pair",
       "input": "items[2]{id,name}:\n  1,Alice\n  2,Bob\ncount: 2",
       "expected": {
