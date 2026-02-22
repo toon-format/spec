@@ -2,7 +2,7 @@
   "name": "@toon-format/spec",
   "type": "module",
   "version": "3.0.1",
-  "packageManager": "pnpm@10.19.0",
+  "packageManager": "pnpm@10.30.1",
   "description": "Official specification for Token-Oriented Object Notation (TOON)",
   "author": "Johann Schopplich <hello@johannschopplich.com>",
   "license": "MIT",
@@ -34,9 +34,8 @@
     "release": "bumpp"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^6.2.0",
-    "bumpp": "^10.3.1",
-    "eslint": "^9.39.0",
-    "vitest": "^4.0.6"
+    "@antfu/eslint-config": "^7.4.3",
+    "bumpp": "^10.4.1",
+    "eslint": "^10.0.1"
   }
 }
