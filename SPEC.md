@@ -349,6 +349,8 @@ Note: The ABNF grammar above cannot enforce that the delimiter used in the field
 
 Note: The grammar above specifies header syntax. TOON's grammar is deliberately designed to prioritize human readability and token efficiency over strict LR(1) parseability. This requires some context-sensitive parsing (particularly for tabular row disambiguation in Section 9.3), which is a deliberate design tradeoff. Reference implementations demonstrate that deterministic parsing is achievable with modest lookahead.
 
+Between the closing bracket `]` of the bracket segment and the opening brace `{` of a fields segment (or the colon `:` if no fields segment is present), only whitespace MAY appear. If a decoder encounters non-whitespace content in these positions (e.g., additional bracket expressions like `[bar]`), the line MUST NOT be interpreted as an array header. Decoders SHOULD fall through to key-value parsing (Section 8), treating the entire pre-colon content as a literal key.
+
 Decoding requirements:
 - The bracket segment MUST parse as a non-negative integer length N.
 - If a trailing tab or pipe appears inside the brackets, it selects the active delimiter; otherwise comma is active.
@@ -729,6 +731,7 @@ When strict mode is enabled (default), decoders MUST error on the following cond
 - Missing colon in key context.
 - Invalid escape sequences or unterminated strings in quoted tokens.
 - Delimiter mismatch (detected via width/count checks and header scope).
+- Non-whitespace content between a valid bracket segment and the colon (or fields segment). Such lines MUST NOT be parsed as array headers. Decoders MUST NOT silently discard content in these positions.
 
 ### 14.3 Indentation Errors
 

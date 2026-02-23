@@ -119,6 +119,33 @@
       "specSection": "8"
     },
     {
+      "name": "treats extra brackets after valid array segment as literal key",
+      "input": "foo[1][bar]: 10",
+      "expected": {
+        "foo[1][bar]": 10
+      },
+      "specSection": "6",
+      "note": "Non-whitespace [bar] between ] and : prevents array header interpretation"
+    },
+    {
+      "name": "treats non-integer bracket content as literal key",
+      "input": "foo[bar][1]: 20",
+      "expected": {
+        "foo[bar][1]": 20
+      },
+      "specSection": "6",
+      "note": "[bar] fails integer parsing; line is not an array header"
+    },
+    {
+      "name": "treats text between bracket segment and colon as literal key",
+      "input": "foo[2]extra: a,b",
+      "expected": {
+        "foo[2]extra": "a,b"
+      },
+      "specSection": "6",
+      "note": "Non-whitespace content between ] and : prevents array header interpretation"
+    },
+    {
       "name": "parses quoted key with braces",
       "input": "\"{key}\": 5",
       "expected": {
