@@ -1,0 +1,6 @@
+{
+  "project": "TOON",
+  "version": "3.0",
+  "tags": ["serialization", "llm", "token-efficient", "json-alternative"],
+  "scores": [98, 85, 92, 77, 100]
+}
