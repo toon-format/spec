@@ -1,0 +1,13 @@
+status: success
+pagination:
+  page: 1
+  perPage: 10
+  total: 42
+  hasNext: true
+users[5]{id,name,email,role,active}:
+  1,Alice Johnson,alice@example.com,admin,true
+  2,Bob Smith,bob@example.com,user,true
+  3,Carol White,carol@example.com,user,false
+  4,Dave Brown,dave@example.com,moderator,true
+  5,Eve Davis,eve@example.com,user,true
+filters[3]: active,role,created_date
