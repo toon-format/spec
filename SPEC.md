@@ -427,9 +427,9 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
 ### 9.1 Primitive Arrays (Inline)
 
 - Encoding:
-  - Non-empty arrays: key[N<delim?>]: v1<delim>v2<delim>… where each vi is encoded as a primitive (Section 7) with delimiter-aware quoting.
-  - Empty arrays: key[0<delim?>]: (no values following).
-  - Root arrays: [N<delim?>]: v1<delim>…
+  - Non-empty arrays: `key[N<delim?>]: v1<delim>v2<delim>…` where each vi is encoded as a primitive (Section 7) with delimiter-aware quoting.
+  - Empty arrays: `key[0<delim?>]:` (no values following).
+  - Root arrays: `[N<delim?>]: v1<delim>…`
 - Decoding:
   - Split using the active delimiter declared by the header; non-active delimiters MUST NOT split values.
   - When splitting inline arrays, empty tokens (including those surrounded by whitespace) decode to the empty string.
@@ -438,12 +438,12 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
 ### 9.2 Arrays of Arrays (Primitives Only) — Expanded List
 
 - Encoding:
-  - Parent header: key[N<delim?>]: on its own line.
+  - Parent header: `key[N<delim?>]:` on its own line.
   - Each inner primitive array is a list item:
-    - - [M<delim?>]: v1<delim>v2<delim>…
-    - Empty inner arrays: - [0<delim?>]:
+    - `- [M<delim?>]: v1<delim>v2<delim>…`
+    - Empty inner arrays: `- [0<delim?>]:`
 - Decoding:
-  - Items appear at depth +1, each starting with "- " and an inner array header "[M<delim?>]: …".
+  - Items appear at depth +1, each starting with "- " and an inner array header `[M<delim?>]: …`.
   - Inner arrays are split using their own active delimiter; in strict mode, counts MUST match M.
   - In strict mode, the number of list items MUST equal outer N.
 
@@ -455,10 +455,10 @@ Tabular detection (encoding; MUST hold for all elements):
 - All values across these keys are primitives (no nested arrays/objects).
 
 When satisfied (encoding):
-- Header: key[N<delim?>]{f1<delim>f2<delim>…}: where field order is the first object's key encounter order.
+- Header: `key[N<delim?>]{f1<delim>f2<delim>…:` where field order is the first object's key encounter order.
 - Field names encoded per Section 7.3.
 - Rows: one line per object at depth +1 under the header; values are encoded primitives (Section 7) and joined by the active delimiter.
-- Root tabular arrays omit the key: [N<delim?>]{…}: followed by rows.
+- Root tabular arrays omit the key: `[N<delim?>]{…}:` followed by rows.
 
 Decoding:
 - A tabular header declares the active delimiter and ordered field list.
@@ -478,19 +478,19 @@ Decoding:
 ### 9.4 Mixed / Non-Uniform Arrays — Expanded List
 
 When tabular requirements are not met (encoding):
-- Header: key[N<delim?>]:
+- Header: `key[N<delim?>]:`
 - Each element is rendered as a list item at depth +1 under the header:
-  - Primitive: - <primitive>
-  - Primitive array: - [M<delim?>]: v1<delim>…
+  - Primitive: `- <primitive>`
+  - Primitive array: `- [M<delim?>]: v1<delim>…`
   - Object: formatted per Section 10 (objects as list items).
-  - Complex arrays: - key'[M<delim?>]: followed by nested items as appropriate.
+  - Complex arrays: `- key'[M<delim?>]:` followed by nested items as appropriate.
 
 Decoding:
 - Header declares list length N and the active delimiter for any nested inline arrays.
 - Each list item starts with "- " at depth +1 and is parsed as:
   - Primitive (no colon and no array header),
-  - Inline primitive array (- [M<delim?>]: …),
-  - Object with first field on the hyphen line (- key: … or - key[N…]{…}: …),
+  - Inline primitive array (`- [M<delim?>]: …`),
+  - Object with first field on the hyphen line (`- key: …` or `- key[…]{…}: …`),
   - Or nested arrays via nested headers.
 - In strict mode, the number of list items MUST equal N.
 
@@ -501,13 +501,13 @@ For an object appearing as a list item:
 - Empty object list item: a single "-" at the list-item indentation level.
 - Encoding (normative):
   - When a list-item object has a tabular array (Section 9.3) as its first field in encounter order, encoders MUST emit the tabular header on the hyphen line:
-    - The hyphen and tabular header appear on the same line at the list-item depth: - key[N<delim?>]{fields}:
+    - The hyphen and tabular header appear on the same line at the list-item depth: `- key[N<delim?>]{fields}:`
     - Tabular rows MUST appear at depth +2 (relative to the hyphen line).
     - All other fields of the same object MUST appear at depth +1 under the hyphen line, in encounter order, using normal object field rules (Section 8).
     - Encoders MUST NOT emit tabular rows at depth +1 or sibling fields at the same depth as rows when the first field is a tabular array.
   - For all other cases (first field is not a tabular array), encoders SHOULD place the first field on the hyphen line. A bare hyphen on its own line is used only for empty list-item objects.
 - Decoding (normative):
-  - When a decoder encounters a list-item line of the form - key[N<delim?>]{fields}: at depth d, it MUST treat this as the start of a tabular array field named key in the list-item object.
+  - When a decoder encounters a list-item line of the form `- key[N<delim?>]{fields}:` at depth d, it MUST treat this as the start of a tabular array field named key in the list-item object.
   - Lines at depth d+2 that conform to tabular row syntax (Section 9.3) are rows of that tabular array.
   - Lines at depth d+1 are additional fields of the same list-item object; the presence of a line at depth d+1 after rows terminates the rows.
   - All other object-as-list-item patterns (bare hyphen, first field on hyphen line for non-tabular values) are decoded according to the general rules in Section 8 and Section 9.
@@ -516,7 +516,7 @@ For an object appearing as a list item:
 
 - Supported delimiters:
   - Comma (default): header omits the delimiter symbol.
-  - Tab: header includes HTAB inside brackets and braces (e.g., [N<TAB>], {a<TAB>b}); rows/inline arrays use tabs.
+  - Tab: header includes HTAB inside brackets and braces (e.g., `[N<TAB>]`, `{a<TAB>b}`); rows/inline arrays use tabs.
   - Pipe: header includes "|" inside brackets and braces; rows/inline arrays use "|".
 
 ### 11.1 Encoding Rules (Normative for Encoders)
@@ -1396,9 +1396,9 @@ Non-Serializable Types:
 
 Implementations in any language SHOULD:
 1. Document their normalization policy clearly, especially for:
-   - Large or arbitrary-precision numbers (lossless string vs. approximate number)
-   - Date/time representations (ISO 8601 format details)
-   - Collection type mappings (order preservation for sets)
+  - Large or arbitrary-precision numbers (lossless string vs. approximate number)
+  - Date/time representations (ISO 8601 format details)
+  - Collection type mappings (order preservation for sets)
 2. Provide configuration options where multiple strategies are reasonable (e.g., lossless vs. approximate numeric encoding).
 3. Ensure that normalization is deterministic: encoding the same host value twice MUST produce identical TOON output.
 
