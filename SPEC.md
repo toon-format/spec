@@ -455,7 +455,7 @@ Tabular detection (encoding; MUST hold for all elements):
 - All values across these keys are primitives (no nested arrays/objects).
 
 When satisfied (encoding):
-- Header: `key[N<delim?>]{f1<delim>f2<delim>…:}` where field order is the first object's key encounter order.
+- Header: `key[N<delim?>]{f1<delim>f2<delim>…}:` where field order is the first object's key encounter order.
 - Field names encoded per Section 7.3.
 - Rows: one line per object at depth +1 under the header; values are encoded primitives (Section 7) and joined by the active delimiter.
 - Root tabular arrays omit the key: `[N<delim?>]{…}:` followed by rows.
