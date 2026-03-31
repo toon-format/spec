@@ -383,7 +383,7 @@ A string value MUST be quoted if any of the following is true:
 - It is numeric-like:
   - Matches /^-?\d+(?:\.\d+)?(?:e[+-]?\d+)?$/i (e.g., "42", "-3.14", "1e-6").
   - Or matches /^0\d+$/ (leading-zero decimals such as "05").
-- It contains a colon (:), double quote ("), or backslash (\).
+- It contains a colon (:), double quote ("), or backslash (\\).
 - It contains brackets or braces ([, ], {, }).
 - It contains control characters: newline, carriage return, or tab.
 - It contains the relevant delimiter (see §11 for complete delimiter rules):
