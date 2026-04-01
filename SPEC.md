@@ -490,7 +490,7 @@ Decoding:
 - Each list item starts with "- " at depth +1 and is parsed as:
   - Primitive (no colon and no array header),
   - Inline primitive array (`- [M<delim?>]: …`),
-  - Object with first field on the hyphen line (`- key: …` or `- key[…]{…}: …`),
+  - Object with first field on the hyphen line (`- key: …` or `- key[N…]{…}: …`),
   - Or nested arrays via nested headers.
 - In strict mode, the number of list items MUST equal N.
 
