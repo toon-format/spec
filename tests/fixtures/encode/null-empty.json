@@ -1,0 +1,74 @@
+{
+  "version": "4.0",
+  "category": "encode",
+  "description": "ignoreNullOrEmpty option - suppress null and empty-string fields from encoded output",
+  "tests": [
+    {
+      "name": "ignoreNullOrEmpty=true: null object field omitted",
+      "input": { "id": 1, "name": null, "active": true },
+      "expected": "id: 1\nactive: true",
+      "options": { "ignoreNullOrEmpty": true },
+      "specSection": "13.6"
+    },
+    {
+      "name": "ignoreNullOrEmpty=true: empty-string object field omitted",
+      "input": { "id": 1, "name": "", "active": true },
+      "expected": "id: 1\nactive: true",
+      "options": { "ignoreNullOrEmpty": true },
+      "specSection": "13.6"
+    },
+    {
+      "name": "ignoreNullOrEmpty=false: null field retained",
+      "input": { "id": 1, "name": null, "active": true },
+      "expected": "id: 1\nname: null\nactive: true",
+      "options": { "ignoreNullOrEmpty": false },
+      "specSection": "13.6"
+    },
+    {
+      "name": "ignoreNullOrEmpty=false: empty-string field retained",
+      "input": { "id": 1, "name": "", "active": true },
+      "expected": "id: 1\nname: \"\"\nactive: true",
+      "options": { "ignoreNullOrEmpty": false },
+      "specSection": "13.6"
+    },
+    {
+      "name": "ignoreNullOrEmpty=true: all fields null results in empty output",
+      "input": { "a": null, "b": null },
+      "expected": "",
+      "options": { "ignoreNullOrEmpty": true },
+      "specSection": "13.6"
+    },
+    {
+      "name": "ignoreNullOrEmpty=true: columnar column suppressed when all rows null",
+      "input": [
+        { "id": 1, "name": "Alice", "notes": null },
+        { "id": 2, "name": "Bob", "notes": null }
+      ],
+      "expected": "[2]{id,name}:\n  1,Alice\n  2,Bob",
+      "options": { "objectArrayLayout": "columnar", "ignoreNullOrEmpty": true },
+      "specSection": "13.6",
+      "note": "notes column is all-null so it is suppressed from the header"
+    },
+    {
+      "name": "ignoreNullOrEmpty=true: columnar column retained when at least one row is non-null",
+      "input": [
+        { "id": 1, "name": "Alice", "notes": null },
+        { "id": 2, "name": "Bob", "notes": "urgent" }
+      ],
+      "expected": "[2]{id,name,notes}:\n  1,Alice,null\n  2,Bob,urgent",
+      "options": { "objectArrayLayout": "columnar", "ignoreNullOrEmpty": true },
+      "specSection": "13.6",
+      "note": "notes is null in row 1 but non-null in row 2, so the column is retained in full"
+    },
+    {
+      "name": "ignoreNullOrEmpty=true: columnar column suppressed when all rows empty string",
+      "input": [
+        { "id": 1, "name": "Alice", "notes": "" },
+        { "id": 2, "name": "Bob", "notes": "" }
+      ],
+      "expected": "[2]{id,name}:\n  1,Alice\n  2,Bob",
+      "options": { "objectArrayLayout": "columnar", "ignoreNullOrEmpty": true },
+      "specSection": "13.6"
+    }
+  ]
+}

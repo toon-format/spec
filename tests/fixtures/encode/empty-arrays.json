@@ -1,0 +1,63 @@
+{
+  "version": "4.0",
+  "category": "encode",
+  "description": "excludeEmptyArrays option - suppress zero-length array fields from encoded output",
+  "tests": [
+    {
+      "name": "excludeEmptyArrays=true: empty array field omitted",
+      "input": { "id": 1, "name": "Alice", "tags": [] },
+      "expected": "id: 1\nname: Alice",
+      "options": { "excludeEmptyArrays": true },
+      "specSection": "13.7"
+    },
+    {
+      "name": "excludeEmptyArrays=false: empty array field emitted as [0]:",
+      "input": { "id": 1, "name": "Alice", "tags": [] },
+      "expected": "id: 1\nname: Alice\ntags[0]:",
+      "options": { "excludeEmptyArrays": false },
+      "specSection": "13.7"
+    },
+    {
+      "name": "excludeEmptyArrays=true: populated array retained",
+      "input": { "id": 1, "tags": ["a", "b"] },
+      "expected": "id: 1\ntags[2]: a,b",
+      "options": { "excludeEmptyArrays": true },
+      "specSection": "13.7"
+    },
+    {
+      "name": "excludeEmptyArrays=true: populated array retained, empty sibling omitted",
+      "input": { "id": 1, "tags": ["a"], "extras": [] },
+      "expected": "id: 1\ntags[1]: a",
+      "options": { "excludeEmptyArrays": true },
+      "specSection": "13.7"
+    },
+    {
+      "name": "excludeEmptyArrays=false: all arrays retained including empty",
+      "input": { "id": 1, "tags": ["a"], "extras": [] },
+      "expected": "id: 1\ntags[1]: a\nextras[0]:",
+      "options": { "excludeEmptyArrays": false },
+      "specSection": "13.7"
+    },
+    {
+      "name": "excludeEmptyArrays=true: empty array in columnar spill row omitted",
+      "input": [
+        { "id": 1, "name": "Alice", "tags": [] },
+        { "id": 2, "name": "Bob", "tags": ["x"] }
+      ],
+      "expected": "[2]{id,name}:\n  1,Alice\n  2,Bob\n    tags[1]: x",
+      "options": { "objectArrayLayout": "columnar", "excludeEmptyArrays": true },
+      "specSection": "13.7",
+      "note": "Row 1's empty tags array is omitted from its spill block; row 2's non-empty tags is emitted"
+    },
+    {
+      "name": "excludeEmptyArrays=false: empty array in columnar spill row emitted",
+      "input": [
+        { "id": 1, "name": "Alice", "tags": [] },
+        { "id": 2, "name": "Bob", "tags": ["x"] }
+      ],
+      "expected": "[2]{id,name}:\n  1,Alice\n    tags[0]:\n  2,Bob\n    tags[1]: x",
+      "options": { "objectArrayLayout": "columnar", "excludeEmptyArrays": false },
+      "specSection": "13.7"
+    }
+  ]
+}
