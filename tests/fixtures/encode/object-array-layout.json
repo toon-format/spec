@@ -1,0 +1,103 @@
+{
+  "version": "4.0",
+  "category": "encode",
+  "description": "objectArrayLayout option - mixed columnar encoding for object arrays with primitive and complex fields",
+  "tests": [
+    {
+      "name": "columnar: all-primitive objects produce same output as tabular",
+      "input": [
+        { "id": 1, "name": "Alice" },
+        { "id": 2, "name": "Bob" }
+      ],
+      "expected": "[2]{id,name}:\n  1,Alice\n  2,Bob",
+      "options": { "objectArrayLayout": "columnar" },
+      "specSection": "9.3.2",
+      "note": "When all fields are primitive, columnar and tabular produce identical output"
+    },
+    {
+      "name": "columnar: primitive and object fields produce spill rows",
+      "input": [
+        { "id": 1, "name": "Alice", "address": { "city": "NY" } },
+        { "id": 2, "name": "Bob", "address": { "city": "LA" } }
+      ],
+      "expected": "[2]{id,name}:\n  1,Alice\n    address:\n      city: NY\n  2,Bob\n    address:\n      city: LA",
+      "options": { "objectArrayLayout": "columnar" },
+      "specSection": "9.3.2"
+    },
+    {
+      "name": "columnar: primitive and array fields produce spill rows",
+      "input": [
+        { "id": 1, "score": 9.5, "tags": ["a", "b"] },
+        { "id": 2, "score": 7.0, "tags": ["c"] }
+      ],
+      "expected": "[2]{id,score}:\n  1,9.5\n    tags[2]: a,b\n  2,7.0\n    tags[1]: c",
+      "options": { "objectArrayLayout": "columnar" },
+      "specSection": "9.3.2"
+    },
+    {
+      "name": "columnar: mixed primitive, object, and array spill fields",
+      "input": [
+        { "id": 1, "name": "Alice", "score": 9.5, "tags": ["a", "b"], "address": { "city": "NY" } },
+        { "id": 2, "name": "Bob", "score": 7.0, "tags": ["c"], "address": { "city": "LA" } }
+      ],
+      "expected": "[2]{id,name,score}:\n  1,Alice,9.5\n    tags[2]: a,b\n    address:\n      city: NY\n  2,Bob,7.0\n    tags[1]: c\n    address:\n      city: LA",
+      "options": { "objectArrayLayout": "columnar" },
+      "specSection": "9.3.2"
+    },
+    {
+      "name": "columnar: row with no spill fields has no spill lines",
+      "input": [
+        { "id": 1, "name": "Alice" },
+        { "id": 2, "name": "Bob", "address": { "city": "LA" } }
+      ],
+      "expected": "[2]{id,name}:\n  1,Alice\n  2,Bob\n    address:\n      city: LA",
+      "options": { "objectArrayLayout": "columnar" },
+      "specSection": "9.3.2",
+      "note": "Row 1 has no complex fields and emits no spill lines; row 2 has address and emits a spill block"
+    },
+    {
+      "name": "columnar: nested columnar array as spill field",
+      "input": [
+        { "id": 1, "name": "Alice", "scores": [{ "type": "math", "value": 95 }, { "type": "science", "value": 88 }] },
+        { "id": 2, "name": "Bob", "scores": [{ "type": "math", "value": 72 }] }
+      ],
+      "expected": "[2]{id,name}:\n  1,Alice\n    scores[2]{type,value}:\n      math,95\n      science,88\n  2,Bob\n    scores[1]{type,value}:\n      math,72",
+      "options": { "objectArrayLayout": "columnar" },
+      "specSection": "9.3.2",
+      "note": "Nested object arrays in spill blocks use the columnar form recursively when their elements are uniform primitives"
+    },
+    {
+      "name": "auto: non-uniform objects fall back to expanded list",
+      "input": [
+        { "id": 1, "name": "Alice" },
+        { "id": 2, "name": "Bob", "extra": true }
+      ],
+      "expected": "[2]:\n  - id: 1\n    name: Alice\n  - id: 2\n    name: Bob\n    extra: true",
+      "options": { "objectArrayLayout": "auto" },
+      "specSection": "9.3, 9.4",
+      "note": "auto mode: non-uniform keys prevent tabular form, fall back to expanded list"
+    },
+    {
+      "name": "auto: mixed-value objects fall back to expanded list",
+      "input": [
+        { "id": 1, "name": "Alice", "address": { "city": "NY" } },
+        { "id": 2, "name": "Bob", "address": { "city": "LA" } }
+      ],
+      "expected": "[2]:\n  - id: 1\n    name: Alice\n    address:\n      city: NY\n  - id: 2\n    name: Bob\n    address:\n      city: LA",
+      "options": { "objectArrayLayout": "auto" },
+      "specSection": "9.3, 9.4",
+      "note": "auto mode: complex fields prevent tabular detection, fall back to expanded list"
+    },
+    {
+      "name": "columnar: root array (no key) with spill rows",
+      "input": [
+        { "id": 1, "value": { "x": 10 } },
+        { "id": 2, "value": { "x": 20 } }
+      ],
+      "expected": "[2]{id}:\n  1\n    value:\n      x: 10\n  2\n    value:\n      x: 20",
+      "options": { "objectArrayLayout": "columnar" },
+      "specSection": "9.3.2",
+      "note": "Root columnar array omits the key, uses [N]{fields}: header form"
+    }
+  ]
+}

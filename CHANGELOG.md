@@ -5,6 +5,28 @@ All notable changes to the TOON specification will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] — v4.0 RFC Proposal
+
+### Breaking Changes
+
+- **Mixed columnar array encoding (§9.3.2):** Introduced a new encoding form for object arrays that contain both primitive and complex fields. A primitive columnar header is emitted once, and complex fields follow each row as indented spill lines at depth +2. Conforming v4.0 decoders MUST detect and decode both tabular (§9.3) and columnar (§9.3.2) forms. v3.x strict-mode decoders will error on columnar-encoded output.
+
+### Added
+
+- **`objectArrayLayout` encoder option (§13.5):** Controls how object arrays are encoded.
+  - `"auto"` (default): preserves v3.x tabular detection — tabular only when all fields are primitive and uniform.
+  - `"columnar"`: activates mixed columnar encoding; primitive fields go in the header, complex fields become spill lines.
+- **`ignoreNullOrEmpty` encoder option (§13.6):** When `true` (default), object fields whose value is `null` or `""` are omitted from the output. In columnar arrays, columns where every row's value is `null` or `""` are suppressed entirely from the header and rows. This option is lossy.
+- **`excludeEmptyArrays` encoder option (§13.7):** When `true` (default), array-valued fields of length 0 are omitted from the output. This option is lossy.
+- **Binary/byte array guidance (Appendix G.6):** Non-normative guidance for typed implementations encoding binary data — Base64 string (recommended default) or numeric array form; both are valid TOON.
+- Columnar row count and width mismatches added to strict-mode error checklist (§14.1).
+
+### Migration from v3.x
+
+- Decoders that only support v3.x will error (strict mode) or silently drop complex fields (non-strict) when they encounter columnar output. Implement §9.3.2 spill-line detection to fully support v4.0 documents.
+- Encoder defaults for `ignoreNullOrEmpty` and `excludeEmptyArrays` are `true`; existing round-trip tests that relied on null or empty-array fields being preserved MUST set these options to `false`.
+- The `objectArrayLayout = "auto"` default preserves v3.x encoding behavior; no changes required for implementations that do not use the new columnar mode.
+
 ## [3.0] - 2025-11-24
 
 ### Breaking Changes

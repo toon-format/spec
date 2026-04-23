@@ -2,11 +2,11 @@
 
 ## Token-Oriented Object Notation
 
-**Version:** 3.0
+**Version:** 4.0 (Working Draft)
 
-**Date:** 2025-11-24
+**Date:** TBD
 
-**Status:** Working Draft
+**Status:** Working Draft — RFC Proposal
 
 **Author:** Johann Schopplich ([@johannschopplich](https://github.com/johannschopplich))
 
@@ -20,9 +20,9 @@ Token-Oriented Object Notation (TOON) is a line-oriented, indentation-based text
 
 ## Status of This Document
 
-This document is a Working Draft v3.0 and may be updated, replaced, or obsoleted. Implementers should monitor the canonical repository at https://github.com/toon-format/spec for changes.
+This document is a Working Draft v4.0 RFC Proposal and may be updated, replaced, or obsoleted. Implementers should monitor the canonical repository at https://github.com/toon-format/spec for changes.
 
-This specification is stable for implementation but not yet finalized. Breaking changes may occur in future major versions.
+This draft proposes breaking changes to v3.x; see Appendix D and §14 for impact details. It is not finalized and is subject to revision during the RFC review period.
 
 ## Normative References
 
@@ -66,11 +66,11 @@ https://www.iso.org/standard/70907.html
 6. [Header Syntax (Normative)](#6-header-syntax-normative)
 7. [Strings and Keys](#7-strings-and-keys)
 8. [Objects](#8-objects)
-9. [Arrays](#9-arrays)
+9. [Arrays](#9-arrays) — including [§9.3.2 Mixed Columnar Form](#932-arrays-of-objects--mixed-columnar-form)
 10. [Objects as List Items](#10-objects-as-list-items)
 11. [Delimiters](#11-delimiters)
 12. [Indentation and Whitespace](#12-indentation-and-whitespace)
-13. [Conformance and Options](#13-conformance-and-options)
+13. [Conformance and Options](#13-conformance-and-options) — including [§13.5 objectArrayLayout](#135-object-array-layout), [§13.6 ignoreNullOrEmpty](#136-ignore-null-or-empty), [§13.7 excludeEmptyArrays](#137-exclude-empty-arrays)
 14. [Strict Mode Errors and Diagnostics (Authoritative Checklist)](#14-strict-mode-errors-and-diagnostics-authoritative-checklist)
 15. [Security Considerations](#15-security-considerations)
 16. [Internationalization](#16-internationalization)
@@ -475,6 +475,64 @@ Decoding:
   - If a line has an unquoted colon but no unquoted active delimiter → key-value line (end of rows).
 - When a tabular array appears as the first field of a list-item object, indentation is governed by Section 10.
 
+### 9.3.2 Arrays of Objects — Mixed Columnar Form
+
+The mixed columnar form encodes object arrays that contain both primitive-valued and complex-valued fields (nested objects or nested arrays). It is activated by the `objectArrayLayout = "columnar"` encoder option (§13.5) and extends the tabular form (§9.3) to accommodate per-row complexity.
+
+**Applicability (encoding):** Select this form when:
+- Every element of the array is an object.
+- At least one field is primitive-valued (per §3) across all elements.
+- At least one element has at least one complex-valued field (a nested object or array).
+
+If all fields are primitive and all objects share identical keys, the standard tabular form (§9.3) is equivalent and SHOULD be preferred. If no primitive fields exist, encoders SHOULD fall back to the expanded list form (§9.4).
+
+**Encoding:**
+1. **Header:** `key[N<delim?>]{f1<delim>f2…}:` where the field list contains only the primitive-valued fields, listed in the first object's encounter order. The active delimiter is selected by the encoder. Field names are encoded per §7.3.
+2. **Primitive row:** One line per object at depth +1 containing only that object's primitive-field values in header field order, joined by the active delimiter, encoded per §7. Complex fields are NOT included on this line.
+3. **Spill lines:** Immediately after the primitive row for each object, any complex-valued fields of that object MUST be emitted at depth +2, in encounter order. Each spill field follows normal encoding rules for its type:
+   - Object-valued field: `fieldname:` at depth +2; contents at depth +3 and below (§8).
+   - Array-valued field: array header at depth +2; rows or list items at depth +3 and below (§9). Nested columnar arrays within spill blocks apply these same rules recursively.
+4. The (primitive row, optional spill block) sequence repeats for each element. The spill block for a given row is terminated by the next primitive row at depth +1 or by returning to the parent scope.
+5. Root columnar arrays omit the key: `[N<delim?>]{…}:` followed by rows and spill lines.
+
+**Example** (indent = 2, delimiter = comma):
+
+```
+[2]{id,name,score}:
+  1,Alice,9.5
+    tags[2]: a,b
+    address:
+      city: NY
+  2,Bob,7.0
+    tags[1]: c
+    address:
+      city: LA
+```
+
+Decoded JSON equivalent:
+```json
+[
+  { "id": 1, "name": "Alice", "score": 9.5, "tags": ["a", "b"], "address": { "city": "NY" } },
+  { "id": 2, "name": "Bob", "score": 7.0, "tags": ["c"], "address": { "city": "LA" } }
+]
+```
+
+**Decoding:**
+
+A decoder determines a mixed columnar array by examining the content following the first primitive row. If one or more lines at depth +2 appear after the first primitive row before the second primitive row (or the end of the array scope), the array is in columnar form. If no depth +2 content appears, the array MAY be treated as standard tabular (§9.3).
+
+Consuming a columnar array:
+1. Read the header; extract field names and the active delimiter.
+2. For each of the N elements:
+   a. Read the next line at depth +1 as the primitive row; split by active delimiter; assign values to header fields in order.
+   b. Collect all subsequent consecutive lines at depth ≥ +2 as the spill block for this element: parse them as object fields per §8 and §9.
+   c. The spill block ends at the next line whose depth ≤ row depth (+1) — either the next primitive row or a line in the parent scope.
+   d. Merge the primitive-field map (from the header and row) with the spill-field map to form the complete decoded object. Key encounter order MUST be preserved: primitive fields in header order, then spill fields in document order.
+3. In strict mode, MUST enforce:
+   - Each primitive row's value count equals the field count in the header.
+   - The total number of primitive rows equals N.
+   - No blank lines between the first and last item (per §12).
+
 ### 9.4 Mixed / Non-Uniform Arrays — Expanded List
 
 When tabular requirements are not met (encoding):
@@ -596,6 +654,9 @@ Options:
   - delimiter (document delimiter; default: comma; alternatives: tab, pipe)
   - keyFolding (default: `"off"`; alternatives: `"safe"`)
   - flattenDepth (default: Infinity when keyFolding is `"safe"`; non-negative integer ≥ 0; values 0 or 1 have no practical folding effect)
+  - objectArrayLayout (default: `"auto"`; alternatives: `"columnar"`) — see §13.5
+  - ignoreNullOrEmpty (default: `true`; boolean) — see §13.6
+  - excludeEmptyArrays (default: `true`; boolean) — see §13.7
 - Decoder options:
   - indent (default: 2 spaces)
   - strict (default: `true`)
@@ -677,6 +738,43 @@ Examples:
 - Input: `a.b: 1` then `a: 2` with `expandPaths="safe"` and `strict=true` → Error: "Expansion conflict at path 'a' (object vs primitive)"
 - Input: `a.b: 1` then `a: 2` with `expandPaths="safe"` and `strict=false` → Output: `{"a": 2}` (LWW)
 
+### 13.5 Object Array Layout
+
+The `objectArrayLayout` option controls how encoders handle arrays of objects.
+
+Mode: `"auto"` | `"columnar"` (default: `"auto"`)
+
+- `"auto"`: Apply tabular detection per §9.3. An object array is encoded in tabular form only when every element is an object, all objects share identical keys, and all values are primitives. Otherwise fall back to expanded list (§9.4).
+- `"columnar"`: Apply mixed columnar encoding per §9.3.2. Primitive-valued fields are extracted into the columnar header; complex-valued fields are emitted as per-row spill lines. Requires every element to be an object; if not satisfied, encoders MUST fall back to expanded list (§9.4). If no primitive fields exist in any element, encoders MUST fall back to expanded list (§9.4).
+
+Decoders conforming to v4.0 MUST support both §9.3 (tabular) and §9.3.2 (columnar) forms and SHOULD auto-detect the form based on whether spill content appears after the first primitive row (see §9.3.2).
+
+### 13.6 Ignore Null or Empty
+
+The `ignoreNullOrEmpty` option controls whether fields with null or empty-string values are emitted.
+
+Type: boolean (default: `true`)
+
+When `true`:
+- Object fields (§8) whose value is `null` or `""` (empty string) MUST be omitted from the encoded output.
+- In columnar arrays (§9.3.2), a column is omitted from the header and all rows when ALL elements have `null` or `""` for that field. Columns where at least one element has a non-null, non-empty value MUST be retained in full (including the null/empty cells for other rows, emitted as `null` or `""` respectively).
+
+This option is **lossy**: decoders cannot distinguish between an absent field and a field explicitly set to `null` or `""`. Encoders and implementations MUST document this behavior when the option is enabled.
+
+When `false`: fields with `null` or `""` values are emitted normally.
+
+### 13.7 Exclude Empty Arrays
+
+The `excludeEmptyArrays` option controls whether array-valued fields of length zero are emitted.
+
+Type: boolean (default: `true`)
+
+When `true`: array-valued object fields (§8) and per-row spill array fields (§9.3.2) whose length is 0 MUST be omitted from the encoded output. The array header `[0]:` is never emitted for such fields.
+
+This option is **lossy**: decoders cannot distinguish between an absent field and a field set to an empty array `[]`. Encoders and implementations MUST document this behavior when the option is enabled.
+
+When `false`: empty arrays are encoded normally as `fieldname[0]:`.
+
 ### 13.1 Encoder Conformance Checklist
 
 Conforming encoders MUST:
@@ -692,6 +790,9 @@ Conforming encoders MUST:
 - [ ] Emit no trailing spaces or trailing newline (§12)
 - [ ] When `keyFolding="safe"`, folding MUST comply with §13.4 (IdentifierSegment validation, no separator in segments, collision avoidance, no quoting required)
 - [ ] When `flattenDepth` is set, folding MUST stop at the configured segment count (§13.4)
+- [ ] When `objectArrayLayout="columnar"`, emit mixed columnar form per §9.3.2 (primitive header, per-row spill lines at depth +2)
+- [ ] When `ignoreNullOrEmpty=true`, omit null/empty fields and suppress all-null/empty columnar columns per §13.6
+- [ ] When `excludeEmptyArrays=true`, omit zero-length array fields per §13.7
 
 ### 13.2 Decoder Conformance Checklist
 
@@ -705,6 +806,7 @@ Conforming decoders MUST:
 - [ ] When `expandPaths="safe"`, expansion MUST follow §13.4 (IdentifierSegment-only segments, deep merge, conflict rules)
 - [ ] When `expandPaths="safe"` with `strict=true`, MUST error on expansion conflicts per §14.5
 - [ ] When `expandPaths="safe"` with `strict=false`, apply LWW conflict resolution (§13.4)
+- [ ] Detect and decode mixed columnar arrays (§9.3.2): after the first primitive row of a fielded array header, collect spill lines at depth +2 and merge into the decoded object
 
 ### 13.3 Validator Conformance Checklist
 
@@ -725,6 +827,8 @@ When strict mode is enabled (default), decoders MUST error on the following cond
 - List arrays: number of list items ≠ declared N.
 - Tabular arrays: number of rows ≠ declared N.
 - Tabular row width mismatches: any row's value count ≠ field count.
+- Columnar arrays (§9.3.2): number of primitive rows ≠ declared N.
+- Columnar row width mismatches: any primitive row's value count ≠ header field count.
 
 ### 14.2 Syntax Errors
 
@@ -1233,6 +1337,16 @@ Note: Host-type normalization tests (e.g., BigInt, Date, Set, Map) are language-
 
 This appendix summarizes major changes between spec versions. For the complete changelog, see [`CHANGELOG.md`](./CHANGELOG.md) in the specification repository.
 
+### v4.0 (TBD) — RFC Proposal
+
+- Added mixed columnar array encoding (§9.3.2): object arrays with both primitive and complex fields use a primitive columnar header, with complex fields emitted as per-row spill lines at depth +2.
+- Added `objectArrayLayout` encoder option (§13.5): `"auto"` preserves v3.x tabular detection; `"columnar"` activates the new mixed columnar form.
+- Added `ignoreNullOrEmpty` encoder option (§13.6): omit null and empty-string fields; suppress all-null/all-empty columnar columns.
+- Added `excludeEmptyArrays` encoder option (§13.7): omit zero-length array fields from output.
+- Added binary/byte array encoding guidance in Appendix G.6.
+- Updated strict-mode error checklist (§14.1) with columnar row count and width mismatches.
+- **Breaking change:** v3.x strict-mode decoders will error on columnar output; v4.0 decoders MUST detect and decode both tabular (§9.3) and columnar (§9.3.2) forms.
+
 ### v3.0 (2025-11-24)
 
 - Standardized encoding for list-item objects whose first field is a tabular array (§10).
@@ -1401,6 +1515,24 @@ Implementations in any language SHOULD:
   - Collection type mappings (order preservation for sets)
 2. Provide configuration options where multiple strategies are reasonable (e.g., lossless vs. approximate numeric encoding).
 3. Ensure that normalization is deterministic: encoding the same host value twice MUST produce identical TOON output.
+
+### G.6 Binary and Byte Array Data
+
+Typed language implementations that can distinguish a byte array / binary blob from a general numeric array SHOULD provide a configurable encoding strategy, since both representations produce valid TOON:
+
+- **Base64 string (recommended default):** Encode the byte sequence as a standard Base64 string (RFC 4648 §4) and emit it as a quoted TOON string value. Produces compact single-token output for binary payloads.
+  ```
+  avatar: "iVBORw0KGgoAAAANSUhEUgAA..."
+  ```
+
+- **Numeric array:** Encode as a TOON primitive array of integers using the normal array header syntax.
+  ```
+  avatar[3]: 137,80,78
+  ```
+
+Decoders receiving a Base64-encoded value and targeting a byte-array type SHOULD attempt Base64 decoding when the target field is of a typed binary type. Decoders consuming the numeric array form decode it as a standard integer array; the byte-array interpretation is type-directed.
+
+Both forms are valid TOON and can be decoded by any conformant v4.0 decoder, but the encoding choice MUST be consistent and documented by the implementation.
 
 ## 19. TOON Core Profile (Normative Subset)
 
