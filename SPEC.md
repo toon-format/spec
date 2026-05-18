@@ -308,18 +308,18 @@ fields-seg    = "{" fieldname *( delim fieldname ) "}"
 delim         = delimsym / ","
 fieldname     = key
 
-header        = [ key ] bracket-seg [ SP ] [ fields-seg [ SP ] ] ":"
+header        = [ key ] bracket-seg *SP [ fields-seg *SP ] ":"
 key           = unquoted-key / quoted-key
 unquoted-key  = ( ALPHA / "_" ) *( ALPHA / DIGIT / "_" / "." )
-quoted-key    = DQUOTE *escaped-char DQUOTE
-; escaped-char is defined in §7.1
+quoted-key    = DQUOTE *quoted-char DQUOTE
+; quoted-char is defined in §7.1
 ```
 
 Note: The ABNF grammar above cannot enforce that the delimiter used in the fields segment (braces) matches the delimiter declared in the bracket segment. This equality requirement is normative per the "same delimiter symbol" rule above in this section and MUST be enforced by implementations. Mismatched delimiters between bracket and brace segments MUST error in strict mode.
 
 Note: The grammar above specifies header syntax only. Tabular row disambiguation is defined in §9.3.
 
-Between the closing bracket `]` of the bracket segment and the opening brace `{` of a fields segment (or the colon `:` if no fields segment is present), only whitespace MAY appear. If a decoder encounters non-whitespace content in these positions (e.g., additional bracket expressions like `[bar]`), the line MUST NOT be interpreted as an array header. In strict mode, decoders MUST error. In non-strict mode, decoders MAY fall through to key-value parsing (Section 8); the resulting key is a literal token not constrained by §7.3's unquoted-key regex.
+Between the closing bracket `]` of the bracket segment and the opening brace `{` of a fields segment (or the colon `:` if no fields segment is present), only whitespace MAY appear. If the bracket segment fails to parse as a non-negative integer length (e.g., `[bar]`), or if a decoder encounters non-whitespace content in these positions (e.g., `[1][bar]:` or `[2]extra:`), the line MUST NOT be interpreted as an array header. In strict mode, decoders MUST error. In non-strict mode, decoders MAY fall through to key-value parsing (Section 8); the resulting key is a literal token not constrained by §7.3's unquoted-key regex.
 
 Decoding requirements:
 - The bracket segment MUST parse as a non-negative integer length N.
@@ -333,7 +333,7 @@ Note: Key folding (§13.4) affects only the key prefix in headers. The header gr
 
 ### 7.1 Escaping
 
-In quoted strings and keys, codepoints are encoded according to the following table. Encoders MUST follow the **Encoder** column; decoders MUST follow the **Decoder** column.
+In quoted strings and keys, codepoints are encoded according to the following table; rows are matched top-to-bottom, and the first matching row applies. Encoders MUST follow the **Encoder** column; decoders MUST follow the **Decoder** column.
 
 | Codepoint set                                          | Encoder                                       | Decoder                                                         |
 |--------------------------------------------------------|-----------------------------------------------|-----------------------------------------------------------------|
@@ -353,6 +353,8 @@ Normative escape grammar:
 
 ```abnf
 HEXDIG         = DIGIT / %x41-46 / %x61-66
+quoted-char    = escaped-char / unescaped-char
+unescaped-char = %x20-21 / %x23-5B / %x5D-D7FF / %xE000-FFFF
 escaped-char   = %x5C ( %x5C / DQUOTE / %x6E / %x72 / %x74 / unicode-escape )
 unicode-escape = %x75 4HEXDIG
 ```
@@ -577,7 +579,7 @@ Conforming encoders MUST:
 - [ ] Convert -0 to 0 (§2)
 - [ ] Convert NaN/±Infinity to null (§3)
 - [ ] Emit no trailing spaces or trailing newline (§12)
-- [ ] When `keyFolding="safe"`, folding MUST comply with §13.4 (IdentifierSegment validation, no separator in segments, collision avoidance, no quoting required)
+- [ ] When `keyFolding="safe"`, folding MUST comply with §13.4 (IdentifierSegment validation, collision avoidance)
 - [ ] When `flattenDepth` is set, folding MUST stop at the configured segment count (§13.4)
 
 ### 13.2 Decoder Conformance Checklist
@@ -638,7 +640,7 @@ Folding process:
 Examples:
 - `{a: {b: {c: 1}}}` with safe mode, depth=Infinity → `a.b.c: 1`
 - `{a: {b: {c: {d: 1}}}}` with safe mode, depth=2 → produces `a.b:` followed by nested `c:` and `d: 1` at appropriate depths
-- `{data: {"full-name": {x: 1}}}` → safe mode skips (segment `"full-name"` requires quoting); emits standard nested structure
+- `{data: {"full-name": {x: 1}}}` → safe mode skips (segment `"full-name"` is not an IdentifierSegment); emits standard nested structure
 
 #### Decoder: Path Expansion
 
@@ -692,7 +694,7 @@ When strict mode is enabled (default), decoders MUST error on the following cond
 - Missing colon in key context.
 - Invalid escape sequences or unterminated strings in quoted tokens.
 - Delimiter mismatch (detected via width/count checks and header scope).
-- Non-whitespace content between a valid bracket segment and the colon (or fields segment) prevents array-header interpretation; decoders MUST NOT silently discard that content. If the line otherwise parses as a key-value line (§6, §8), it is not a strict-mode error.
+- Non-whitespace content between a valid bracket segment and the colon (or fields segment) prevents array-header interpretation; decoders MUST NOT silently discard that content. In strict mode, decoders MUST error (see §6); in non-strict mode, decoders MAY fall through to key-value parsing.
 
 ### 14.3 Indentation Errors
 

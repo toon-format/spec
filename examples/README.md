@@ -60,7 +60,7 @@ Complete, valid TOON files demonstrating core features:
 - [`valid/key-folding-basic.toon`](valid/key-folding-basic.toon) - Basic dotted-key notation
   - Demonstrates how `keyFolding="safe"` only folds chains of single-key objects (e.g. `server.host: localhost`)
   - Notes that siblings such as `database.connection.username` need their own wrapper objects in the JSON source
-  - Generated directly from [`valid/key-folding-basic.json`](valid/key-folding-basic.json) using the CLI encoder
+  - Generated from [`valid/key-folding-basic.json`](valid/key-folding-basic.json) with `keyFolding="safe"`
   - Spec: §13.4 Key Folding and Path Expansion
 
 - [`valid/key-folding-with-array.toon`](valid/key-folding-with-array.toon) - Dotted keys with arrays

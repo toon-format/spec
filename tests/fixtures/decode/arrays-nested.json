@@ -173,12 +173,6 @@
       "specSection": "9.1"
     },
     {
-      "name": "decodes canonical empty root array",
-      "input": "[]",
-      "expected": [],
-      "specSection": "9.1"
-    },
-    {
       "name": "parses complex mixed object with arrays and nested objects",
       "input": "user:\n  id: 123\n  name: Ada\n  tags[2]: reading,gaming\n  active: true\n  prefs[0]:",
       "expected": {

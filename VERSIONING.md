@@ -90,10 +90,10 @@ If we need to make a breaking change (MAJOR version bump):
 
 ## Implementation Compatibility
 
+When in doubt, we err on the side of caution and treat potentially breaking changes as MAJOR version bumps.
+
 Implementations should document the supported spec version (e.g. `"toon-spec": "3.1"`) and may support multiple versions concurrently: default to the latest, let users target a specific version, and document version-specific behavior. A new MINOR version keeps existing conformant implementations conformant. A new MAJOR version may require updates; previous-version implementations remain valid, and a migration note is provided in CHANGELOG.md.
 
 ## Version History
 
 See [CHANGELOG.md](./CHANGELOG.md) for detailed version history.
-
-When in doubt, we err on the side of caution and treat potentially breaking changes as MAJOR version bumps.

@@ -89,9 +89,7 @@ All test fixtures follow a standard JSON structure defined in [`fixtures.schema.
 
 - `delimiter`: `","` (comma, default), `"\t"` (tab), or `"|"` (pipe). Affects encoder output; decoders parse the delimiter declared in array headers
 - `indent`: Number of spaces per indentation level (default: `2`)
-- `keyFolding`: `"off"` (default) or `"safe"`. Enables key folding to collapse single-key object chains into dotted-path notation (v1.5+)
-- `flattenDepth`: Integer. Maximum depth to fold key chains when `keyFolding` is `"safe"` (default: Infinity). Values less than 2 have no practical folding effect (v1.5+)
-
+- `keyFolding`: `"off"` (default) or `"safe"`. Enables key folding to collapse single-key object chains into dotted-path notation- `flattenDepth`: Integer. Maximum depth to fold key chains when `keyFolding` is `"safe"` (default: Infinity). Values less than 2 have no practical folding effect
 #### Decoding Options
 
 ```json
@@ -103,9 +101,7 @@ All test fixtures follow a standard JSON structure defined in [`fixtures.schema.
 ```
 
 - `indent`: Expected number of spaces per indentation level (default: `2`)
-- `strict`: Enable strict validation (default: `true`). When `expandPaths` is `"safe"`, strict mode controls conflict resolution: errors on conflicts when `true`, LWW when `false` (v1.5+)
-- `expandPaths`: `"off"` (default) or `"safe"`. Enables path expansion to split dotted keys into nested object structures (v1.5+)
-
+- `strict`: Enable strict validation (default: `true`). When `expandPaths` is `"safe"`, strict mode controls conflict resolution: errors on conflicts when `true`, LWW when `false`- `expandPaths`: `"off"` (default) or `"safe"`. Enables path expansion to split dotted keys into nested object structures
 ### Error Tests
 
 Error tests use `shouldError: true` to indicate that the test expects an error to be thrown:
