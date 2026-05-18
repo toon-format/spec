@@ -799,6 +799,7 @@ Recommended error messages:
   - Strings with colon, the relevant delimiter (document or active), hyphen marker cases ("-" or strings starting with "-"), control characters, or brackets/braces MUST be quoted.
 - Strict-mode checks (Section 14) detect malformed strings, truncation, or injected rows/items via length and width mismatches.
 - Encoders SHOULD avoid excessive memory on large inputs; implement streaming/tabular row emission where feasible.
+- Control characters in quoted strings (`\uXXXX`, §7.1) round-trip verbatim per §17.1; encoders MUST NOT strip them during normalization. Recipients that render decoded values into terminals, logs, or markup are responsible for downstream escaping; TOON is a transport format, not a sanitization boundary.
 - Unicode:
   - Encoders SHOULD avoid altering Unicode beyond required escaping; decoders SHOULD accept valid UTF-8 in quoted strings/keys (with the escape repertoire defined in §7.1).
 
@@ -1257,6 +1258,7 @@ This appendix summarizes major changes between spec versions. For the complete c
 
 - Added `\uXXXX` Unicode escape (§7.1) for control characters and arbitrary code points in quoted strings and keys.
 - Canonical encoding of empty object-field arrays as `key: []` (§9.1); legacy `key[0]:` remains accepted by decoders.
+- Added security note on control-character round-tripping and downstream sanitization responsibility (§15).
 
 ### v3.0 (2025-11-24)
 
