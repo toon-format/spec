@@ -86,14 +86,13 @@ https://www.iso.org/standard/70907.html
 - [Appendix C: Test Suite and Compliance (Informative)](#appendix-c-test-suite-and-compliance-informative)
 - [Appendix D: Document Changelog (Informative)](#appendix-d-document-changelog-informative)
 - [Appendix E: Acknowledgments and License](#appendix-e-acknowledgments-and-license)
-- [Appendix F: Cross-check With Reference Behavior (Informative)](#appendix-f-cross-check-with-reference-behavior-informative)
-- [Appendix G: Host Type Normalization Examples (Informative)](#appendix-g-host-type-normalization-examples-informative)
+- [Appendix F: Host Type Normalization Examples (Informative)](#appendix-f-host-type-normalization-examples-informative)
 
 ## Introduction (Informative)
 
 ### Purpose and scope
 
-TOON (Token-Oriented Object Notation) is a line-oriented, indentation-based text format that encodes the JSON data model with explicit structure and minimal quoting. It is designed as a compact, deterministic representation of structured data, particularly well-suited to arrays of uniform objects. TOON is often used as a translation layer: produce data as JSON in code, encode to TOON for downstream consumption (e.g., LLM prompts), and decode back to JSON if needed.
+TOON is a token-efficient text format for JSON-shaped data, designed primarily for LLM prompts and contexts where every token costs. It saves tokens vs JSON by declaring array shapes once (length and optional field list) and using indentation in place of braces. TOON is typically used as a translation layer: produce data as JSON in code, encode to TOON for downstream consumption, and decode back to JSON if needed.
 
 ### Applicability and non-goals
 
@@ -105,7 +104,7 @@ Use TOON when:
 
 TOON is not intended to replace:
 - JSON for non-uniform or deeply nested structures where repeated keys are not dominant,
-- CSV for flat, strictly tabular data where maximum compactness is required and nesting is not needed,
+- CSV for flat, strictly tabular data without nesting,
 - general-purpose storage or public APIs. TOON carries the JSON data model; it is a transport/authoring format with explicit structure, not an extended type system or schema language.
 
 Out of scope:
@@ -127,17 +126,6 @@ users[2]{id,name,role}:
   2,Bob,user
 ```
 
-### Document roadmap
-
-Normative rules are organized as follows:
-- Data model and canonical number form (§2); normalization on encode (§3); decoding interpretation (§4).
-- Concrete syntax, including root-form determination (§5) and header syntax (§6).
-- Strings and keys (§7); objects (§8); arrays and their sub-forms (§9); objects as list items (§10); delimiter rules (§11).
-- Indentation and whitespace (§12); conformance and options (§13).
-- Strict-mode errors (authoritative checklist) (§14).
-
-Appendices are informative unless stated otherwise and provide examples, parsing helpers, and implementation guidance.
-
 ## 1. Terminology and Conventions
 
 ### 1.1 Use of RFC2119 Keywords and Normativity
@@ -145,8 +133,6 @@ Appendices are informative unless stated otherwise and provide examples, parsing
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC2119] and [RFC8174] when, and only when, they appear in all capitals, as shown here.
 
 All normative text in this specification is contained in Sections 1-16 and Section 19. All appendices are informative except where explicitly marked normative. Examples throughout this document are informative unless explicitly stated otherwise.
-
-Implementations that fail to conform to any MUST or REQUIRED level requirement are non-conformant. Implementations that conform to all MUST and REQUIRED level requirements but fail to conform to SHOULD or RECOMMENDED level requirements are said to be "not fully conformant" but are still considered conformant.
 
 ### 1.2 Core Concepts
 
@@ -213,15 +199,9 @@ Implementations that fail to conform to any MUST or REQUIRED level requirement a
     - Emit a quoted string containing the exact decimal representation to preserve value fidelity, OR
     - Emit a canonical number that round-trips to the host's numeric approximation (losing precision), provided it conforms to the canonical formatting rules above.
   - Encoders SHOULD provide an option to choose lossless stringification for out-of-range numbers.
-- Numbers (decoding):
-  - Decoders MUST accept decimal and exponent forms on input (e.g., 42, -3.14, 1e-6, -1E+9).
-  - Decoders MUST treat tokens with forbidden leading zeros in the integer part (e.g., `"05"`, `"0001"`, `"-05"`, `"-0001"`) as strings, not numbers. This rule does **not** apply to a single zero integer part followed by a fractional or exponent part (e.g., `0.5`, `0e1`, `-0.5`, `-0e1`), which are valid numbers.
-  - If a decoded numeric token is not representable in the host's default numeric type without loss, implementations MAY:
-    - Return a higher-precision numeric type (e.g., arbitrary-precision integer or decimal), OR
-    - Return a string, OR
-    - Return an approximate numeric value if that is the documented policy.
-  - Implementations MUST document their policy for handling out-of-range or non-representable numbers. A lossless-first policy is RECOMMENDED for libraries intended for data interchange or validation.
 - Null: Represented as the literal null.
+
+Decoder numeric rules are defined in §4.
 
 ## 3. Encoding Normalization (Reference Encoder)
 
@@ -237,7 +217,7 @@ Encoders MUST normalize non-JSON values to the JSON data model before encoding. 
   - Map-like collections → object (with string keys).
   - Undefined, function, symbol, or unrecognized types → null.
 
-See Appendix G for non-normative language-specific examples (Go, JavaScript, Python, Rust).
+See Appendix F for non-normative language-specific examples (Go, JavaScript, Python, Rust).
 
 ## 4. Decoding Interpretation (Reference Decoder)
 
@@ -249,13 +229,14 @@ Decoders map text tokens to host values:
 - Unquoted value tokens:
   - true, false, null → booleans/null.
   - Numeric parsing:
-    - MUST accept standard decimal and exponent forms (e.g., 42, -3.14, 1e-6, -1E+9).
-    - MUST treat tokens with forbidden leading zeros (e.g., "05", "0001") as strings (not numbers).
+    - Decoders MUST accept decimal and exponent forms on input (e.g., `42`, `-3.14`, `1e-6`, `-1E+9`).
+    - Decoders MUST treat tokens with forbidden leading zeros in the integer part (e.g., `"05"`, `"0001"`, `"-05"`, `"-0001"`) as strings, not numbers. This rule does **not** apply to a single zero integer part followed by a fractional or exponent part (e.g., `0.5`, `0e1`, `-0.5`, `-0e1`), which are valid numbers.
     - Only finite numbers are expected from conforming encoders.
+    - If a decoded numeric token is not representable in the host's default numeric type without loss, implementations MAY return a higher-precision numeric type, return a string, or return an approximate numeric value if that is the documented policy. Implementations MUST document their out-of-range policy; lossless-first is RECOMMENDED for libraries intended for data interchange or validation.
     - Decoding examples:
-      - `"1.5000"` → numeric value `1.5` (trailing zeros in fractional part are accepted)
-      - `"-1E+03"` → numeric value `-1000` (exponent forms are accepted)
-      - `"-0"` → numeric value `0` (negative zero decodes to zero; most host environments do not distinguish -0 from 0)
+      - `"1.5000"` → `1.5` (trailing zeros in fractional part accepted)
+      - `"-1E+03"` → `-1000` (exponent forms accepted)
+      - `"-0"` → `0` (negative zero decodes to zero; most host environments do not distinguish -0 from 0)
   - The literal token `[]` in object field position (`key: []`) and root position (`[]`) decodes as an empty array (§9.1).
   - Otherwise → string.
 - Keys:
@@ -318,15 +299,8 @@ Spacing and delimiters:
 
 Normative header grammar (ABNF):
 ```
-; Core rules from RFC 5234
-ALPHA  = %x41-5A / %x61-7A   ; A-Z / a-z
-DIGIT  = %x30-39             ; 0-9
-DQUOTE = %x22                ; "
-HTAB   = %x09                ; horizontal tab
-LF     = %x0A                ; line feed
-SP     = %x20                ; space
+; Core rules per RFC 5234 §B.1 (ALPHA, DIGIT, DQUOTE, HTAB, LF, SP)
 
-; Header syntax
 bracket-seg   = "[" 1*DIGIT [ delimsym ] "]"
 delimsym      = HTAB / "|"
 ; Field names are keys (quoted/unquoted) separated by the active delimiter
@@ -334,21 +308,18 @@ fields-seg    = "{" fieldname *( delim fieldname ) "}"
 delim         = delimsym / ","
 fieldname     = key
 
-header        = [ key ] bracket-seg [ fields-seg ] ":"
+header        = [ key ] bracket-seg [ SP ] [ fields-seg [ SP ] ] ":"
 key           = unquoted-key / quoted-key
-
-; Unquoted keys must match identifier pattern
 unquoted-key  = ( ALPHA / "_" ) *( ALPHA / DIGIT / "_" / "." )
-
-; Quoted keys use only escapes from Section 7.1
-; (Exact escaped-char repertoire is defined in Section 7.1)
+quoted-key    = DQUOTE *escaped-char DQUOTE
+; escaped-char is defined in §7.1
 ```
 
 Note: The ABNF grammar above cannot enforce that the delimiter used in the fields segment (braces) matches the delimiter declared in the bracket segment. This equality requirement is normative per the "same delimiter symbol" rule above in this section and MUST be enforced by implementations. Mismatched delimiters between bracket and brace segments MUST error in strict mode.
 
 Note: The grammar above specifies header syntax only. Tabular row disambiguation is defined in §9.3.
 
-Between the closing bracket `]` of the bracket segment and the opening brace `{` of a fields segment (or the colon `:` if no fields segment is present), only whitespace MAY appear. If a decoder encounters non-whitespace content in these positions (e.g., additional bracket expressions like `[bar]`), the line MUST NOT be interpreted as an array header. Decoders SHOULD fall through to key-value parsing (Section 8), treating the entire pre-colon content as a literal key.
+Between the closing bracket `]` of the bracket segment and the opening brace `{` of a fields segment (or the colon `:` if no fields segment is present), only whitespace MAY appear. If a decoder encounters non-whitespace content in these positions (e.g., additional bracket expressions like `[bar]`), the line MUST NOT be interpreted as an array header. In strict mode, decoders MUST error. In non-strict mode, decoders MAY fall through to key-value parsing (Section 8); the resulting key is a literal token not constrained by §7.3's unquoted-key regex.
 
 Decoding requirements:
 - The bracket segment MUST parse as a non-negative integer length N.
@@ -362,18 +333,21 @@ Note: Key folding (§13.4) affects only the key prefix in headers. The header gr
 
 ### 7.1 Escaping
 
-In quoted strings and keys, the following characters MUST be escaped:
-- "\\" → "\\\\"
-- "\"" → "\\\""
-- U+000A newline → "\\n"
-- U+000D carriage return → "\\r"
-- U+0009 tab → "\\t"
+In quoted strings and keys, codepoints are encoded according to the following table. Encoders MUST follow the **Encoder** column; decoders MUST follow the **Decoder** column.
 
-Control characters in the range U+0000 through U+001F that are not U+000A, U+000D, or U+0009 MUST be encoded using the `\uXXXX` form, where `XXXX` is exactly four hexadecimal digits. Encoders SHOULD emit lowercase hexadecimal digits. Encoders MAY use `\uXXXX` for any other non-surrogate code point in U+0000 through U+FFFF but SHOULD prefer literal UTF-8 for printable characters.
+| Codepoint set                                          | Encoder                                       | Decoder                                                         |
+|--------------------------------------------------------|-----------------------------------------------|-----------------------------------------------------------------|
+| `\` (U+005C)                                           | MUST emit `\\`                                | MUST decode `\\` → `\`                                          |
+| `"` (U+0022)                                           | MUST emit `\"`                                | MUST decode `\"` → `"`                                          |
+| LF (U+000A)                                            | MUST emit `\n`                                | MUST decode `\n` → LF                                           |
+| CR (U+000D)                                            | MUST emit `\r`                                | MUST decode `\r` → CR                                           |
+| HTAB (U+0009)                                          | MUST emit `\t`                                | MUST decode `\t` → HTAB                                         |
+| Other U+0000–U+001F controls                           | MUST emit `\uXXXX` (lowercase hex SHOULD)     | MUST decode `\uXXXX` (case-insensitive hex)                     |
+| U+D800–U+DFFF lone surrogates                          | (not produced by valid encoders)              | MUST reject when decoded from `\uXXXX`                          |
+| Other BMP codepoints (U+0020–U+D7FF, U+E000–U+FFFF)    | SHOULD emit literal UTF-8; MAY emit `\uXXXX`  | MUST accept either form                                         |
+| Supplementary (> U+FFFF)                               | MUST emit literal UTF-8                       | MUST accept literal UTF-8; surrogate-pair `\uXXXX` not recognized |
 
-Decoders MUST accept `\uXXXX` (case-insensitive hex digits) in quoted strings and quoted keys, converting the four digits to the corresponding Unicode code point. Decoders MUST reject `\u` followed by fewer than four hex digits, MUST reject lone surrogate code points U+D800–U+DFFF decoded from `\uXXXX`, and MUST reject any other escape sequence or unterminated strings.
-
-Supplementary code points (> U+FFFF) are represented as literal UTF-8 in quoted strings; surrogate-pair sequences (two consecutive `\uXXXX` escapes) are not recognized.
+Decoders MUST reject any escape sequence not listed above, MUST reject `\u` followed by fewer than four hex digits, and MUST reject unterminated strings.
 
 Normative escape grammar:
 
@@ -391,9 +365,7 @@ A string value MUST be quoted if any of the following is true:
 - It is empty ("").
 - It has leading or trailing whitespace.
 - It equals true, false, or null (case-sensitive).
-- It is numeric-like:
-  - Matches /^-?\d+(?:\.\d+)?(?:e[+-]?\d+)?$/i (e.g., "42", "-3.14", "1e-6").
-  - Or matches /^0\d+$/ (leading-zero decimals such as "05").
+- It is numeric-like: matches /^-?\d+(?:\.\d+)?(?:e[+-]?\d+)?$/i (e.g., "42", "-3.14", "05", "1e-6").
 - It contains a colon (:), double quote ("), or backslash (\\).
 - It contains brackets or braces ([, ], {, }).
 - It contains control characters in U+0000 through U+001F.
@@ -550,7 +522,6 @@ For an object appearing as a list item:
   - Inline arrays and tabular rows MUST be split only on the active delimiter.
   - Splitting MUST preserve empty tokens; surrounding spaces are trimmed, and empty tokens decode to the empty string.
   - Nested headers may change the active delimiter; decoding MUST use the delimiter declared by the nearest header.
-  - If the bracket declares tab or pipe, the same symbol MUST be used in the fields segment and for splitting all rows/values in that scope (§6).
 - Object field values (key: value): Decoders parse the entire post-colon token as a single value; document delimiter is not a decoder concept.
 
 ## 12. Indentation and Whitespace
@@ -575,35 +546,9 @@ For an object appearing as a list item:
     - Inside arrays/tabular rows: in strict mode, MUST error; in non-strict mode, MAY be ignored and not counted as a row/item.
   - Trailing newline at end-of-file: decoders SHOULD accept; validators MAY warn.
 
-Recommended blank-line handling (normative where stated):
-- Before decoding, or during scanning:
-  - Track blank lines with depth.
-  - For strict mode: if a blank line occurs between the first and last row/item line in an array/tabular block, this MUST error.
-  - Otherwise (outside arrays/tabular rows), blank lines SHOULD be skipped and not contribute to root-form detection.
-- Empty input means: after ignoring trailing newlines and ignorable blank lines outside arrays/tabular rows, there are no non-empty lines.
-
 ## 13. Conformance and Options
 
-Conformance classes:
-
-- Encoder:
-  - MUST produce output adhering to all normative rules in Sections 2–12 and 15.
-  - MUST be deterministic regarding:
-    - Object field order (encounter order).
-    - Tabular detection (uniform vs non-uniform).
-    - Quoting decisions given values and delimiter context (document delimiter or active delimiter in array scope).
-
-- Decoder:
-  - MUST implement tokenization, escaping, and type interpretation per Sections 4 and 7.4.
-  - MUST parse array headers per Section 6 and apply the declared active delimiter to inline arrays and tabular rows.
-  - MUST implement structure and depth rules per Sections 8–11, including objects-as-list-items placement.
-  - MUST enforce strict-mode rules in Section 14 when strict = true.
-
-- Validator:
-  - SHOULD verify structural conformance (headers, indentation, list markers).
-  - SHOULD verify whitespace invariants.
-  - SHOULD verify delimiter consistency between headers and rows.
-  - SHOULD verify length counts vs declared [N].
+Encoders, decoders, and validators each have a per-class checklist below (§13.1–§13.3). Conforming implementations MUST satisfy every applicable item.
 
 Options:
 - Encoder options:
@@ -682,9 +627,7 @@ Foldable chain: A chain of L segments K1 → K2 → ... → KL is foldable when:
 
 Safe mode requirements (all MUST hold for a chain to be folded):
 1. All folded segments K1 through Kd (where d = min(L, flattenDepth)) MUST be IdentifierSegments (§1.9): matching `^[A-Za-z_][A-Za-z0-9_]*$`.
-2. No segment may contain the path separator (`.` in v1.5).
-3. The resulting folded key string MUST NOT equal any existing sibling literal key at the same object depth (collision avoidance).
-4. If any segment would require quoting per §7.3, the chain MUST NOT be folded.
+2. The resulting folded key string MUST NOT equal any existing sibling literal key at the same object depth (collision avoidance).
 
 Folding process:
 - For a foldable chain of L segments, determine d = min(L, flattenDepth).
@@ -708,7 +651,7 @@ Mode: `"off"` | `"safe"` (default: `"off"`)
 Safe mode behavior:
 - Any unquoted key containing the path separator (`.`) is considered for expansion; quoted keys remain literal after unescaping.
 - Split the key into segments at each occurrence of `.`.
-- Only expand when ALL resulting segments are IdentifierSegments (§1.9) and none contain `.` after splitting.
+- Only expand when ALL resulting segments are IdentifierSegments (§1.9).
 - Keys that do not meet the expansion criteria remain as literal keys.
 
 Deep merge semantics:
@@ -774,23 +717,6 @@ See §13.4 for complete conflict definitions, deep-merge semantics, and examples
 
 Note (informative): Implementations MAY expose conflict diagnostics via out-of-band mechanisms (e.g., debug hooks, verbose CLI flags, or separate validation APIs), but such facilities are non-normative and MUST NOT affect default decode behavior or output.
 
-### 14.6 Recommended Error Messages and Validator Diagnostics (Informative)
-
-Validators SHOULD additionally report:
-- Trailing spaces, trailing newlines (encoding invariants).
-- Headers missing delimiter marks when non-comma delimiter is in use.
-- Values violating delimiter-aware quoting rules.
-
-Recommended error messages:
-- "Missing colon after key"
-- "Unterminated string: missing closing quote"
-- "Invalid escape sequence: \x"
-- "Indentation must be an exact multiple of N spaces"
-- "Tabs are not allowed in indentation"
-- "Expected N tabular rows, but got M"
-- "Expected N list array items, but got M"
-- "Expected K values in row, but got L"
-
 ## 15. Security Considerations
 
 - Injection and ambiguity are mitigated by quoting rules:
@@ -805,7 +731,6 @@ Recommended error messages:
 
 - Full Unicode is supported in keys and values, subject to quoting and escaping rules.
 - Encoders MUST NOT apply locale-dependent formatting for numbers or booleans (e.g., no thousands separators).
-- ISO 8601 strings SHOULD be used for Date normalization.
 
 ## 17. Interoperability and Mappings (Informative)
 
@@ -813,154 +738,36 @@ This section describes TOON's relationship with other serialization formats and 
 
 ### 17.1 JSON Interoperability
 
-TOON models the same data types as JSON [RFC8259]: objects, arrays, strings, numbers, booleans, and null. After normalization (Section 3), TOON can deterministically encode any JSON-compatible data structure.
+TOON models the same data types as JSON [RFC8259]: objects, arrays, strings, numbers, booleans, and null. After normalization (§3), TOON can deterministically encode any JSON-compatible data structure. JSON → TOON → JSON round-trips preserve all JSON values, subject to: host-specific types (Date, Set, Map, BigInt) normalize per §3; NaN and ±Infinity normalize to null; -0 normalizes to 0; object key order is preserved.
 
-Round-trip Compatibility:
-
-JSON → TOON → JSON round-trips preserve all JSON values, with these normalization behaviors:
-- JavaScript-specific types (Date, Set, Map, BigInt) normalize per Section 3
-- NaN and ±Infinity normalize to null
-- -0 normalizes to 0
-- Object key order is preserved (as encountered)
-
-Example: JSON to TOON Conversion
-
-JSON input:
-```json
-{
-  "users": [
-    { "id": 1, "name": "Alice", "active": true },
-    { "id": 2, "name": "Bob", "active": false }
-  ],
-  "count": 2
-}
-```
-
-TOON output (tabular format):
-```
-users[2]{id,name,active}:
-  1,Alice,true
-  2,Bob,false
-count: 2
-```
+See Appendix A for representative encoding shapes.
 
 ### 17.2 CSV Interoperability
 
-TOON's tabular form encodes the same shape as CSV [RFC4180] with the following differences:
-
-Differences from CSV:
-- Explicit array length declarations enable validation
-- Field names declared in header (no separate header row)
-- Supports nested structures (CSV is flat-only)
-- Three delimiter options (comma/tab/pipe) vs CSV's comma-only
-- Type-aware encoding (primitives, not just strings)
-
-Example: CSV to TOON Conversion
-
-CSV input:
-```csv
-id,name,price
-A1,Widget,9.99
-B2,Gadget,14.50
-```
-
-TOON equivalent:
-```
-items[2]{id,name,price}:
-  A1,Widget,9.99
-  B2,Gadget,14.5
-```
-
-Conversion Guidelines:
-- CSV headers map to TOON field names
-- CSV data rows map to TOON tabular rows
-- CSV string escaping (double-quotes) maps to TOON quoting rules
-- CSV row count can be added as array length declaration
+TOON's tabular form encodes the same shape as CSV [RFC4180], differing in:
+- Explicit array length declarations enable validation.
+- Field names declared in the header (no separate header row).
+- Supports nested structures (CSV is flat-only).
+- Three delimiter options (comma, tab, pipe) vs CSV's comma-only.
+- Type-aware encoding (primitives, not just strings).
 
 ### 17.3 YAML Interoperability
 
-TOON shares YAML's indentation-based structure but differs significantly in syntax:
-
-Similarities:
-- Indentation for nesting
-- List items with hyphen markers (- )
-- Minimal quoting for simple values
-
-Differences:
-- TOON requires explicit array headers with lengths
-- TOON uses colon-space for key-value (no other separators)
-- TOON has no comment syntax (YAML has #)
-- TOON is deterministic (YAML allows multiple representations)
-
-Example: YAML to TOON Conversion
-
-YAML input:
-```yaml
-server:
-  host: localhost
-  port: 8080
-  tags:
-    - web
-    - api
-```
-
-TOON equivalent:
-```
-server:
-  host: localhost
-  port: 8080
-  tags[2]: web,api
-```
+TOON shares YAML's indentation-based structure but is more constrained and deterministic:
+- TOON requires explicit array headers with lengths; YAML does not.
+- TOON uses colon-space as the only key-value separator.
+- TOON has no comment syntax.
+- TOON has a single canonical representation; YAML allows multiple.
 
 ## 18. IANA Considerations
 
-### 18.1 Media Type Registration
+This specification does not request IANA registration at this time.
 
-This specification does not request IANA registration at this time, as the format is still in Working Draft status. When this specification reaches Candidate Standard status, formal media type registration will be requested following the procedures defined in [RFC6838].
-
-### 18.2 Provisional Media Type
-
-Until IANA registration is completed, implementations SHOULD use:
-- Media type: `text/toon`
+- Provisional media type: `text/toon`
 - File extension: `.toon`
+- Charset: always UTF-8; the `charset=utf-8` parameter may be specified and is assumed if absent.
 
-Full designation details:
-
-Type name: text
-
-Subtype name: toon (provisional, not IANA-registered)
-
-Required parameters: None
-
-Optional parameters:
-- charset: Although TOON is always UTF-8, the charset parameter MAY be specified as "charset=utf-8". If absent, UTF-8 MUST be assumed.
-
-Encoding considerations: 8-bit. TOON documents are UTF-8 encoded text with LF (U+000A) line endings.
-
-Security considerations: See Section 15.
-
-Interoperability considerations: See Section 17.
-
-Published specification: This document.
-
-Applications: LLM-based applications, prompt engineering tools, data serialization for AI contexts, configuration management systems.
-
-Fragment identifier considerations: None defined.
-
-Additional information:
-- File extension: .toon
-- Macintosh file type code: TEXT
-- Contact: See Appendix E (Author section)
-
-Intended usage: COMMON (upon standardization)
-
-Restrictions on usage: None
-
-Change controller: Community-maintained. See repository at https://github.com/toon-format/spec
-
-### 18.3 Implementation Status
-
-Implementers SHOULD be aware that the media type designation `text/toon` is provisional and MAY be subject to change before formal IANA registration. Early implementers are encouraged to monitor the specification repository for updates.
+When this specification reaches Candidate Standard status, formal registration will be requested following the procedures defined in [RFC6838]. The full RFC6838 template will be added at that time. The `text/toon` designation is provisional and may change before formal registration.
 
 ## Appendix A: Examples (Informative)
 
@@ -1194,7 +1001,7 @@ These sketches illustrate structure and common decoding helpers. They are inform
 
 ### B.4 Primitive Token Parsing
 
-- If token starts with a quote, it MUST be a properly quoted string (no trailing characters after the closing quote). Unescape per §7.1; otherwise MUST error.
+- If token starts with a quote, it must be a properly quoted string (no trailing characters after the closing quote). Unescape per §7.1; otherwise error.
 - Else if token is true/false/null → boolean/null.
 - Else if token is numeric without forbidden leading zeros and finite → number.
   - Examples: `"1.5000"` → `1.5`, `"-1E+03"` → `-1000`, `"-0"` → `0` (host normalization applies)
@@ -1202,7 +1009,7 @@ These sketches illustrate structure and common decoding helpers. They are inform
 
 ### B.5 Object and List Item Parsing
 
-- Key-value line: parse a key up to the first colon; missing colon → MUST error. The remainder of the line is the primitive value (if present).
+- Key-value line: parse a key up to the first colon; missing colon → error. The remainder of the line is the primitive value (if present).
   - If the remainder is exactly `[]` → empty array (§9.1).
 - Nested object: "key:" with nothing after colon opens a nested object. If this is:
   - A field inside a regular object: nested fields are at depth +1 relative to that line.
@@ -1218,82 +1025,20 @@ These sketches illustrate structure and common decoding helpers. They are inform
 
 - Track blank lines during scanning with line numbers and depth.
 - For arrays/tabular rows:
-  - In strict mode, any blank line between the first and last item/row line MUST error.
-  - In non-strict mode, blank lines MAY be ignored and not counted as items/rows.
+  - In strict mode, any blank line between the first and last item/row line errors.
+  - In non-strict mode, blank lines may be ignored and not counted as items/rows.
 - Outside arrays/tabular rows:
-  - Blank lines SHOULD be ignored (do not affect root-form detection or object boundaries).
+  - Blank lines should be ignored (do not affect root-form detection or object boundaries).
 
 ## Appendix C: Test Suite and Compliance (Informative)
 
-### Reference Test Suite
+A language-agnostic reference test suite is maintained at [tests/](./tests/); see [tests/README.md](./tests/README.md) for the per-fixture index. The suite is versioned alongside this specification. Implementations are encouraged to validate against it, but conformance is determined solely by adherence to the normative requirements in Sections 1-16 and Section 19; test coverage does not define the specification.
 
-A language-agnostic reference test suite is maintained at:
-https://github.com/toon-format/spec/tree/main/tests
-
-The test suite is versioned alongside this specification. Implementations are encouraged to validate against this test suite, but conformance is determined solely by adherence to the normative requirements in Sections 1-16 and Section 19 of this specification. Test coverage does not define the specification; the specification defines conformance.
-
-The reference test suite provides validation for implementations but is not exhaustive. Implementers remain responsible for ensuring their implementations conform to all normative requirements.
-
-### Test Coverage
-
-The reference test suite covers:
-- Primitive encoding/decoding, quoting, control-character escaping.
-- Object key encoding/decoding and order preservation.
-- Primitive arrays (inline), empty arrays.
-- Arrays of arrays (expanded), mixed-length and empty inner arrays.
-- Tabular detection and formatting, including delimiter variations.
-- Mixed arrays and objects-as-list-items behavior, including nested arrays and objects.
-- Whitespace invariants (no trailing spaces/newline).
-- Canonical number formatting (no exponent, no trailing zeros, no leading zeros).
-- Decoder strict-mode errors: count mismatches, invalid escapes, missing colon, delimiter mismatches, indentation errors, blank-line handling.
-
-Note: Host-type normalization tests (e.g., BigInt, Date, Set, Map) are language-specific and maintained in implementation repositories. See Appendix G for normalization guidance.
+Host-type normalization tests (e.g., BigInt, Date, Set, Map) are language-specific and maintained in implementation repositories. See Appendix F for normalization guidance.
 
 ## Appendix D: Document Changelog (Informative)
 
-This appendix summarizes major changes between spec versions. For the complete changelog, see [`CHANGELOG.md`](./CHANGELOG.md) in the specification repository.
-
-### v3.1 (2026-05-18)
-
-- Added `\uXXXX` Unicode escape (§7.1) for control characters and BMP code points in quoted strings and keys.
-- Recommended encoding of empty object-field arrays as `key: []` (§9.1); legacy `key[0]:` remains accepted by decoders.
-- Added security note on control-character round-tripping (§15).
-
-### v3.0 (2025-11-24)
-
-- Standardized encoding for list-item objects whose first field is a tabular array (§10).
-
-### v2.1 (2025-11-23)
-
-- Tightened canonical encoding for objects as list items (§10): bare `-` for multi-field objects, compact `- key[N]{fields}:` only for single-field tabular arrays.
-
-### v2.0 (2025-11-10)
-
-- Removed `[#N]` length-marker syntax from array headers; `[N]` is now the only valid form.
-
-### v1.5 (2025-11-08)
-
-- Added optional key folding (`keyFolding="safe"`) and path expansion (`expandPaths="safe"`) with deep-merge semantics and strict-mode conflict handling (§13.4, §14.5).
-
-### v1.4 (2025-11-05)
-
-- Generalized normalization and numeric canonicalization rules, and added host-type normalization guidance (Appendix G).
-
-### v1.3 (2025-10-31)
-
-- Added numeric precision guidance and ABNF core rules for headers and keys (§2, §6).
-
-### v1.2 (2025-10-29)
-
-- Tightened delimiter scoping, indentation, blank-line handling, hyphen-based quoting, BigInt normalization, and row/key disambiguation rules (§2, §9, §11-§12).
-
-### v1.1 (2025-10-29)
-
-- Introduced strict-mode validation, delimiter-aware parsing, and decoder options (indent, strict).
-
-### v1.0 (2025-10-28)
-
-- Initial specification: encoding normalization, decoding interpretation, and conformance requirements.
+See [`CHANGELOG.md`](./CHANGELOG.md) for the version history.
 
 ## Appendix E: Acknowledgments and License
 
@@ -1311,21 +1056,11 @@ This specification and reference implementation are released under the MIT Licen
 
 ---
 
-## Appendix F: Cross-check With Reference Behavior (Informative)
+## Appendix F: Host Type Normalization Examples (Informative)
 
-- The reference encoder/decoder test suites implement:
-  - Safe-unquoted string rules and delimiter-aware quoting (document vs active delimiter).
-  - Header formation and delimiter-aware parsing with active delimiter scoping.
-  - Tabular detection requiring uniform keys and primitive-only values.
-  - Objects-as-list-items parsing (+2 nested object rule; +1 siblings).
-  - Whitespace invariants for encoding and strict-mode indentation enforcement for decoding.
-  - Blank-line handling and trailing-newline acceptance.
+This appendix provides non-normative guidance on how implementations in different programming languages may normalize host-specific types to the JSON data model before encoding. The normative requirement is in §3: implementations must normalize non-JSON types to the JSON data model and must document their normalization policy.
 
-## Appendix G: Host Type Normalization Examples (Informative)
-
-This appendix provides non-normative guidance on how implementations in different programming languages MAY normalize host-specific types to the JSON data model before encoding. The normative requirement is in Section 3: implementations MUST normalize non-JSON types to the JSON data model and MUST document their normalization policy.
-
-### G.1 Go
+### F.1 Go
 
 Go implementations commonly normalize the following host types:
 
@@ -1337,7 +1072,7 @@ Temporal Types:
 - `time.Time`: Convert to ISO 8601 string via `.Format(time.RFC3339)` or `.Format(time.RFC3339Nano)`.
 
 Collection Types:
-- `map[K]V`: Convert to object. Keys MUST be strings or convertible to strings via `fmt.Sprint`.
+- `map[K]V`: Convert to object. Keys must be strings or convertible to strings via `fmt.Sprint`.
 - `[]T` (slices): Preserve as array.
 
 Struct Types:
@@ -1345,9 +1080,9 @@ Struct Types:
 
 Non-Serializable Types:
 - `nil`: Maps to `null`.
-- Functions, channels, `unsafe.Pointer`: Not serializable; implementations MUST error or skip these fields.
+- Functions, channels, `unsafe.Pointer`: Not serializable; implementations should error or skip these fields.
 
-### G.2 JavaScript
+### F.2 JavaScript
 
 JavaScript implementations commonly normalize the following host types:
 
@@ -1364,13 +1099,13 @@ Collection Types:
 - `Map`: Convert to object using `String(key)` for keys and normalizing values recursively. Non-string keys are coerced to strings.
 
 Object Types:
-- Objects with a `toJSON()` method: Call `value.toJSON()` and then normalize the returned value recursively before encoding. This allows domain objects to override default normalization behavior in a controlled, deterministic way (similar to `JSON.stringify`). Implementations SHOULD guard against `toJSON()` returning the same object (to avoid infinite recursion) and MAY fall back to default normalization in that case.
+- Objects with a `toJSON()` method: Call `value.toJSON()` and then normalize the returned value recursively before encoding. This allows domain objects to override default normalization behavior in a controlled, deterministic way (similar to `JSON.stringify`). Implementations should guard against `toJSON()` returning the same object (to avoid infinite recursion) and may fall back to default normalization in that case.
 - Plain objects: Enumerate own enumerable string keys in encounter order; normalize values recursively.
 
 Non-Serializable Types:
 - `undefined`, `function`, `Symbol`: Convert to `null`.
 
-### G.3 Python
+### F.3 Python
 
 Python implementations commonly normalize the following host types:
 
@@ -1384,7 +1119,7 @@ Temporal Types:
 
 Collection Types:
 - `set`, `frozenset`: Convert to list (array).
-- `dict`: Preserve as object with string keys. Non-string keys MUST be coerced to strings.
+- `dict`: Preserve as object with string keys. Non-string keys must be coerced to strings.
 
 Object Types:
 - Custom objects: Extract attributes via `__dict__` or implement custom serialization; convert to object (dict) with string keys.
@@ -1393,7 +1128,7 @@ Non-Serializable Types:
 - `None`: Maps to `null`.
 - Functions, lambdas, modules: Convert to `null`.
 
-### G.4 Rust
+### F.4 Rust
 
 Rust implementations commonly normalize the following host types (typically using serialization frameworks like `serde`):
 
@@ -1407,7 +1142,7 @@ Temporal Types:
 
 Collection Types:
 - `HashSet<T>`, `BTreeSet<T>`: Convert to `Vec<T>` (array).
-- `HashMap<K, V>`, `BTreeMap<K, V>`: Convert to object. Keys MUST be strings or convertible to strings via `Display` or `ToString`.
+- `HashMap<K, V>`, `BTreeMap<K, V>`: Convert to object. Keys must be strings or convertible to strings via `Display` or `ToString`.
 
 Enum Types:
 - Unit variants: Convert to string of variant name (e.g., `Color::Red` → `"Red"`).
@@ -1416,17 +1151,17 @@ Enum Types:
 Non-Serializable Types:
 - `Option::None`: Convert to `null`.
 - `Option::Some(T)`: Unwrap and normalize `T`.
-- Function pointers, raw pointers: Not serializable; implementations MUST error or skip these fields.
+- Function pointers, raw pointers: Not serializable; implementations should error or skip these fields.
 
-### G.5 General Guidance
+### F.5 General Guidance
 
-Implementations in any language SHOULD:
+Implementations in any language should:
 1. Document their normalization policy clearly, especially for:
   - Large or arbitrary-precision numbers (lossless string vs. approximate number)
   - Date/time representations (ISO 8601 format details)
   - Collection type mappings (order preservation for sets)
 2. Provide configuration options where multiple strategies are reasonable (e.g., lossless vs. approximate numeric encoding).
-3. Ensure that normalization is deterministic: encoding the same host value twice MUST produce identical TOON output.
+3. Ensure that normalization is deterministic: encoding the same host value twice produces identical TOON output.
 
 ## 19. TOON Core Profile (Normative Subset)
 
@@ -1446,21 +1181,16 @@ This profile captures the most common, memory-friendly rules by reference to nor
 
 ## 20. Versioning and Extensibility
 
-This specification uses semantic versioning (major.minor format). Breaking changes (incompatible with previous versions) will increment the major version number (e.g., v2.0). Minor version increments represent clarifications, additional conformance requirements, or backward-compatible additions that do not break existing conformant implementations.
-
-For a detailed version history, see Appendix D.
+For versioning policy and version history, see [VERSIONING.md](./VERSIONING.md) and [CHANGELOG.md](./CHANGELOG.md).
 
 ### Extensibility
 
-- Backward-compatible evolutions SHOULD preserve current headers, quoting rules, and indentation semantics.
-- Reserved/structural characters (colon, brackets, braces, hyphen) MUST retain current meanings.
-- The path separator (see §1.9) is fixed to `"."` in v1.5; future versions MAY make this configurable.
-- Future work (non-normative): schemas, comments/annotations, additional delimiter profiles.
+- Backward-compatible evolutions should preserve current headers, quoting rules, and indentation semantics.
+- Reserved/structural characters (colon, brackets, braces, hyphen) retain their current meanings across versions.
+- The path separator (see §1.9) is fixed to `"."` in v1.5; future versions may make this configurable.
 
 ## 21. Intellectual Property Considerations
 
 This specification is released under the MIT License (see repository and Appendix E for details). No patent disclosures are known at the time of publication. The authors intend this specification to be freely implementable without royalty requirements.
 
 Implementers should be aware that this is a community specification and not a formal standards-track document from a recognized standards body (such as IETF, W3C, or ISO). No formal patent review process has been conducted. Implementers are responsible for conducting their own intellectual property due diligence as appropriate for their use case.
-
-The MIT License permits free use, modification, and distribution of both this specification and conforming implementations, subject to the license terms.
