@@ -22,7 +22,7 @@ Complete, valid TOON files demonstrating core features:
 
 - [`valid/primitive-arrays.toon`](valid/primitive-arrays.toon) - Inline primitive arrays
   - Demonstrates compact inline format `[N]: item1,item2,item3`
-  - Shows empty arrays `[0]:`
+  - Shows empty arrays `[]`
   - Multiple arrays in one document
   - Spec: §9.1 Primitive Arrays
 
