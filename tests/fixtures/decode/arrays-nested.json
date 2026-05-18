@@ -1,5 +1,5 @@
 {
-  "version": "3.0",
+  "version": "3.1",
   "category": "decode",
   "description": "Nested and mixed array decoding - list format, arrays of arrays, root arrays, mixed types",
   "tests": [
@@ -169,6 +169,12 @@
     {
       "name": "parses empty root-level array",
       "input": "[0]:",
+      "expected": [],
+      "specSection": "9.1"
+    },
+    {
+      "name": "decodes canonical empty root array",
+      "input": "[]",
       "expected": [],
       "specSection": "9.1"
     },

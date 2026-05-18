@@ -258,6 +258,7 @@ Decoders map text tokens to host values:
       - `"1.5000"` → numeric value `1.5` (trailing zeros in fractional part are accepted)
       - `"-1E+03"` → numeric value `-1000` (exponent forms are accepted)
       - `"-0"` → numeric value `0` (negative zero decodes to zero; most host environments do not distinguish -0 from 0)
+  - The literal token `[]` in object field position (`key: []`) and root position (`[]`) decodes as an empty array (§9.1).
   - Otherwise → string.
 - Keys:
   - Decoded as strings (quoted keys MUST be unescaped per Section 7.1).
@@ -432,6 +433,7 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
 - Dotted keys (e.g., `user.name`) are valid literal keys in TOON. Decoders MUST treat them as single literal keys unless path expansion is explicitly enabled (see §13.4). This preserves backward compatibility and allows safe opt-in expansion behavior.
 - Decoding:
   - A line "key:" with nothing after the colon at depth d opens an object; subsequent lines at depth > d belong to that object until the depth decreases to ≤ d.
+  - A bare `key:` (no value after the colon) MUST decode as an empty or nested object, NOT an empty array. Empty arrays use the explicit `key: []` form (§9.1).
   - Lines "key: value" at the same depth are sibling fields.
 
 ## 9. Arrays
@@ -440,12 +442,14 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
 
 - Encoding:
   - Non-empty arrays: `key[N<delim?>]: v1<delim>v2<delim>…` where each vi is encoded as a primitive (Section 7) with delimiter-aware quoting.
-  - Empty arrays: `key[0<delim?>]:` (no values following).
+  - Empty arrays (object field position): encoders SHOULD emit `key: []` (a key followed by the two-character literal `[]`). Encoders MAY emit the legacy header form `key[0<delim?>]:` for backward compatibility.
+  - Empty arrays (root position): encoders SHOULD emit `[]` on its own line. Encoders MAY emit the legacy `[0<delim?>]:` form.
   - Root arrays: `[N<delim?>]: v1<delim>…`
 - Decoding:
   - Split using the active delimiter declared by the header; non-active delimiters MUST NOT split values.
   - When splitting inline arrays, empty tokens (including those surrounded by whitespace) decode to the empty string.
   - In strict mode, the number of decoded values MUST equal N; otherwise MUST error.
+  - Empty arrays: decoders MUST accept `key: []`, `[]`, and the legacy forms `key[0<delim?>]:` and `[0<delim?>]:` as empty arrays.
 
 ### 9.2 Arrays of Arrays (Primitives Only) — Expanded List
 
@@ -454,6 +458,7 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
   - Each inner primitive array is a list item:
     - `- [M<delim?>]: v1<delim>v2<delim>…`
     - Empty inner arrays: `- [0<delim?>]:`
+    - Inner empty arrays in this form retain `- [0<delim?>]:` for parse clarity; the `key: []` field-level form (§9.1) does NOT apply to list-item inner arrays.
 - Decoding:
   - Items appear at depth +1, each starting with "- " and an inner array header `[M<delim?>]: …`.
   - Inner arrays are split using their own active delimiter; in strict mode, counts MUST match M.
@@ -696,7 +701,7 @@ Conforming encoders MUST:
 - [ ] Use consistent indentation (default 2 spaces, no tabs) (§12)
 - [ ] Escape per §7.1 in quoted strings; reject other escapes
 - [ ] Quote strings containing active delimiter, colon, or structural characters (§7.2)
-- [ ] Emit array lengths [N] matching actual item count (§6, §9)
+- [ ] Emit array lengths [N] matching actual item count (§6, §9); empty object-field arrays SHOULD use `key: []` (§9.1)
 - [ ] Preserve object key order as encountered (§2)
 - [ ] Normalize numbers to non-exponential decimal form (§2)
 - [ ] Convert -0 to 0 (§2)
@@ -709,6 +714,7 @@ Conforming encoders MUST:
 
 Conforming decoders MUST:
 - [ ] Parse array headers per §6 (length, delimiter, optional fields)
+- [ ] Accept empty arrays in both forms: `key: []` / `[]` and legacy `key[0]:` / `[0]:` (§9.1)
 - [ ] Split inline arrays and tabular rows using active delimiter only (§11)
 - [ ] Unescape per §7.1
 - [ ] Type unquoted primitives: true/false/null → booleans/null, numeric → number, else → string (§4)
@@ -725,6 +731,7 @@ Validators SHOULD verify:
 - [ ] Whitespace invariants (no trailing spaces/newlines)
 - [ ] Delimiter consistency between headers and rows
 - [ ] Array length counts match declared [N]
+- [ ] Legacy `key[0]:` empty-array emission MAY be flagged as a style diagnostic (§9.1)
 - [ ] All strict-mode requirements (§14)
 
 ## 14. Strict Mode Errors and Diagnostics (Authoritative Checklist)
@@ -737,6 +744,7 @@ When strict mode is enabled (default), decoders MUST error on the following cond
 - List arrays: number of list items ≠ declared N.
 - Tabular arrays: number of rows ≠ declared N.
 - Tabular row width mismatches: any row's value count ≠ field count.
+- The count checks above apply only when an explicit `[N]` length is declared. The `key: []` form has no declared length; the count check is N/A (§9.1).
 
 ### 14.2 Syntax Errors
 
@@ -1055,7 +1063,7 @@ Edge cases:
 ```
 name: ""
 
-tags[0]:
+tags: []
 
 version: "123"
 enabled: "true"
@@ -1248,6 +1256,7 @@ This appendix summarizes major changes between spec versions. For the complete c
 ### v3.1 (YYYY-MM-DD)
 
 - Added `\uXXXX` Unicode escape (§7.1) for control characters and arbitrary code points in quoted strings and keys.
+- Canonical encoding of empty object-field arrays as `key: []` (§9.1); legacy `key[0]:` remains accepted by decoders.
 
 ### v3.0 (2025-11-24)
 

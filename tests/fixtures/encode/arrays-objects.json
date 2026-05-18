@@ -1,5 +1,5 @@
 {
-  "version": "3.0",
+  "version": "3.1",
   "category": "encode",
   "description": "Arrays of objects encoding - list format for non-uniform objects and complex structures",
   "tests": [
@@ -94,7 +94,7 @@
           { "name": "Ada", "data": [] }
         ]
       },
-      "expected": "items[1]:\n  - name: Ada\n    data[0]:",
+      "expected": "items[1]:\n  - name: Ada\n    data: []",
       "specSection": "10"
     },
     {
@@ -120,7 +120,7 @@
       "input": {
         "items": [{ "data": [], "name": "x" }]
       },
-      "expected": "items[1]:\n  - data[0]:\n    name: x",
+      "expected": "items[1]:\n  - data: []\n    name: x",
       "specSection": "10"
     },
     {
