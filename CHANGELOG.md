@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `\uXXXX` Unicode escape in quoted strings and keys for representing control characters and arbitrary code points (§7.1).
+- Security note on control-character round-tripping and downstream sanitization responsibility (§15).
 
 ### Changed
 
