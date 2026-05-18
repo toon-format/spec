@@ -22,7 +22,7 @@ Adding new delimiter types (beyond comma/tab/pipe)
   Example: Supporting semicolon as delimiter
 
 Changing quoting or escape rules
-  Example: Adding \u0000 escape sequences
+  Example: Adding new \uXXXX escape ranges
   Example: Changing when colons require quotes
 
 Modifying tabular detection logic
@@ -37,13 +37,7 @@ Changing array header syntax
 
 ### No – Direct PR or Issue First
 
-```
-Typo: "recieves" → "receives"                        → Direct PR
-Adding example for nested arrays                     → Direct PR
-Clarifying ambiguous wording                         → Issue → PR
-Expanding test coverage                              → Direct PR
-Documenting existing edge case behavior              → Issue → PR
-```
+Typos, additional examples, clarifications of existing wording, extra test coverage, and documenting existing edge cases can be filed as a direct PR (or an issue if you want to discuss first).
 
 ## RFC Process
 

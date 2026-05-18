@@ -90,49 +90,10 @@ If we need to make a breaking change (MAJOR version bump):
 
 ## Implementation Compatibility
 
-### Specification Version Support
-
-If you're implementing TOON, clearly document which spec version you support:
-
-```json
-{
-  "toon-spec": "1.3"
-}
-```
-
-This helps users know what behavior to expect.
-
-### Forward Compatibility
-
-Your implementation can support multiple spec versions. If you do:
-
-1. Default to the latest supported version
-2. Let users specify which version to target
-3. Document version-specific behavior clearly
-
-### Backward Compatibility
-
-**When a new MINOR version is released:**
-
-- Your implementation stays conformant – no code changes needed
-- Updates may be recommended but aren't required
-
-**When a new MAJOR version is released:**
-
-- You may need updates to support the new version
-- Previous version implementations remain valid
-- We'll provide a migration guide
+Implementations should document the supported spec version (e.g. `"toon-spec": "3.1"`) and may support multiple versions concurrently: default to the latest, let users target a specific version, and document version-specific behavior. A new MINOR version keeps existing conformant implementations conformant. A new MAJOR version may require updates; previous-version implementations remain valid, and a migration note is provided in CHANGELOG.md.
 
 ## Version History
 
 See [CHANGELOG.md](./CHANGELOG.md) for detailed version history.
-
-## Questions
-
-Not sure if your proposed change is breaking or non-breaking?
-
-1. Open an issue with the `[RFC]` tag
-2. Describe the proposed change
-3. Ask for feedback from maintainers and community
 
 When in doubt, we err on the side of caution and treat potentially breaking changes as MAJOR version bumps.

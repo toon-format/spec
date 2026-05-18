@@ -23,7 +23,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   - Encoders MUST emit `- key[N]{fields}:` on the hyphen line.
   - Tabular rows MUST appear at depth +2 relative to the hyphen line.
   - All other fields of the same object MUST appear at depth +1.
-  - The v2.0 shallow form (rows and fields at the same depth) and the v2.1 bare-hyphen form are no longer normative and MUST NOT be emitted by conforming encoders.
+  - Pre-v3.0 alternative layouts (rows and fields at the same depth; bare-hyphen form) are no longer normative and MUST NOT be emitted by conforming encoders.
 
 ### Changed
 
@@ -84,7 +84,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
-- Appendix G with host-type normalization examples for Go, JavaScript, Python, and Rust.
+- Host Type Normalization Examples appendix (Go, JavaScript, Python, Rust); now Appendix F.
 
 ## [1.3] - 2025-10-31
 

@@ -2,15 +2,6 @@
 
 This directory contains **language-agnostic JSON test fixtures** for validating TOON implementations against the specification. These fixtures cover core specification requirements and provide a standardized conformance test suite.
 
-## Purpose
-
-The test fixtures serve multiple purposes:
-
-- **Conformance validation:** Verify implementations follow the specification
-- **Regression testing:** Catch behavioral changes across versions
-- **Implementation guide:** Demonstrate expected encoding/decoding behavior
-- **Cross-language consistency:** Ensure all implementations produce identical output
-
 ## Directory Structure
 
 ```
@@ -70,7 +61,7 @@ All test fixtures follow a standard JSON structure defined in [`fixtures.schema.
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `version` | Yes | TOON specification version (e.g., `"1.3"`) |
+| `version` | Yes | Earliest TOON spec version at which the behavior tested by this fixture was finalized. Fixtures remain valid for all later versions; the field records when the test content stabilized, not when it was last touched. |
 | `category` | Yes | Test category: `"encode"` or `"decode"` |
 | `description` | Yes | Brief description of what this fixture tests |
 | `tests` | Yes | Array of test cases |
@@ -204,10 +195,6 @@ To contribute new test cases:
 
 See [CONTRIBUTING.md](../CONTRIBUTING.md) for detailed guidelines.
 
-## Reference Implementation
-
-The reference implementation in TypeScript/JavaScript is maintained at: [github.com/toon-format/toon](https://github.com/toon-format/toon)
-
 ## Questions or Issues?
 
 If you find:
@@ -222,7 +209,3 @@ Please [open an issue](https://github.com/toon-format/spec/issues) with:
 - Fixture file and test case name
 - Description of the issue
 - Proposed fix (if applicable)
-
-## License
-
-These test fixtures are released under the MIT License, the same as the specification.

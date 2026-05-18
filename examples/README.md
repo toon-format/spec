@@ -26,12 +26,6 @@ Complete, valid TOON files demonstrating core features:
   - Multiple arrays in one document
   - Spec: §9.1 Primitive Arrays
 
-- [`valid/tabular-array.toon`](valid/tabular-array.toon) - Tabular array format (comma delimiter)
-  - Demonstrates the most token-efficient format for uniform data
-  - Header declares fields once: `{field1,field2,...}`
-  - Rows contain only data values
-  - Spec: §9.3 Tabular Arrays
-
 - [`valid/mixed-array.toon`](valid/mixed-array.toon) - Mixed-type array (list format)
   - Demonstrates list format with `-` prefix
   - Shows arrays containing different types (number, object, string)
@@ -57,38 +51,36 @@ Complete, valid TOON files demonstrating core features:
   - Shows that object field values still follow document delimiter quoting rules
   - Spec: §11.1 Delimiters (Encoding Rules)
 
-### Key Folding and Path Expansion (v1.5+)
+### Key Folding and Path Expansion
 
-> Regenerate any of these examples via the reference CLI, e.g. `npx @toon-format/cli --encode --keyFolding safe examples/valid/key-folding-basic.json --output examples/valid/key-folding-basic.toon`.
+> Regenerate any of these examples via a conforming encoder with `keyFolding="safe"`.
+>
+> Decode folded examples with `expandPaths="safe"` to reconstruct nested JSON.
 
 - [`valid/key-folding-basic.toon`](valid/key-folding-basic.toon) - Basic dotted-key notation
   - Demonstrates how `keyFolding="safe"` only folds chains of single-key objects (e.g. `server.host: localhost`)
   - Notes that siblings such as `database.connection.username` need their own wrapper objects in the JSON source
   - Generated directly from [`valid/key-folding-basic.json`](valid/key-folding-basic.json) using the CLI encoder
-  - **Decode tip:** use `expandPaths="safe"` to reconstruct the nested JSON structure
   - Spec: §13.4 Key Folding and Path Expansion
 
 - [`valid/key-folding-with-array.toon`](valid/key-folding-with-array.toon) - Dotted keys with arrays
   - Shows folding combined with inline arrays: `data.meta.items[3]: widget,gadget,tool`
   - Adds folded scalar `stats.meta.count: 3` plus folded array `user.preferences.tags[2]: …`
   - Shows that arrays stop the folding chain yet remain inline when the parent chain qualifies
-  - **Decode tip:** use `expandPaths="safe"` to reconstruct the nested JSON structure
   - Spec: §13.4 Key Folding
 
 - [`valid/key-folding-mixed.toon`](valid/key-folding-mixed.toon) - Mixed folding strategies
   - Combines standard nested objects (`app`, `server`) with folded keys (`database.connection.url`, `feature.flags.beta`)
   - Shows the encoder mixing folded and non-folded sections within the same document
   - Useful when only some branches meet the single-key-chain requirement
-  - **Decode tip:** use `expandPaths="safe"` to reconstruct the nested JSON structure
   - Spec: §13.4 Key Folding
 
 - [`valid/path-expansion-merge.toon`](valid/path-expansion-merge.toon) - Deep merge behavior
   - Demonstrates how overlapping dotted keys merge during expansion
   - Shows `user.profile.name: Ada` + `user.settings.theme: dark` → nested object with both branches
-  - Decoder option `expandPaths="safe"` reconstructs nested structure
   - Spec: §13.4 Path Expansion
 
-- [`valid/key-folding-non-identifier.toon`](valid/key-folding-non-identifier.toon) - Non-identifier segments (v1.5+)
+- [`valid/key-folding-non-identifier.toon`](valid/key-folding-non-identifier.toon) - Non-identifier segments
   - Contains dotted keys with segments like `first-name` with hyphens (not valid IdentifierSegments)
   - Keys are quoted (hyphens are not allowed in unquoted keys)
   - These remain as literal dotted keys when `expandPaths="safe"` is used
@@ -106,9 +98,9 @@ Examples that intentionally violate TOON syntax rules:
 - [`invalid/missing-colon.toon`](invalid/missing-colon.toon) - Missing colon after key
   - Keys must be followed by `:`; when a value appears on the same line, the format MUST be `: ` (colon + single space)
   - Demonstrates common syntax error
-  - Spec: §8 Objects, §14.2 Syntax Errors
+  - Spec: §5 Concrete Syntax (root form), §14.2 Syntax Errors
 
-- [`invalid/path-expansion-conflict-strict.toon`](invalid/path-expansion-conflict-strict.toon) - Path expansion conflict (v1.5+)
+- [`invalid/path-expansion-conflict-strict.toon`](invalid/path-expansion-conflict-strict.toon) - Path expansion conflict
   - First line creates nested path `user.profile.name`, second line tries to assign primitive to `user.profile`
   - Fails when decoded with `expandPaths="safe"` and `strict=true` (default)
   - With `strict=false`, applies LWW conflict resolution (later value wins)
@@ -128,25 +120,12 @@ Side-by-side JSON ↔ TOON examples showing equivalent representations:
   - Shows the tabular form for uniform arrays of objects; see the [benchmarks](https://github.com/toon-format/toon/tree/main/benchmarks) for measured token reductions
   - Demonstrates the primary use case: uniform arrays of objects
 
-- [`conversions/config.json`](conversions/config.json) + [`conversions/config.toon`](conversions/config.toon) (v1.5+)
+- [`conversions/config.json`](conversions/config.json) + [`conversions/config.toon`](conversions/config.toon)
   - Deeply nested configuration data (server, database, logging settings)
-  - Regenerated with `keyFolding="safe"`; because most objects are multi-key, folding halts quickly and the output stays primarily nested (the stop condition)
-  - Shows safe folding behavior while remaining spec-compliant
-  - Highlights how safe folding behaves when little or no folding is permitted
+  - Demonstrates standard indentation-based nesting for multi-key objects
 
-- [`conversions/api-response.json`](conversions/api-response.json) + [`conversions/api-response.toon`](conversions/api-response.toon) (v1.5+)
+- [`conversions/api-response.json`](conversions/api-response.json) + [`conversions/api-response.toon`](conversions/api-response.toon)
   - API response with nested data and metadata
-  - Regenerated with `keyFolding="safe"`; multi-sibling branches like `data` and `meta` stay fully nested instead of becoming dotted keys (stop condition on display)
-  - Shows practical use case for serializing API responses while preserving deterministic structure
-  - `expandPaths="safe"` is not required for this file (no folded keys)
-
-## Using These Examples
-
-These examples are useful for:
-
-1. **Learning TOON syntax** - Study working examples to understand the format.
-2. **Testing implementations** - Verify your parser/encoder handles these cases.
-3. **Documentation** - Reference examples when explaining TOON features.
-4. **Debugging** - Compare your output with these known-good examples.
+  - Demonstrates standard nesting for serializing API responses while preserving deterministic structure
 
 For reference test fixtures, see the [`tests/`](../tests/) directory.

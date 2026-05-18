@@ -15,11 +15,6 @@ This repository contains the official specification for **Token-Oriented Object 
 
 The specification includes ABNF snippets, encoding rules, validation requirements, and conformance criteria.
 
-## What is TOON?
-
-> [!IMPORTANT]
-> For a high-level overview of TOON, its features and benefits, design goals, and comparisons to other formats, see the [`toon-format/toon` repository](https://github.com/toon-format/toon).
-
 ## Serialization Example
 
 <table>
@@ -88,53 +83,13 @@ hikes[3]{id,name,distanceKm,elevationGain,companion,wasSunny}:
 </tr>
 </table>
 
-## Reference Implementation
-
-The reference implementation in TypeScript/JavaScript is maintained at: [github.com/toon-format/toon](https://github.com/toon-format/toon)
-
-The reference implementation includes:
-
-- Complete encoder and decoder
-- CLI tools for JSON ↔ TOON conversion
-- Performance benchmarks
-
-## Community Implementations
-
-Official community-driven implementations are currently being developed at the [github.com/toon-format](https://github.com/toon-format) organization.
-
 ## Test Fixtures & Conformance
 
-The [tests/fixtures/](./tests/fixtures/) directory contains **language-agnostic JSON test fixtures** for validating TOON implementations. Each fixture file contains test cases with input/output pairs covering core specification requirements.
-
-**What's included:**
-
-- **Encoding tests:** JSON → TOON conversion
-- **Decoding tests:** TOON → JSON parsing
-- **Error cases:** Validation and strict mode checks
-- **Edge cases:** All corner cases from the specification
-
-**For implementers:**
-
-1. Load JSON fixtures from `tests/fixtures/encode/` and `tests/fixtures/decode/`.
-2. Run each test case against your implementation.
-
-See [tests/README.md](./tests/README.md) for detailed fixture format and usage instructions.
+Language-agnostic conformance fixtures live in [tests/fixtures/](./tests/fixtures/); see [tests/README.md](./tests/README.md) for format and usage.
 
 ## Media Type & File Extension
 
-TOON defines a provisional media type (see §18.2 of the specification):
-
-- **Media type:** `text/toon` (provisional, pending IANA registration)
-- **File extension:** `.toon`
-- **Charset:** Always UTF-8
-
-For HTTP usage:
-
-```http
-Content-Type: text/toon
-```
-
-See the full [IANA Considerations section](SPEC.md#18-iana-considerations) for details.
+Media type `text/toon` (provisional, UTF-8), file extension `.toon`. See [§18 of SPEC.md](SPEC.md#18-iana-considerations).
 
 ## Contributing
 

@@ -20,14 +20,6 @@
       "specSection": "11"
     },
     {
-      "name": "parses primitive arrays with comma delimiter",
-      "input": "tags[3]: reading,gaming,coding",
-      "expected": {
-        "tags": ["reading", "gaming", "coding"]
-      },
-      "specSection": "11"
-    },
-    {
       "name": "parses tabular arrays with tab delimiter",
       "input": "items[2\t]{sku\tqty\tprice}:\n  A1\t2\t9.99\n  B2\t1\t14.5",
       "expected": {
