@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `\uXXXX` Unicode escape in quoted strings and keys for representing control characters and arbitrary code points (§7.1).
 
+### Changed
+
+- Empty object-field arrays SHOULD now encode as `key: []` (§9.1). Decoders MUST accept both `key: []` and the legacy `key[0]:` form. Inner empty arrays in arrays-of-arrays (§9.2) retain `- [0]:`.
+
 ## [3.0] - 2025-11-24
 
 ### Breaking Changes

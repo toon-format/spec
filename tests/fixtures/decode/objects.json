@@ -1,5 +1,5 @@
 {
-  "version": "1.4",
+  "version": "3.1",
   "category": "decode",
   "description": "Object decoding - simple objects, nested objects, key parsing, quoted values",
   "tests": [
@@ -27,6 +27,14 @@
       "input": "user:",
       "expected": {
         "user": {}
+      },
+      "specSection": "8"
+    },
+    {
+      "name": "bare key: with no children decodes as empty object, not array",
+      "input": "matches:",
+      "expected": {
+        "matches": {}
       },
       "specSection": "8"
     },

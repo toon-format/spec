@@ -1,5 +1,5 @@
 {
-  "version": "1.4",
+  "version": "3.1",
   "category": "encode",
   "description": "Primitive array encoding - inline arrays of strings, numbers, booleans",
   "tests": [
@@ -32,7 +32,7 @@
       "input": {
         "items": []
       },
-      "expected": "items[0]:",
+      "expected": "items: []",
       "specSection": "9.1"
     },
     {
@@ -48,7 +48,7 @@
       "input": {
         "": []
       },
-      "expected": "\"\"[0]:",
+      "expected": "\"\": []",
       "specSection": "9.1"
     },
     {

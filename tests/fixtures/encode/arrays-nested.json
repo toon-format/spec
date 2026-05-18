@@ -1,5 +1,5 @@
 {
-  "version": "3.0",
+  "version": "3.1",
   "category": "encode",
   "description": "Nested and mixed array encoding - arrays of arrays, mixed type arrays, root arrays",
   "tests": [
@@ -68,7 +68,7 @@
     {
       "name": "encodes empty root-level array",
       "input": [],
-      "expected": "[0]:",
+      "expected": "[]",
       "specSection": "9.1"
     },
     {
@@ -82,7 +82,7 @@
           "prefs": []
         }
       },
-      "expected": "user:\n  id: 123\n  name: Ada\n  tags[2]: reading,gaming\n  active: true\n  prefs[0]:",
+      "expected": "user:\n  id: 123\n  name: Ada\n  tags[2]: reading,gaming\n  active: true\n  prefs: []",
       "specSection": "8"
     },
     {
