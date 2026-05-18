@@ -56,7 +56,7 @@ Non-breaking changes (MINOR version bump) include:
 - Adding new SHOULD or MAY recommendations.
 - Expanding the specification to cover previously undefined behavior (if done in a backward-compatible way).
 - Adding new test cases that existing conformant implementations already pass.
-- Adding a normative decoder requirement that broadens accepted input without invalidating output from prior conformant encoders.
+- Adding a normative decoder requirement that broadens accepted input, compatible with existing encoder output.
 
 ### Documentation Improvements
 

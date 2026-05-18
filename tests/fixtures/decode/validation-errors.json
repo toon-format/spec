@@ -39,7 +39,7 @@
       "specSection": "14.2"
     },
     {
-      "name": "rejects truncated unicode escape \\u00",
+      "name": "rejects truncated unicode escape \\u00b",
       "input": "val: \"a\\u00b\"",
       "expected": null,
       "shouldError": true,
