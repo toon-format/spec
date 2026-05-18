@@ -246,7 +246,7 @@ See Appendix G for non-normative language-specific examples (Go, JavaScript, Pyt
 Decoders map text tokens to host values:
 
 - Quoted tokens (strings and keys):
-  - MUST be unescaped per Section 7.1 (only \\, \", \n, \r, \t, and \uXXXX are valid; see §7.1). Any other escape or an unterminated string MUST error.
+  - MUST be unescaped per Section 7.1. Any other escape or an unterminated string MUST error.
   - Quoted primitives remain strings even if they look like numbers/booleans/null.
 - Unquoted value tokens:
   - true, false, null → booleans/null.
@@ -443,7 +443,7 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
 
 - Encoding:
   - Non-empty arrays: `key[N<delim?>]: v1<delim>v2<delim>…` where each vi is encoded as a primitive (Section 7) with delimiter-aware quoting.
-  - Empty arrays (object field position): encoders SHOULD emit `key: []` (a key followed by the two-character literal `[]`). Encoders MAY emit the legacy header form `key[0<delim?>]:` for backward compatibility.
+  - Empty arrays (object field position): encoders SHOULD emit `key: []`. Encoders MAY emit the legacy header form `key[0<delim?>]:` for backward compatibility.
   - Empty arrays (root position): encoders SHOULD emit `[]` on its own line. Encoders MAY emit the legacy `[0<delim?>]:` form.
   - Root arrays: `[N<delim?>]: v1<delim>…`
 - Decoding:
@@ -459,7 +459,7 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
   - Each inner primitive array is a list item:
     - `- [M<delim?>]: v1<delim>v2<delim>…`
     - Empty inner arrays: `- [0<delim?>]:`
-    - Inner empty arrays in this form retain `- [0<delim?>]:` for parse clarity; the `key: []` field-level form (§9.1) does NOT apply to list-item inner arrays.
+    - The `key: []` field-level form (§9.1) does NOT apply to list-item inner arrays.
 - Decoding:
   - Items appear at depth +1, each starting with "- " and an inner array header `[M<delim?>]: …`.
   - Inner arrays are split using their own active delimiter; in strict mode, counts MUST match M.
@@ -524,7 +524,6 @@ For an object appearing as a list item:
     - All other fields of the same object MUST appear at depth +1 under the hyphen line, in encounter order, using normal object field rules (Section 8).
     - Encoders MUST NOT emit tabular rows at depth +1 or sibling fields at the same depth as rows when the first field is a tabular array.
   - For all other cases (first field is not a tabular array), encoders SHOULD place the first field on the hyphen line. A bare hyphen on its own line is used only for empty list-item objects.
-  - Empty arrays in field positions (including list-item object fields) use the canonical `key: []` form per §9.1.
 - Decoding (normative):
   - When a decoder encounters a list-item line of the form `- key[N<delim?>]{fields}:` at depth d, it MUST treat this as the start of a tabular array field named key in the list-item object.
   - Lines at depth d+2 that conform to tabular row syntax (Section 9.3) are rows of that tabular array.
@@ -733,7 +732,6 @@ Validators SHOULD verify:
 - [ ] Whitespace invariants (no trailing spaces/newlines)
 - [ ] Delimiter consistency between headers and rows
 - [ ] Array length counts match declared [N]
-- [ ] Legacy `key[0]:` empty-array emission MAY be flagged as a style diagnostic (§9.1)
 - [ ] All strict-mode requirements (§14)
 
 ## 14. Strict Mode Errors and Diagnostics (Authoritative Checklist)
@@ -801,7 +799,7 @@ Recommended error messages:
   - Strings with colon, the relevant delimiter (document or active), hyphen marker cases ("-" or strings starting with "-"), control characters, or brackets/braces MUST be quoted.
 - Strict-mode checks (Section 14) detect malformed strings, truncation, or injected rows/items via length and width mismatches.
 - Encoders SHOULD avoid excessive memory on large inputs; implement streaming/tabular row emission where feasible.
-- Control characters in quoted strings (`\uXXXX`, §7.1) are preserved as data values; encoders MUST NOT strip them during normalization. Recipients that render decoded values into terminals, logs, or markup are responsible for downstream escaping; TOON is a transport format, not a sanitization boundary.
+- Control characters in quoted strings (`\uXXXX`, §7.1) are preserved as data values; encoders MUST NOT strip them during normalization.
 - Unicode:
   - Encoders SHOULD avoid altering Unicode beyond required escaping; decoders SHOULD accept valid UTF-8 in quoted strings/keys (with the escape repertoire defined in §7.1).
 
@@ -1261,7 +1259,7 @@ This appendix summarizes major changes between spec versions. For the complete c
 
 - Added `\uXXXX` Unicode escape (§7.1) for control characters and BMP code points in quoted strings and keys.
 - Canonical encoding of empty object-field arrays as `key: []` (§9.1); legacy `key[0]:` remains accepted by decoders.
-- Added security note on control-character round-tripping and downstream sanitization responsibility (§15).
+- Added security note on control-character round-tripping (§15).
 
 ### v3.0 (2025-11-24)
 
