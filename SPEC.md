@@ -379,7 +379,7 @@ Normative escape grammar:
 
 ```abnf
 HEXDIG         = DIGIT / %x41-46 / %x61-66
-escaped-char   = "\" ( "\" / DQUOTE / %x6E / %x72 / %x74 / unicode-escape )
+escaped-char   = %x5C ( %x5C / DQUOTE / %x6E / %x72 / %x74 / unicode-escape )
 unicode-escape = %x75 4HEXDIG
 ```
 
