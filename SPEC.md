@@ -16,7 +16,7 @@
 
 ## Abstract
 
-Token-Oriented Object Notation (TOON) is a line-oriented, indentation-based text format that encodes the JSON data model with explicit structure and minimal quoting. Arrays declare their length and an optional field list once; rows use a single active delimiter (comma, tab, or pipe). Objects use indentation instead of braces; strings are quoted only when required. This specification defines TOON’s concrete syntax, canonical number formatting, delimiter scoping, and strict‑mode validation, and sets conformance requirements for encoders, decoders, and validators. TOON provides a compact, deterministic representation of structured data and is particularly efficient for arrays of uniform objects.
+Token-Oriented Object Notation (TOON) is a line-oriented, indentation-based text format that encodes the JSON data model with explicit structure and minimal quoting. Arrays declare their length and an optional field list once; rows use a single active delimiter (comma, tab, or pipe). Objects use indentation instead of braces; strings are quoted only when required. This specification defines TOON's concrete syntax, canonical number formatting, delimiter scoping, and strict-mode validation, and sets conformance requirements for encoders, decoders, and validators. TOON provides a deterministic representation of structured data, with tabular syntax for arrays of uniform objects.
 
 ## Status of This Document
 
@@ -95,7 +95,7 @@ https://www.iso.org/standard/70907.html
 
 TOON (Token-Oriented Object Notation) is a line-oriented, indentation-based text format that encodes the JSON data model with explicit structure and minimal quoting. It is designed as a compact, deterministic representation of structured data, particularly well-suited to arrays of uniform objects. TOON is often used as a translation layer: produce data as JSON in code, encode to TOON for downstream consumption (e.g., LLM prompts), and decode back to JSON if needed.
 
-### Applicability and non‑goals
+### Applicability and non-goals
 
 Use TOON when:
 - arrays of objects share the same fields (uniform tabular data),
@@ -144,8 +144,6 @@ Appendices are informative unless stated otherwise and provide examples, parsing
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC2119] and [RFC8174] when, and only when, they appear in all capitals, as shown here.
 
-Audience: implementers of encoders/decoders/validators; tool authors; practitioners embedding TOON in LLM prompts.
-
 All normative text in this specification is contained in Sections 1-16 and Section 19. All appendices are informative except where explicitly marked normative. Examples throughout this document are informative unless explicitly stated otherwise.
 
 Implementations that fail to conform to any MUST or REQUIRED level requirement are non-conformant. Implementations that conform to all MUST and REQUIRED level requirements but fail to conform to SHOULD or RECOMMENDED level requirements are said to be "not fully conformant" but are still considered conformant.
@@ -153,7 +151,7 @@ Implementations that fail to conform to any MUST or REQUIRED level requirement a
 ### 1.2 Core Concepts
 
 - TOON document: A sequence of UTF-8 text lines formatted according to this spec.
-- Line: A sequence of non-newline characters terminated by LF (U+000A) in serialized form. Encoders MUST use LF.
+- Line: A sequence of non-newline characters. Serialized documents use LF (U+000A) as the line separator between lines; encoders MUST use LF, not CRLF.
 
 ### 1.3 Structural Terms
 
@@ -308,7 +306,7 @@ Where:
 - Field names in braces are separated by the same active delimiter and encoded as keys (Section 7.3).
 
 Spacing and delimiters:
-- Every header line MUST end with a colon.
+- Every header MUST include a colon after the bracket segment and optional fields segment.
 - When inline values follow a header on the same line (non-empty primitive arrays), there MUST be exactly one space after the colon before the first value.
 - The active delimiter declared by the bracket segment applies to:
   - splitting inline primitive arrays on that header line,
@@ -344,12 +342,11 @@ unquoted-key  = ( ALPHA / "_" ) *( ALPHA / DIGIT / "_" / "." )
 
 ; Quoted keys use only escapes from Section 7.1
 ; (Exact escaped-char repertoire is defined in Section 7.1)
-; quoted-key   = DQUOTE *(escaped-char / safe-char) DQUOTE
 ```
 
-Note: The ABNF grammar above cannot enforce that the delimiter used in the fields segment (braces) matches the delimiter declared in the bracket segment. This equality requirement is normative per the prose in lines 311-312 above and MUST be enforced by implementations. Mismatched delimiters between bracket and brace segments MUST error in strict mode.
+Note: The ABNF grammar above cannot enforce that the delimiter used in the fields segment (braces) matches the delimiter declared in the bracket segment. This equality requirement is normative per the "same delimiter symbol" rule above in this section and MUST be enforced by implementations. Mismatched delimiters between bracket and brace segments MUST error in strict mode.
 
-Note: The grammar above specifies header syntax. TOON's grammar is deliberately designed to prioritize human readability and token efficiency over strict LR(1) parseability. This requires some context-sensitive parsing (particularly for tabular row disambiguation in Section 9.3), which is a deliberate design tradeoff. Reference implementations demonstrate that deterministic parsing is achievable with modest lookahead.
+Note: The grammar above specifies header syntax only. Tabular row disambiguation is defined in §9.3.
 
 Between the closing bracket `]` of the bracket segment and the opening brace `{` of a fields segment (or the colon `:` if no fields segment is present), only whitespace MAY appear. If a decoder encounters non-whitespace content in these positions (e.g., additional bracket expressions like `[bar]`), the line MUST NOT be interpreted as an array header. Decoders SHOULD fall through to key-value parsing (Section 8), treating the entire pre-colon content as a literal key.
 
@@ -363,7 +360,7 @@ Note: Key folding (§13.4) affects only the key prefix in headers. The header gr
 
 ## 7. Strings and Keys
 
-### 7.1 Escaping (Encoding and Decoding)
+### 7.1 Escaping
 
 In quoted strings and keys, the following characters MUST be escaped:
 - "\\" → "\\\\"
@@ -388,7 +385,7 @@ unicode-escape = %x75 4HEXDIG
 
 Tabs are allowed inside quoted strings and as a declared delimiter; they MUST NOT be used for indentation (Section 12).
 
-### 7.2 Quoting Rules for String Values (Encoding)
+### 7.2 Quoting Rules for String Values
 
 A string value MUST be quoted if any of the following is true:
 - It is empty ("").
@@ -407,7 +404,7 @@ A string value MUST be quoted if any of the following is true:
 
 Otherwise, the string MAY be emitted without quotes. Unicode, emoji, and strings with internal (non-leading/trailing) spaces are safe unquoted provided they do not violate the conditions.
 
-### 7.3 Key Encoding (Encoding)
+### 7.3 Key Encoding
 
 Object keys and tabular field names:
 - MAY be unquoted only if they match: ^[A-Za-z_][A-Za-z0-9_.]*$.
@@ -417,7 +414,7 @@ Keys requiring quoting per the above rules MUST be quoted in all contexts, inclu
 
 Encoders MAY perform key folding when enabled (see §13.4 for complete folding rules and requirements).
 
-### 7.4 Decoding Rules for Strings and Keys (Decoding)
+### 7.4 Decoding Rules for Strings and Keys
 
 Decoding of value tokens follows §4 (unquoted type inference, quoted strings, numeric rules). This section adds key-specific requirements:
 
@@ -452,7 +449,7 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
   - In strict mode, the number of decoded values MUST equal N; otherwise MUST error.
   - Empty arrays: decoders MUST accept `key: []`, `[]`, and the legacy forms `key[0<delim?>]:` and `[0<delim?>]:` as empty arrays.
 
-### 9.2 Arrays of Arrays (Primitives Only) — Expanded List
+### 9.2 Arrays of Arrays (Primitives Only) – Expanded List
 
 - Encoding:
   - Parent header: `key[N<delim?>]:` on its own line.
@@ -465,7 +462,7 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
   - Inner arrays are split using their own active delimiter; in strict mode, counts MUST match M.
   - In strict mode, the number of list items MUST equal outer N.
 
-### 9.3 Arrays of Objects — Tabular Form
+### 9.3 Arrays of Objects – Tabular Form
 
 Tabular detection (encoding; MUST hold for all elements):
 - Every element is an object.
@@ -493,7 +490,7 @@ Decoding:
   - If a line has an unquoted colon but no unquoted active delimiter → key-value line (end of rows).
 - When a tabular array appears as the first field of a list-item object, indentation is governed by Section 10.
 
-### 9.4 Mixed / Non-Uniform Arrays — Expanded List
+### 9.4 Mixed / Non-Uniform Arrays – Expanded List
 
 When tabular requirements are not met (encoding):
 - Header: `key[N<delim?>]:`
@@ -505,7 +502,7 @@ When tabular requirements are not met (encoding):
 
 Decoding:
 - Header declares list length N and the active delimiter for any nested inline arrays.
-- Each list item starts with "- " at depth +1 and is parsed as:
+- Each list item starts with "- " at depth +1 (or the bare marker "-" for an empty object list item, §10) and is parsed as:
   - Primitive (no colon and no array header),
   - Inline primitive array (`- [M<delim?>]: …`),
   - Object with first field on the hyphen line (`- key: …` or `- key[N…]{…}: …`),
@@ -537,7 +534,7 @@ For an object appearing as a list item:
   - Tab: header includes HTAB inside brackets and braces (e.g., `[N<TAB>]`, `{a<TAB>b}`); rows/inline arrays use tabs.
   - Pipe: header includes "|" inside brackets and braces; rows/inline arrays use "|".
 
-### 11.1 Encoding Rules (Normative for Encoders)
+### 11.1 Encoding Rules
 
 - Document delimiter: Encoders select a document delimiter (option: comma, tab, pipe; default comma) that influences quoting for all object field values (key: value) throughout the document.
 - Active delimiter: Inside an array header's scope, the active delimiter governs quoting only for inline array values and tabular row cells.
@@ -546,7 +543,7 @@ For an object appearing as a list item:
   - Object field values (key: value): encoders use the document delimiter to decide delimiter-aware quoting, regardless of whether the object appears within an array's scope.
   - Strings containing non-active delimiters do not require quoting unless another condition applies (§7.2).
 
-### 11.2 Decoding Rules (Normative for Decoders)
+### 11.2 Decoding Rules
 
 - Active delimiter: Decoders use only the active delimiter declared by the nearest array header to split inline arrays and tabular rows.
 - Delimiter-aware parsing:
@@ -613,7 +610,7 @@ Options:
   - indent (default: 2 spaces)
   - delimiter (document delimiter; default: comma; alternatives: tab, pipe)
   - keyFolding (default: `"off"`; alternatives: `"safe"`)
-  - flattenDepth (default: Infinity when keyFolding is `"safe"`; non-negative integer ≥ 0; values 0 or 1 have no practical folding effect)
+  - flattenDepth (default: Infinity when keyFolding is `"safe"`; non-negative integer; values less than 2 have no practical effect)
 - Decoder options:
   - indent (default: 2 spaces)
   - strict (default: `true`)
@@ -621,84 +618,10 @@ Options:
 
 Strict-mode errors are enumerated in §14; validators MAY add informative diagnostics for style and encoding invariants.
 
-### 13.4 Key Folding and Path Expansion
-
-Key folding and path expansion are optional transformations for compact dotted-path notation. Both default to `"off"`.
-
-#### Encoder: Key Folding
-
-Key folding allows encoders to collapse chains of single-key objects into dotted-path notation, reducing verbosity for deeply nested structures.
-
-Mode: `"off"` | `"safe"` (default: `"off"`)
-- `"off"`: No folding is performed. All objects are encoded with standard nesting.
-- `"safe"`: Fold eligible chains according to the rules below.
-
-flattenDepth: The maximum number of segments from K0 to include in the folded path (default: Infinity when keyFolding is `"safe"`; values less than 2 have no practical effect).
-- A value of 2 folds only two-segment chains: `{a: {b: val}}` → `a.b: val`.
-- A value of Infinity folds entire eligible chains: `{a: {b: {c: val}}}` → `a.b.c: val`.
-
-Foldable chain: A chain K0 → K1 → ... → Kn is foldable when:
-- Each Ki (where i = 0 to n−1) is an object with exactly one key Ki+1.
-- The chain stops at the first non-single-key object or when encountering a leaf value.
-- Arrays are not considered single-key objects; a chain stops at arrays.
-- The leaf value at Kn is either a primitive, an array, or an empty object.
-
-Safe mode requirements (all MUST hold for a chain to be folded):
-1. All folded segments K0 through K(d−1) (where d = min(chain length, flattenDepth)) MUST be IdentifierSegments (§1.9): matching `^[A-Za-z_][A-Za-z0-9_]*$`.
-2. No segment may contain the path separator (`.` in v1.5).
-3. The resulting folded key string MUST NOT equal any existing sibling literal key at the same object depth (collision avoidance).
-4. If any segment would require quoting per §7.3, the chain MUST NOT be folded.
-
-Folding process:
-- For a foldable chain of length n, determine d = min(n, flattenDepth).
-- Fold segments K0 through K(d−1) into a single key: `K0.K1.....K(d−1)`.
-- If d < n, emit the remaining structure (Kd through Kn) as normal nested objects.
-- The leaf value at Kn is encoded normally (primitive, array, or empty object).
-
-Examples:
-- `{a: {b: {c: 1}}}` with safe mode, depth=Infinity → `a.b.c: 1`
-- `{a: {b: {c: {d: 1}}}}` with safe mode, depth=2 → produces `a.b:` followed by nested `c:` and `d: 1` at appropriate depths
-- `{data: {"full-name": {x: 1}}}` → safe mode skips (segment `"full-name"` requires quoting); emits standard nested structure
-
-#### Decoder: Path Expansion
-
-Path expansion allows decoders to split dotted keys into nested object structures, enabling round-trip compatibility with folded encodings.
-
-Mode: `"off"` | `"safe"` (default: `"off"`)
-- `"off"`: Dotted keys are treated as literal keys. No expansion is performed.
-- `"safe"`: Expand eligible dotted keys according to the rules below.
-
-Safe mode behavior:
-- Any key containing the path separator (`.`) is considered for expansion.
-- Split the key into segments at each occurrence of `.`.
-- Only expand when ALL resulting segments are IdentifierSegments (§1.9) and none contain `.` after splitting.
-- Keys that do not meet the expansion criteria remain as literal keys.
-
-Deep merge semantics:
-When multiple expanded keys construct overlapping object paths, the decoder MUST merge them recursively:
-- Object + Object: Deep merge recursively (recurse into nested keys and apply these rules).
-- Object + Non-object (array or primitive): This is a conflict. Apply conflict resolution policy.
-- Array + Array or Primitive + Primitive: This is a conflict. Apply conflict resolution policy. Arrays are never merged element-wise.
-- Key ordering: During expansion, newly created keys are inserted in encounter order (the order they appear in the document). When merging creates nested keys, keys from later lines are appended after existing keys at the same depth. This ensures deterministic, predictable key order in the resulting object.
-
-Conflict resolution:
-- Conflict definition: A conflict occurs when expansion requires an object at a given path but finds a non-object value (array or primitive), or vice versa. A conflict also occurs when a final leaf key already exists with a non-object value that must be overwritten.
-- `strict=true` (default): Decoders MUST error on any conflict. This ensures data integrity and catches structural inconsistencies.
-- `strict=false`: Last-write-wins (LWW) conflict resolution: keys appearing later in document order (encounter order during parsing) overwrite earlier values. This provides deterministic behavior for lenient parsing.
-
-Application order: Path expansion is applied AFTER all base parsing rules (§4–12) have been applied and BEFORE the final decoded value is returned to the caller. Structural validations enumerated in §14 (strict-mode errors for array counts, indentation, etc.) operate on the pre-expanded structure and remain unaffected by expansion.
-
-Examples:
-- Input: `data.meta.items[2]: a,b` with `expandPaths="safe"` → Output: `{"data": {"meta": {"items": ["a", "b"]}}}`
-- Input: `user.name: Ada` with `expandPaths="off"` → Output: `{"user.name": "Ada"}`
-- Input: `a.b.c: 1` and `a.b.d: 2` and `a.e: 3` with `expandPaths="safe"` → Output: `{"a": {"b": {"c": 1, "d": 2}, "e": 3}}` (deep merge)
-- Input: `a.b: 1` then `a: 2` with `expandPaths="safe"` and `strict=true` → Error: "Expansion conflict at path 'a' (object vs primitive)"
-- Input: `a.b: 1` then `a: 2` with `expandPaths="safe"` and `strict=false` → Output: `{"a": 2}` (LWW)
-
 ### 13.1 Encoder Conformance Checklist
 
 Conforming encoders MUST:
-- [ ] Produce UTF-8 output with LF (U+000A) line endings (§5)
+- [ ] Produce UTF-8 output with LF (U+000A) line endings (§1.2)
 - [ ] Use consistent indentation (default 2 spaces, no tabs) (§12)
 - [ ] Escape per §7.1 in quoted strings; reject other escapes
 - [ ] Quote strings containing active delimiter, colon, or structural characters (§7.2)
@@ -735,6 +658,80 @@ Validators SHOULD verify:
 - [ ] Array length counts match declared [N]
 - [ ] All strict-mode requirements (§14)
 
+### 13.4 Key Folding and Path Expansion
+
+Key folding and path expansion are optional transformations for compact dotted-path notation. Both default to `"off"`.
+
+#### Encoder: Key Folding
+
+Key folding allows encoders to collapse chains of single-key objects into dotted-path notation, reducing verbosity for deeply nested structures.
+
+Mode: `"off"` | `"safe"` (default: `"off"`)
+- `"off"`: No folding is performed. All objects are encoded with standard nesting.
+- `"safe"`: Fold eligible chains according to the rules below.
+
+flattenDepth: The maximum number of segments from K1 to include in the folded path (default: Infinity when keyFolding is `"safe"`; values less than 2 have no practical effect).
+- A value of 2 folds the first two segments of an eligible chain: `{a: {b: val}}` → `a.b: val`; longer chains continue nested below the folded key.
+- A value of Infinity folds entire eligible chains: `{a: {b: {c: val}}}` → `a.b.c: val`.
+
+Foldable chain: A chain of L segments K1 → K2 → ... → KL is foldable when:
+- Each Ki (where 1 ≤ i < L) is an object with exactly one key Ki+1.
+- The chain stops at the first non-single-key object or when encountering a leaf value.
+- Arrays are not considered single-key objects; a chain stops at arrays.
+- The leaf value at KL is either a primitive, an array, or an empty object.
+
+Safe mode requirements (all MUST hold for a chain to be folded):
+1. All folded segments K1 through Kd (where d = min(L, flattenDepth)) MUST be IdentifierSegments (§1.9): matching `^[A-Za-z_][A-Za-z0-9_]*$`.
+2. No segment may contain the path separator (`.` in v1.5).
+3. The resulting folded key string MUST NOT equal any existing sibling literal key at the same object depth (collision avoidance).
+4. If any segment would require quoting per §7.3, the chain MUST NOT be folded.
+
+Folding process:
+- For a foldable chain of L segments, determine d = min(L, flattenDepth).
+- Fold segments K1 through Kd into a single key: `K1.K2.....Kd`.
+- If d < L, emit the remaining structure (Kd+1 through KL) as normal nested objects.
+- The leaf value at KL is encoded normally (primitive, array, or empty object).
+
+Examples:
+- `{a: {b: {c: 1}}}` with safe mode, depth=Infinity → `a.b.c: 1`
+- `{a: {b: {c: {d: 1}}}}` with safe mode, depth=2 → produces `a.b:` followed by nested `c:` and `d: 1` at appropriate depths
+- `{data: {"full-name": {x: 1}}}` → safe mode skips (segment `"full-name"` requires quoting); emits standard nested structure
+
+#### Decoder: Path Expansion
+
+Path expansion allows decoders to split dotted keys into nested object structures, enabling round-trip compatibility with folded encodings.
+
+Mode: `"off"` | `"safe"` (default: `"off"`)
+- `"off"`: Dotted keys are treated as literal keys. No expansion is performed.
+- `"safe"`: Expand eligible dotted keys according to the rules below.
+
+Safe mode behavior:
+- Any unquoted key containing the path separator (`.`) is considered for expansion; quoted keys remain literal after unescaping.
+- Split the key into segments at each occurrence of `.`.
+- Only expand when ALL resulting segments are IdentifierSegments (§1.9) and none contain `.` after splitting.
+- Keys that do not meet the expansion criteria remain as literal keys.
+
+Deep merge semantics:
+When multiple expanded keys construct overlapping object paths, the decoder MUST merge them recursively:
+- Object + Object: Deep merge recursively (recurse into nested keys and apply these rules).
+- Object + Non-object (array or primitive): This is a conflict. Apply conflict resolution policy.
+- Array + Array or Primitive + Primitive: This is a conflict. Apply conflict resolution policy. Arrays are never merged element-wise.
+- Key ordering: During expansion, newly created keys are inserted in encounter order (the order they appear in the document). When merging creates nested keys, keys from later lines are appended after existing keys at the same depth. This ensures deterministic, predictable key order in the resulting object.
+
+Conflict resolution:
+- Conflict definition: A conflict occurs when expansion requires an object at a given path but finds a non-object value (array or primitive), or vice versa. A conflict also occurs when a final leaf key already exists with a non-object value that must be overwritten.
+- `strict=true` (default): Decoders MUST error on any conflict. This ensures data integrity and catches structural inconsistencies.
+- `strict=false`: Last-write-wins (LWW) conflict resolution: keys appearing later in document order (encounter order during parsing) overwrite earlier values. This provides deterministic behavior for lenient parsing.
+
+Application order: Path expansion is applied AFTER all base parsing rules (§4–12) have been applied and BEFORE the final decoded value is returned to the caller. Structural validations enumerated in §14 (strict-mode errors for array counts, indentation, etc.) operate on the pre-expanded structure and remain unaffected by expansion.
+
+Examples:
+- Input: `data.meta.items[2]: a,b` with `expandPaths="safe"` → Output: `{"data": {"meta": {"items": ["a", "b"]}}}`
+- Input: `user.name: Ada` with `expandPaths="off"` → Output: `{"user.name": "Ada"}`
+- Input: `a.b.c: 1` and `a.b.d: 2` and `a.e: 3` with `expandPaths="safe"` → Output: `{"a": {"b": {"c": 1, "d": 2}, "e": 3}}` (deep merge)
+- Input: `a.b: 1` then `a: 2` with `expandPaths="safe"` and `strict=true` → Error: "Expansion conflict at path 'a' (object vs primitive)"
+- Input: `a.b: 1` then `a: 2` with `expandPaths="safe"` and `strict=false` → Output: `{"a": 2}` (LWW)
+
 ## 14. Strict Mode Errors and Diagnostics (Authoritative Checklist)
 
 When strict mode is enabled (default), decoders MUST error on the following conditions.
@@ -752,7 +749,7 @@ When strict mode is enabled (default), decoders MUST error on the following cond
 - Missing colon in key context.
 - Invalid escape sequences or unterminated strings in quoted tokens.
 - Delimiter mismatch (detected via width/count checks and header scope).
-- Non-whitespace content between a valid bracket segment and the colon (or fields segment). Such lines MUST NOT be parsed as array headers. Decoders MUST NOT silently discard content in these positions.
+- Non-whitespace content between a valid bracket segment and the colon (or fields segment) prevents array-header interpretation; decoders MUST NOT silently discard that content. If the line otherwise parses as a key-value line (§6, §8), it is not a strict-mode error.
 
 ### 14.3 Indentation Errors
 
@@ -849,9 +846,9 @@ count: 2
 
 ### 17.2 CSV Interoperability
 
-TOON's tabular format generalizes CSV [RFC4180] with several enhancements:
+TOON's tabular form encodes the same shape as CSV [RFC4180] with the following differences:
 
-Advantages over CSV:
+Differences from CSV:
 - Explicit array length declarations enable validation
 - Field names declared in header (no separate header row)
 - Supports nested structures (CSV is flat-only)
@@ -919,7 +916,7 @@ server:
 
 ### 18.1 Media Type Registration
 
-This specification does not request IANA registration at this time, as the format is still in Working Draft status. When this specification reaches Candidate Standard status (per the criteria in "Status of This Document"), formal media type registration will be requested following the procedures defined in [RFC6838].
+This specification does not request IANA registration at this time, as the format is still in Working Draft status. When this specification reaches Candidate Standard status, formal media type registration will be requested following the procedures defined in [RFC6838].
 
 ### 18.2 Provisional Media Type
 
@@ -1049,7 +1046,7 @@ Error cases (invalid TOON):
 ```
 key value
 
-name: "bad\xescapse"
+name: "bad\xescape"
 
 items[1]:
    - value
@@ -1211,7 +1208,7 @@ These sketches illustrate structure and common decoding helpers. They are inform
   - A field inside a regular object: nested fields are at depth +1 relative to that line.
   - The first field on a list-item hyphen line: nested fields at depth +2 relative to the hyphen line; subsequent fields at +1.
 - List items:
-  - Lines start with "- " at one deeper depth than the parent array header.
+  - Lines start with "- " at one deeper depth than the parent array header (or the bare marker "-" for an empty object list item, §10).
   - After "- ":
     - If "[ … ]:" appears → inline array item; decode with its own header and active delimiter.
     - Else if a colon appears → object with first field on hyphen line.
@@ -1259,7 +1256,7 @@ This appendix summarizes major changes between spec versions. For the complete c
 ### v3.1 (2026-05-18)
 
 - Added `\uXXXX` Unicode escape (§7.1) for control characters and BMP code points in quoted strings and keys.
-- Canonical encoding of empty object-field arrays as `key: []` (§9.1); legacy `key[0]:` remains accepted by decoders.
+- Recommended encoding of empty object-field arrays as `key: []` (§9.1); legacy `key[0]:` remains accepted by decoders.
 - Added security note on control-character round-tripping (§15).
 
 ### v3.0 (2025-11-24)
@@ -1268,7 +1265,7 @@ This appendix summarizes major changes between spec versions. For the complete c
 
 ### v2.1 (2025-11-23)
 
-- Tightened canonical encoding for objects as list items (§10): bare `-` for multi-field objects, compact `- key[N]{fields}:` only for single-field tabular arrays, to improve visual consistency and LLM readability.
+- Tightened canonical encoding for objects as list items (§10): bare `-` for multi-field objects, compact `- key[N]{fields}:` only for single-field tabular arrays.
 
 ### v2.0 (2025-11-10)
 
@@ -1437,7 +1434,7 @@ This profile captures the most common, memory-friendly rules by reference to nor
 
 - Character set and line endings: As defined in §1 (Core Concepts) and §12.
 - Indentation: MUST conform to §12 (2 spaces per level by default; strict mode enforces indentSize multiples).
-- Keys and colon syntax: MUST conform to §7.2 (unquoted keys match ^[A-Za-z_][A-Za-z0-9_.]*$; quoted otherwise; colon required after keys).
+- Keys and colon syntax: MUST conform to §7.3 (unquoted keys match ^[A-Za-z_][A-Za-z0-9_.]*$; quoted otherwise) and §7.4 (colon required after keys).
 - Strings and quoting: MUST be quoted as defined in §7.2 (deterministic quoting rules for empty strings, whitespace, reserved literals, control characters, delimiters, leading hyphens, and structural tokens).
 - Escape sequences: MUST conform to §7.1.
 - Numbers: Encoders MUST emit canonical form per §2; decoders MUST accept input per §4.

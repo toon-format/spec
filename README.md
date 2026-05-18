@@ -3,7 +3,7 @@
 [![SPEC v3.1](https://img.shields.io/badge/spec-v3.1-lightgrey)](./SPEC.md)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
-This repository contains the official specification for **Token-Oriented Object Notation (TOON)**, a compact, human-readable encoding of the JSON data model for LLM prompts. It provides a lossless serialization of the same objects, arrays, and primitives as JSON, but in a syntax that minimizes tokens and makes structure easy for models to follow.
+This repository contains the official specification for **Token-Oriented Object Notation (TOON)**, a line-oriented, indentation-based encoding of the JSON data model. See [github.com/toon-format/toon](https://github.com/toon-format/toon) for an overview, rationale, and benchmarks.
 
 ## 📋 Specification
 
@@ -13,7 +13,7 @@ This repository contains the official specification for **Token-Oriented Object 
 - **Status:** Working Draft
 - **License:** MIT
 
-The specification includes complete grammar (ABNF), encoding rules, validation requirements, and conformance criteria.
+The specification includes ABNF snippets, encoding rules, validation requirements, and conformance criteria.
 
 ## What is TOON?
 
@@ -117,7 +117,6 @@ The [tests/fixtures/](./tests/fixtures/) directory contains **language-agnostic 
 
 1. Load JSON fixtures from `tests/fixtures/encode/` and `tests/fixtures/decode/`.
 2. Run each test case against your implementation.
-3. Report results using the conformance badge system.
 
 See [tests/README.md](./tests/README.md) for detailed fixture format and usage instructions.
 
@@ -149,13 +148,13 @@ For implementation-specific questions or bugs, please refer to the respective im
 
 ## Versioning
 
-The TOON specification follows semantic versioning. See [VERSIONING.md](./VERSIONING.md) for our versioning policy and compatibility guarantees.
+The TOON specification uses MAJOR.MINOR versioning. See [VERSIONING.md](./VERSIONING.md) for the policy and compatibility guarantees.
 
 ## Resources
 
-- **Specification:** [SPEC.md](./SPEC.md) - Complete formal specification with ABNF grammar
+- **Specification:** [SPEC.md](./SPEC.md) - Formal specification with ABNF grammar snippets
 - **Examples:** [examples/](./examples/) - Working examples organized by feature
-- **Test Fixtures:** [tests/fixtures/](./tests/fixtures/) - Comprehensive test suite
+- **Test Fixtures:** [tests/fixtures/](./tests/fixtures/) - Reference test fixtures
 - **Changelog:** [CHANGELOG.md](./CHANGELOG.md) - Version history and changes
 - **Reference Implementation:** [github.com/toon-format/toon](https://github.com/toon-format/toon) - TypeScript/JavaScript implementation
 - **Benchmarks:** [Reference repo benchmarks/](https://github.com/toon-format/toon/tree/main/benchmarks) - Token efficiency measurements and accuracy retrieval tests

@@ -26,7 +26,6 @@ tests/
 │   │   ├── arrays-objects.json
 │   │   ├── delimiters.json
 │   │   ├── whitespace.json
-│   │   ├── options.json
 │   │   └── key-folding.json
 │   └── decode/             # Decoding tests (TOON → JSON)
 │       ├── primitives.json

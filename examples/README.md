@@ -88,6 +88,12 @@ Complete, valid TOON files demonstrating core features:
   - Decoder option `expandPaths="safe"` reconstructs nested structure
   - Spec: §13.4 Path Expansion
 
+- [`valid/key-folding-non-identifier.toon`](valid/key-folding-non-identifier.toon) - Non-identifier segments (v1.5+)
+  - Contains dotted keys with segments like `first-name` with hyphens (not valid IdentifierSegments)
+  - Keys are quoted (hyphens are not allowed in unquoted keys)
+  - These remain as literal dotted keys when `expandPaths="safe"` is used
+  - Spec: §13.4 Safe Mode Requirements, §1.9 IdentifierSegment, §7.3 Key Encoding
+
 ## Invalid Examples
 
 Examples that intentionally violate TOON syntax rules:
@@ -108,12 +114,6 @@ Examples that intentionally violate TOON syntax rules:
   - With `strict=false`, applies LWW conflict resolution (later value wins)
   - Spec: §13.4 Path Expansion, §14.5 Conflicts
 
-- [`valid/key-folding-non-identifier.toon`](valid/key-folding-non-identifier.toon) - Non-identifier segments (v1.5+)
-  - Contains dotted keys with segments like `first-name` with hyphens (not valid IdentifierSegments)
-  - Keys are quoted (hyphens are not allowed in unquoted keys)
-  - These remain as literal dotted keys when `expandPaths="safe"` is used
-  - Spec: §13.4 Safe Mode Requirements, §1.9 IdentifierSegment, §7.3 Key Encoding
-
 - [`invalid/delimiter-mismatch.toon`](invalid/delimiter-mismatch.toon) - Header delimiter mismatch
   - Declares pipe delimiter in brackets (`[N|]`) but uses comma-separated fields (`{a,b}`)
   - MUST error in strict mode
@@ -125,13 +125,13 @@ Side-by-side JSON ↔ TOON examples showing equivalent representations:
 
 - [`conversions/users.json`](conversions/users.json) + [`conversions/users.toon`](conversions/users.toon)
   - Same tabular data in both formats
-  - Shows token reduction achieved by TOON (≈30-60% for tabular data)
+  - Shows the tabular form for uniform arrays of objects; see the [benchmarks](https://github.com/toon-format/toon/tree/main/benchmarks) for measured token reductions
   - Demonstrates the primary use case: uniform arrays of objects
 
 - [`conversions/config.json`](conversions/config.json) + [`conversions/config.toon`](conversions/config.toon) (v1.5+)
   - Deeply nested configuration data (server, database, logging settings)
   - Regenerated with `keyFolding="safe"`; because most objects are multi-key, folding halts quickly and the output stays primarily nested (the stop condition)
-  - Shows ≈40-50% token reduction versus the JSON source while remaining spec-compliant
+  - Shows safe folding behavior while remaining spec-compliant
   - Highlights how safe folding behaves when little or no folding is permitted
 
 - [`conversions/api-response.json`](conversions/api-response.json) + [`conversions/api-response.toon`](conversions/api-response.toon) (v1.5+)
@@ -149,4 +149,4 @@ These examples are useful for:
 3. **Documentation** - Reference examples when explaining TOON features.
 4. **Debugging** - Compare your output with these known-good examples.
 
-For comprehensive test coverage, see the [`tests/`](../tests/) directory which contains language-agnostic JSON test fixtures covering all spec requirements.
+For reference test fixtures, see the [`tests/`](../tests/) directory.
