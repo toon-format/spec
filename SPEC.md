@@ -246,7 +246,7 @@ See Appendix G for non-normative language-specific examples (Go, JavaScript, Pyt
 Decoders map text tokens to host values:
 
 - Quoted tokens (strings and keys):
-  - MUST be unescaped per Section 7.1 (only \\, \", \n, \r, \t are valid). Any other escape or an unterminated string MUST error.
+  - MUST be unescaped per Section 7.1 (only \\, \", \n, \r, \t, and \uXXXX are valid; see §7.1). Any other escape or an unterminated string MUST error.
   - Quoted primitives remain strings even if they look like numbers/booleans/null.
 - Unquoted value tokens:
   - true, false, null → booleans/null.
@@ -370,7 +370,19 @@ In quoted strings and keys, the following characters MUST be escaped:
 - U+000D carriage return → "\\r"
 - U+0009 tab → "\\t"
 
-Decoders MUST reject any other escape sequence and unterminated strings.
+Control characters in the range U+0000 through U+001F that are not U+000A, U+000D, or U+0009 MUST be encoded using the `\uXXXX` form, where `XXXX` is exactly four hexadecimal digits. Encoders SHOULD emit lowercase hexadecimal digits. Encoders MAY use `\uXXXX` for any other Unicode code point but SHOULD prefer literal UTF-8 for printable characters.
+
+Decoders MUST accept `\uXXXX` (case-insensitive hex digits) in quoted strings and quoted keys, converting the four digits to the corresponding Unicode code point. Decoders MUST reject `\u` followed by fewer than four hex digits, MUST reject lone surrogate code points U+D800–U+DFFF decoded from `\uXXXX`, and MUST reject any other escape sequence or unterminated strings.
+
+Supplementary code points (> U+FFFF) are represented as literal UTF-8 in quoted strings; surrogate-pair sequences (two consecutive `\uXXXX` escapes) are not recognized.
+
+Normative escape grammar:
+
+```abnf
+HEXDIG         = DIGIT / %x41-46 / %x61-66
+escaped-char   = "\" ( "\" / DQUOTE / "n" / "r" / "t" / unicode-escape )
+unicode-escape = %x75 4HEXDIG
+```
 
 Tabs are allowed inside quoted strings and as a declared delimiter; they MUST NOT be used for indentation (Section 12).
 
@@ -682,7 +694,7 @@ Examples:
 Conforming encoders MUST:
 - [ ] Produce UTF-8 output with LF (U+000A) line endings (§5)
 - [ ] Use consistent indentation (default 2 spaces, no tabs) (§12)
-- [ ] Escape \\, ", \n, \r, \t in quoted strings; reject other escapes (§7.1)
+- [ ] Escape per §7.1 in quoted strings; reject other escapes
 - [ ] Quote strings containing active delimiter, colon, or structural characters (§7.2)
 - [ ] Emit array lengths [N] matching actual item count (§6, §9)
 - [ ] Preserve object key order as encountered (§2)
@@ -698,7 +710,7 @@ Conforming encoders MUST:
 Conforming decoders MUST:
 - [ ] Parse array headers per §6 (length, delimiter, optional fields)
 - [ ] Split inline arrays and tabular rows using active delimiter only (§11)
-- [ ] Unescape quoted strings with only valid escapes (§7.1)
+- [ ] Unescape per §7.1
 - [ ] Type unquoted primitives: true/false/null → booleans/null, numeric → number, else → string (§4)
 - [ ] Enforce strict-mode rules when `strict=true` (§14)
 - [ ] Preserve array order and object key order (§2)
@@ -780,7 +792,7 @@ Recommended error messages:
 - Strict-mode checks (Section 14) detect malformed strings, truncation, or injected rows/items via length and width mismatches.
 - Encoders SHOULD avoid excessive memory on large inputs; implement streaming/tabular row emission where feasible.
 - Unicode:
-  - Encoders SHOULD avoid altering Unicode beyond required escaping; decoders SHOULD accept valid UTF-8 in quoted strings/keys (with only the five escapes).
+  - Encoders SHOULD avoid altering Unicode beyond required escaping; decoders SHOULD accept valid UTF-8 in quoted strings/keys (with the escape repertoire defined in §7.1).
 
 ## 16. Internationalization
 
@@ -1175,7 +1187,7 @@ These sketches illustrate structure and common decoding helpers. They are inform
 
 ### B.4 Primitive Token Parsing
 
-- If token starts with a quote, it MUST be a properly quoted string (no trailing characters after the closing quote). Unescape using only the five escapes; otherwise MUST error.
+- If token starts with a quote, it MUST be a properly quoted string (no trailing characters after the closing quote). Unescape per §7.1; otherwise MUST error.
 - Else if token is true/false/null → boolean/null.
 - Else if token is numeric without forbidden leading zeros and finite → number.
   - Examples: `"1.5000"` → `1.5`, `"-1E+03"` → `-1000`, `"-0"` → `0` (host normalization applies)
@@ -1232,6 +1244,10 @@ Note: Host-type normalization tests (e.g., BigInt, Date, Set, Map) are language-
 ## Appendix D: Document Changelog (Informative)
 
 This appendix summarizes major changes between spec versions. For the complete changelog, see [`CHANGELOG.md`](./CHANGELOG.md) in the specification repository.
+
+### v3.1 (YYYY-MM-DD)
+
+- Added `\uXXXX` Unicode escape (§7.1) for control characters and arbitrary code points in quoted strings and keys.
 
 ### v3.0 (2025-11-24)
 
@@ -1410,7 +1426,7 @@ This profile captures the most common, memory-friendly rules by reference to nor
 - Indentation: MUST conform to §12 (2 spaces per level by default; strict mode enforces indentSize multiples).
 - Keys and colon syntax: MUST conform to §7.2 (unquoted keys match ^[A-Za-z_][A-Za-z0-9_.]*$; quoted otherwise; colon required after keys).
 - Strings and quoting: MUST be quoted as defined in §7.2 (deterministic quoting rules for empty strings, whitespace, reserved literals, control characters, delimiters, leading hyphens, and structural tokens).
-- Escape sequences: MUST conform to §7.1 (only \\, \", \n, \r, \t are valid).
+- Escape sequences: MUST conform to §7.1.
 - Numbers: Encoders MUST emit canonical form per §2; decoders MUST accept input per §4.
 - Arrays and headers: Header syntax MUST conform to §6; array encoding as defined in §9.
 - Delimiters: Delimiter scoping and quoting rules as defined in §11.
@@ -1429,7 +1445,7 @@ For a detailed version history, see Appendix D.
 - Backward-compatible evolutions SHOULD preserve current headers, quoting rules, and indentation semantics.
 - Reserved/structural characters (colon, brackets, braces, hyphen) MUST retain current meanings.
 - The path separator (see §1.9) is fixed to `"."` in v1.5; future versions MAY make this configurable.
-- Future work (non-normative): schemas, comments/annotations, additional delimiter profiles, optional \uXXXX escapes (if added, must be precisely defined).
+- Future work (non-normative): schemas, comments/annotations, additional delimiter profiles.
 
 ## 21. Intellectual Property Considerations
 

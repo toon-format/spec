@@ -1,5 +1,5 @@
 {
-  "version": "1.4",
+  "version": "3.1",
   "category": "decode",
   "description": "Validation errors - length mismatches, invalid escapes, syntax errors, delimiter mismatches",
   "tests": [
@@ -37,6 +37,20 @@
       "expected": null,
       "shouldError": true,
       "specSection": "14.2"
+    },
+    {
+      "name": "rejects truncated unicode escape \\u00",
+      "input": "val: \"a\\u00b\"",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "7.1"
+    },
+    {
+      "name": "rejects lone surrogate code point \\uD800",
+      "input": "val: \"a\\uD800b\"",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "7.1"
     },
     {
       "name": "throws on unterminated string",
