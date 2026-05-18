@@ -4,7 +4,7 @@
 
 **Version:** 3.1
 
-**Date:** YYYY-MM-DD
+**Date:** 2026-05-18
 
 **Status:** Working Draft
 
@@ -382,7 +382,7 @@ Normative escape grammar:
 
 ```abnf
 HEXDIG         = DIGIT / %x41-46 / %x61-66
-escaped-char   = "\" ( "\" / DQUOTE / "n" / "r" / "t" / unicode-escape )
+escaped-char   = "\" ( "\" / DQUOTE / %x6E / %x72 / %x74 / unicode-escape )
 unicode-escape = %x75 4HEXDIG
 ```
 
@@ -524,6 +524,7 @@ For an object appearing as a list item:
     - All other fields of the same object MUST appear at depth +1 under the hyphen line, in encounter order, using normal object field rules (Section 8).
     - Encoders MUST NOT emit tabular rows at depth +1 or sibling fields at the same depth as rows when the first field is a tabular array.
   - For all other cases (first field is not a tabular array), encoders SHOULD place the first field on the hyphen line. A bare hyphen on its own line is used only for empty list-item objects.
+  - Empty arrays in field positions (including list-item object fields) use the canonical `key: []` form per §9.1.
 - Decoding (normative):
   - When a decoder encounters a list-item line of the form `- key[N<delim?>]{fields}:` at depth d, it MUST treat this as the start of a tabular array field named key in the list-item object.
   - Lines at depth d+2 that conform to tabular row syntax (Section 9.3) are rows of that tabular array.
@@ -800,7 +801,7 @@ Recommended error messages:
   - Strings with colon, the relevant delimiter (document or active), hyphen marker cases ("-" or strings starting with "-"), control characters, or brackets/braces MUST be quoted.
 - Strict-mode checks (Section 14) detect malformed strings, truncation, or injected rows/items via length and width mismatches.
 - Encoders SHOULD avoid excessive memory on large inputs; implement streaming/tabular row emission where feasible.
-- Control characters in quoted strings (`\uXXXX`, §7.1) round-trip verbatim per §17.1; encoders MUST NOT strip them during normalization. Recipients that render decoded values into terminals, logs, or markup are responsible for downstream escaping; TOON is a transport format, not a sanitization boundary.
+- Control characters in quoted strings (`\uXXXX`, §7.1) are preserved as data values; encoders MUST NOT strip them during normalization. Recipients that render decoded values into terminals, logs, or markup are responsible for downstream escaping; TOON is a transport format, not a sanitization boundary.
 - Unicode:
   - Encoders SHOULD avoid altering Unicode beyond required escaping; decoders SHOULD accept valid UTF-8 in quoted strings/keys (with the escape repertoire defined in §7.1).
 
@@ -1206,6 +1207,7 @@ These sketches illustrate structure and common decoding helpers. They are inform
 ### B.5 Object and List Item Parsing
 
 - Key-value line: parse a key up to the first colon; missing colon → MUST error. The remainder of the line is the primitive value (if present).
+  - If the remainder is exactly `[]` → empty array (§9.1).
 - Nested object: "key:" with nothing after colon opens a nested object. If this is:
   - A field inside a regular object: nested fields are at depth +1 relative to that line.
   - The first field on a list-item hyphen line: nested fields at depth +2 relative to the hyphen line; subsequent fields at +1.
@@ -1255,9 +1257,9 @@ Note: Host-type normalization tests (e.g., BigInt, Date, Set, Map) are language-
 
 This appendix summarizes major changes between spec versions. For the complete changelog, see [`CHANGELOG.md`](./CHANGELOG.md) in the specification repository.
 
-### v3.1 (YYYY-MM-DD)
+### v3.1 (2026-05-18)
 
-- Added `\uXXXX` Unicode escape (§7.1) for control characters and arbitrary code points in quoted strings and keys.
+- Added `\uXXXX` Unicode escape (§7.1) for control characters and BMP code points in quoted strings and keys.
 - Canonical encoding of empty object-field arrays as `key: []` (§9.1); legacy `key[0]:` remains accepted by decoders.
 - Added security note on control-character round-tripping and downstream sanitization responsibility (§15).
 

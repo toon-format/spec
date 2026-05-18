@@ -10,7 +10,7 @@ This repository contains the official specification for **Token-Oriented Object 
 
 [→ Read the full specification (SPEC.md)](./SPEC.md)
 
-- **Version:** 3.1 (YYYY-MM-DD)
+- **Version:** 3.1 (2026-05-18)
 - **Status:** Working Draft
 - **License:** MIT
 

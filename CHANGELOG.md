@@ -5,16 +5,17 @@ All notable changes to the TOON specification will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.1] - YYYY-MM-DD
+## [3.1] - 2026-05-18
 
 ### Added
 
-- `\uXXXX` Unicode escape in quoted strings and keys for representing control characters and arbitrary code points (§7.1).
+- `\uXXXX` Unicode escape in quoted strings and keys for representing control characters and BMP code points (§7.1).
 - Security note on control-character round-tripping and downstream sanitization responsibility (§15).
 
 ### Changed
 
 - Empty object-field arrays SHOULD now encode as `key: []` (§9.1). Decoders MUST accept both `key: []` and the legacy `key[0]:` form. Inner empty arrays in arrays-of-arrays (§9.2) retain `- [0]:`.
+- Encoders MUST now emit `\uXXXX` for control characters U+0000–U+001F outside `\n`, `\r`, `\t` (§7.1). v3.0 had no defined escape for these characters; this release formalizes previously undefined behavior without invalidating any prior conformant output.
 
 ## [3.0] - 2025-11-24
 
