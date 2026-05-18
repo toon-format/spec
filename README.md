@@ -104,7 +104,7 @@ Official community-driven implementations are currently being developed at the [
 
 ## Test Fixtures & Conformance
 
-The [tests/fixtures/](./tests/fixtures/) directory contains **language-agnostic JSON test fixtures** for validating TOON implementations. Each fixture file contains test cases with input/output pairs covering all specification requirements.
+The [tests/fixtures/](./tests/fixtures/) directory contains **language-agnostic JSON test fixtures** for validating TOON implementations. Each fixture file contains test cases with input/output pairs covering core specification requirements.
 
 **What's included:**
 

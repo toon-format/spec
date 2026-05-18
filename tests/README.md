@@ -1,6 +1,6 @@
 # TOON Test Fixtures
 
-This directory contains **comprehensive language-agnostic JSON test fixtures** for validating TOON implementations against the specification. These fixtures cover all specification requirements and provide a standardized conformance test suite.
+This directory contains **language-agnostic JSON test fixtures** for validating TOON implementations against the specification. These fixtures cover core specification requirements and provide a standardized conformance test suite.
 
 ## Purpose
 
