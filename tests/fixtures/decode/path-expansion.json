@@ -144,15 +144,16 @@
       "specSection": "13.4"
     },
     {
-      "name": "preserves non-IdentifierSegment keys as literals",
-      "input": "full-name.x: 1",
+      "name": "preserves quoted non-IdentifierSegment keys as literals",
+      "input": "\"full-name.x\": 1",
       "expected": {
         "full-name.x": 1
       },
       "options": {
         "expandPaths": "safe"
       },
-      "specSection": "13.4"
+      "specSection": "13.4",
+      "note": "Quoted keys remain literal after unescaping; safe-mode expansion does not split them. The key must be quoted because §7.3 forbids hyphens in unquoted keys."
     },
     {
       "name": "expands keys creating empty nested objects",

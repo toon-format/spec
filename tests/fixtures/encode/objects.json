@@ -197,6 +197,22 @@
       "specSection": "7.1"
     },
     {
+      "name": "escapes U+0004 control character in key via \\uXXXX",
+      "input": {
+        "a\u0004b": 1
+      },
+      "expected": "\"a\\u0004b\": 1",
+      "specSection": "7.1"
+    },
+    {
+      "name": "escapes U+001F control character in key via \\uXXXX",
+      "input": {
+        "x\u001fy": 2
+      },
+      "expected": "\"x\\u001fy\": 2",
+      "specSection": "7.1"
+    },
+    {
       "name": "encodes deeply nested objects",
       "input": {
         "a": {

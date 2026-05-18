@@ -92,6 +92,27 @@
         "strict": true
       },
       "specSection": "6"
+    },
+    {
+      "name": "throws on extra brackets between bracket segment and colon in strict mode",
+      "input": "foo[1][bar]: 10",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "6",
+      "note": "Non-whitespace content between ] and : must error in strict mode (§6 fall-through is non-strict only)"
+    },
+    {
+      "name": "throws on text between bracket segment and colon in strict mode",
+      "input": "foo[2]extra: a,b",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "6"
     }
   ]
 }

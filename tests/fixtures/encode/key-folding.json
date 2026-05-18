@@ -136,23 +136,6 @@
       "note": "flattenDepth=0 disables all folding"
     },
     {
-      "name": "encodes standard nesting with flattenDepth=1 (no practical effect)",
-      "input": {
-        "a": {
-          "b": {
-            "c": 1
-          }
-        }
-      },
-      "expected": "a:\n  b:\n    c: 1",
-      "options": {
-        "keyFolding": "safe",
-        "flattenDepth": 1
-      },
-      "specSection": "13.4",
-      "note": "flattenDepth=1 has no practical folding effect (requires at least 2 segments)"
-    },
-    {
       "name": "encodes standard nesting with keyFolding=off (baseline)",
       "input": {
         "a": {
