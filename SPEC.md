@@ -2,9 +2,9 @@
 
 ## Token-Oriented Object Notation
 
-**Version:** 3.0
+**Version:** 3.1
 
-**Date:** 2025-11-24
+**Date:** YYYY-MM-DD
 
 **Status:** Working Draft
 
@@ -20,7 +20,7 @@ Token-Oriented Object Notation (TOON) is a line-oriented, indentation-based text
 
 ## Status of This Document
 
-This document is a Working Draft v3.0 and may be updated, replaced, or obsoleted. Implementers should monitor the canonical repository at https://github.com/toon-format/spec for changes.
+This document is a Working Draft v3.1 and may be updated, replaced, or obsoleted. Implementers should monitor the canonical repository at https://github.com/toon-format/spec for changes.
 
 This specification is stable for implementation but not yet finalized. Breaking changes may occur in future major versions.
 
@@ -279,6 +279,7 @@ TOON is a deterministic, line-oriented, indentation-based notation.
     - Otherwise: expanded list items: key[N<delim?>]: with "- …" items (see Sections 9.4 and 10).
 - Root form discovery:
   - If the first non-empty depth-0 line is a valid root array header per Section 6 (must include a colon), decode a root array.
+  - Else if the document has exactly one non-empty line and it is the literal token `[]`, decode an empty root array (§9.1).
   - Else if the document has exactly one non-empty line and it is neither a valid array header nor a key-value line (quoted or unquoted key), decode a single primitive (examples: `hello`, `42`, `true`).
   - Otherwise, decode an object.
   - An empty document (no non-empty lines after ignoring trailing newline(s) and ignorable blank lines) decodes to an empty object `{}`.
@@ -371,7 +372,7 @@ In quoted strings and keys, the following characters MUST be escaped:
 - U+000D carriage return → "\\r"
 - U+0009 tab → "\\t"
 
-Control characters in the range U+0000 through U+001F that are not U+000A, U+000D, or U+0009 MUST be encoded using the `\uXXXX` form, where `XXXX` is exactly four hexadecimal digits. Encoders SHOULD emit lowercase hexadecimal digits. Encoders MAY use `\uXXXX` for any other Unicode code point but SHOULD prefer literal UTF-8 for printable characters.
+Control characters in the range U+0000 through U+001F that are not U+000A, U+000D, or U+0009 MUST be encoded using the `\uXXXX` form, where `XXXX` is exactly four hexadecimal digits. Encoders SHOULD emit lowercase hexadecimal digits. Encoders MAY use `\uXXXX` for any other non-surrogate code point in U+0000 through U+FFFF but SHOULD prefer literal UTF-8 for printable characters.
 
 Decoders MUST accept `\uXXXX` (case-insensitive hex digits) in quoted strings and quoted keys, converting the four digits to the corresponding Unicode code point. Decoders MUST reject `\u` followed by fewer than four hex digits, MUST reject lone surrogate code points U+D800–U+DFFF decoded from `\uXXXX`, and MUST reject any other escape sequence or unterminated strings.
 
@@ -398,7 +399,7 @@ A string value MUST be quoted if any of the following is true:
   - Or matches /^0\d+$/ (leading-zero decimals such as "05").
 - It contains a colon (:), double quote ("), or backslash (\\).
 - It contains brackets or braces ([, ], {, }).
-- It contains control characters: newline, carriage return, or tab.
+- It contains control characters in U+0000 through U+001F.
 - It contains the relevant delimiter (see §11 for complete delimiter rules):
   - For inline array values and tabular row cells: the active delimiter from the nearest array header.
   - For object field values (key: value): the document delimiter, even when the object is within an array's scope.
