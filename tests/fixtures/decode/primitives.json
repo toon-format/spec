@@ -1,5 +1,5 @@
 {
-  "version": "1.4",
+  "version": "3.1",
   "category": "decode",
   "description": "Primitive value decoding - strings, numbers, booleans, null, unescaping",
   "tests": [
@@ -49,6 +49,18 @@
       "name": "parses quoted string with escaped quotes",
       "input": "\"say \\\"hello\\\"\"",
       "expected": "say \"hello\"",
+      "specSection": "7.1"
+    },
+    {
+      "name": "decodes \\uXXXX escape (U+0004)",
+      "input": "val: \"a\\u0004b\"",
+      "expected": { "val": "a\u0004b" },
+      "specSection": "7.1"
+    },
+    {
+      "name": "decodes \\uXXXX with mixed-case hex digits",
+      "input": "val: \"a\\u00Abb\"",
+      "expected": { "val": "a«b" },
       "specSection": "7.1"
     },
     {

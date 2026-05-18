@@ -5,6 +5,12 @@ All notable changes to the TOON specification will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1] - YYYY-MM-DD
+
+### Added
+
+- `\uXXXX` Unicode escape in quoted strings and keys for representing control characters and arbitrary code points (§7.1).
+
 ## [3.0] - 2025-11-24
 
 ### Breaking Changes
