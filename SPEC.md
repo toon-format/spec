@@ -702,7 +702,8 @@ Conforming encoders MUST:
 - [ ] Use consistent indentation (default 2 spaces, no tabs) (§12)
 - [ ] Escape per §7.1 in quoted strings; reject other escapes
 - [ ] Quote strings containing active delimiter, colon, or structural characters (§7.2)
-- [ ] Emit array lengths [N] matching actual item count (§6, §9); empty object-field arrays SHOULD use `key: []` (§9.1)
+- [ ] Emit array lengths [N] matching actual item count (§6, §9)
+- [ ] Prefer `key: []` for empty object-field arrays (§9.1)
 - [ ] Preserve object key order as encountered (§2)
 - [ ] Normalize numbers to non-exponential decimal form (§2)
 - [ ] Convert -0 to 0 (§2)

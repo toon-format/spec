@@ -9,13 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `\uXXXX` Unicode escape in quoted strings and keys for representing control characters and BMP code points (§7.1).
-- Security note on control-character round-tripping (§15).
+- `\uXXXX` Unicode escape in quoted strings and keys; encoders MUST emit it for control characters U+0000–U+001F outside `\n`, `\r`, `\t` (§7.1).
+- Encoders MUST NOT strip control characters from quoted strings during normalization (§15).
 
 ### Changed
 
 - Empty object-field arrays SHOULD now encode as `key: []` (§9.1). Decoders MUST accept both `key: []` and the legacy `key[0]:` form.
-- Encoders MUST emit `\uXXXX` for control characters U+0000–U+001F outside `\n`, `\r`, `\t` (§7.1).
 
 ## [3.0] - 2025-11-24
 
