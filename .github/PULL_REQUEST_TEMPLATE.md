@@ -50,62 +50,23 @@
 
 ## Examples
 
-<!-- Provide concrete examples demonstrating the change -->
+<!-- Provide concrete examples demonstrating the change. Replace placeholders with valid TOON (no `#` comments – TOON has none). -->
 
 ### Before
 
 ```toon
-<!-- If applicable, show the current behavior -->
 ```
 
 ### After
 
 ```toon
-<!-- Show the new behavior -->
 ```
-
-## Test Coverage
-
-<!-- How are these changes tested? -->
-
-- [ ] Existing test fixtures pass
-- [ ] New test fixtures added (if applicable)
-- [ ] Examples in SPEC.md updated
-- [ ] Reference implementation behavior documented
-
-## Documentation
-
-<!-- What documentation was updated? -->
-
-- [ ] SPEC.md updated
-- [ ] CHANGELOG.md updated
-- [ ] Examples updated (if applicable)
-- [ ] README.md updated (if applicable)
-- [ ] Test fixtures updated (if applicable)
 
 ## Checklist
 
-<!-- Please review and check all applicable items -->
-
 - [ ] I have read [CONTRIBUTING.md](../CONTRIBUTING.md)
-- [ ] I have searched for similar PRs and issues
 - [ ] My changes follow the specification writing style guidelines
 - [ ] I have used RFC 2119 keywords (MUST, SHOULD, MAY) correctly where applicable
-- [ ] I have provided clear examples
 - [ ] I have updated CHANGELOG.md with my changes
-- [ ] I have considered the impact on existing implementations
 - [ ] For breaking changes: I have provided a migration strategy
-- [ ] All new and existing tests pass
-
-## Additional Notes
-
-<!-- Any other information that reviewers should know -->
-
----
-
-**For Maintainers:**
-
-- [ ] Version number assigned (if needed)
-- [ ] Spec version updated (if applicable)
-- [ ] Breaking change documented in VERSIONING.md (if applicable)
-- [ ] Community implementations notified (if breaking change)
+- [ ] Test fixtures added or updated (if applicable)

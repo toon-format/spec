@@ -1,6 +1,6 @@
 # TOON Test Fixtures
 
-This directory contains **language-agnostic JSON test fixtures** for validating TOON implementations against the specification. These fixtures cover core specification requirements and provide a standardized conformance test suite.
+This directory contains **language-agnostic JSON test fixtures** for validating TOON implementations against the specification. These fixtures cover core specification requirements; conformance is defined by SPEC.md (§13 and Appendix C), not by this fixture suite.
 
 ## Directory Structure
 
@@ -167,9 +167,11 @@ The fixture format is language-agnostic JSON, so you can load and iterate it usi
 | `whitespace.json` | Whitespace tolerance and token trimming | §12 |
 | `root-form.json` | Root form detection (empty, single primitive) | §5 |
 | `validation-errors.json` | Syntax errors, length mismatches, malformed input | §6, §14 |
-| `indentation-errors.json` | Strict mode indentation validation | §14.3, §12 |
-| `blank-lines.json` | Blank line handling in arrays | §14.4, §12 |
-| `path-expansion.json` | Path expansion with safe mode, deep merge, strict-mode conflicts | §13.4, §14.5 |
+
+**Coverage note:** §3 host-type normalization (NaN/±Infinity → null, host Date/Set/Map/BigInt mappings) is intentionally outside these JSON fixtures, since the fixture format cannot express non-JSON encode inputs. Implementations should cover §3 in their language-local test suites.
+| `indentation-errors.json` | Strict mode indentation validation | §14.2, §12 |
+| `blank-lines.json` | Blank line handling in arrays | §14.2, §12 |
+| `path-expansion.json` | Path expansion with safe mode, deep merge, strict-mode conflicts | §13.4, §14.3 |
 
 ## Validating Fixtures
 
@@ -191,9 +193,8 @@ To contribute new test cases:
 1. **Identify the category:** Which fixture file should contain the test?
 2. **Follow the format:** Use the structure defined in `fixtures.schema.json`
 3. **Add spec references:** Link to relevant specification sections
-4. **Validate:** Ensure your fixture validates against the schema
-5. **Test with reference implementation:** Verify expected output is correct
-6. **Submit PR:** Include clear description of what the test validates
+4. **Validate:** Verify the expected output against SPEC.md and that the fixture validates against the schema
+5. **Submit PR:** Include clear description of what the test validates
 
 See [CONTRIBUTING.md](../CONTRIBUTING.md) for detailed guidelines.
 

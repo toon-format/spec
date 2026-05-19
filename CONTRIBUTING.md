@@ -68,40 +68,21 @@ See [tests/README.md](./tests/README.md) for fixture structure and guidelines.
 
 ## Specification Principles
 
-TOON prioritizes (in order):
-
-1. **Token Efficiency** – Changes should maintain or improve token usage for LLM input
-2. **LLM-Friendly Structure** – Easy for LLMs to parse and generate (explicit markers are features)
-3. **Simplicity** – Prefer consistent rules over special cases
-4. **Backward Compatibility** – Breaking changes need strong justification
-5. **Interoperability** – Implementations must produce identical output for identical input
-6. **Human Readability** – Debuggable by humans despite machine optimization
-
-These principles guide every decision. When in doubt, optimize for token efficiency first.
+See the Introduction in [SPEC.md](./SPEC.md) for TOON's purpose, applicability, and non-goals. Proposals should align with the priorities stated there: token efficiency, deterministic JSON round-trip, unambiguous human-readable structure, and strict validation.
 
 ## Style Guidelines
 
 Follow [SPEC.md](./SPEC.md) conventions:
 
-- **RFC 2119 keywords**: Use MUST/SHOULD/MAY correctly (see SPEC.md §1)
+- **RFC 2119 keywords**: Use MUST/SHOULD/MAY correctly (see SPEC.md §1.1)
 - **Examples over prose**: Show concrete input/output for complex rules
 - **Precision**: Zero ambiguity – multiple implementations must agree
 - **Structure**: Number sections, cross-reference related rules
 - **Line length**: 80-120 characters for readability
 
-## Communication
+## Maintainer
 
-- **GitHub Issues**: For bug reports and feature requests
-- **GitHub Discussions**: For questions and general discussion
-- **Pull Requests**: For code reviews and implementation discussion
-
-## Maintainers
-
-This is a collaborative project. Current maintainers:
-
-- [@johannschopplich](https://github.com/johannschopplich)
-
-All maintainers have equal and consensual decision-making power. For major architectural decisions, please open a discussion issue first.
+[@johannschopplich](https://github.com/johannschopplich). For major architectural decisions, please open a discussion issue first.
 
 ## License
 

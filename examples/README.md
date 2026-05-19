@@ -53,9 +53,7 @@ Complete, valid TOON files demonstrating core features:
 
 ### Key Folding and Path Expansion
 
-> Regenerate any of these examples via a conforming encoder with `keyFolding="safe"`.
->
-> Decode folded examples with `expandPaths="safe"` to reconstruct nested JSON.
+> Examples with a `.json` sidecar can be regenerated via a conforming encoder with `keyFolding="safe"`. Decode the `.toon` with `expandPaths="safe"` to reconstruct nested JSON.
 
 - [`valid/key-folding-basic.toon`](valid/key-folding-basic.toon) - Basic dotted-key notation
   - Demonstrates how `keyFolding="safe"` only folds chains of single-key objects (e.g. `server.host: localhost`)
@@ -75,14 +73,9 @@ Complete, valid TOON files demonstrating core features:
   - Useful when only some branches meet the single-key-chain requirement
   - Spec: §13.4 Key Folding
 
-- [`valid/path-expansion-merge.toon`](valid/path-expansion-merge.toon) - Deep merge behavior
-  - Demonstrates how overlapping dotted keys merge during expansion
-  - Shows `user.profile.name: Ada` + `user.settings.theme: dark` → nested object with both branches
-  - Spec: §13.4 Path Expansion
-
 - [`valid/key-folding-non-identifier.toon`](valid/key-folding-non-identifier.toon) - Non-identifier segments
-  - Paired with [`valid/key-folding-non-identifier.json`](valid/key-folding-non-identifier.json); quoted dotted keys with non-IdentifierSegment parts remain literal under `expandPaths="safe"`
-  - Spec: §13.4 Safe Mode Requirements, §1.9 IdentifierSegment, §7.3 Key Encoding
+  - Paired with [`valid/key-folding-non-identifier.json`](valid/key-folding-non-identifier.json); quoted dotted keys (quoting forced by hyphens per §7.3) remain literal under `expandPaths="safe"`
+  - Spec: §13.4 Safe Mode Requirements, §7.3 Key Encoding
 
 ## Invalid Examples
 
@@ -93,15 +86,9 @@ Examples that intentionally violate TOON syntax rules:
   - Should fail validation in strict mode
   - Spec: §14.1 Strict Mode (Array Count & Width)
 
-- [`invalid/missing-colon.toon`](invalid/missing-colon.toon) - Missing colon after key
-  - Keys require `:`; this file omits it
-  - Spec: §5 Concrete Syntax (root form)
-
-- [`invalid/path-expansion-conflict-strict.toon`](invalid/path-expansion-conflict-strict.toon) - Path expansion conflict
-  - First line creates nested path `user.profile.name`, second line tries to assign primitive to `user.profile`
-  - Fails when decoded with `expandPaths="safe"` and `strict=true` (default)
-  - With `strict=false`, applies LWW conflict resolution (later value wins)
-  - Spec: §13.4 Path Expansion, §14.5 Conflicts
+- [`invalid/multiple-root-primitives.toon`](invalid/multiple-root-primitives.toon) - Multiple depth-0 primitives
+  - Two non-key-value lines at root depth in strict mode
+  - Spec: §5 Concrete Syntax (root form), §14.2 Syntax and Structural Errors
 
 - [`invalid/delimiter-mismatch.toon`](invalid/delimiter-mismatch.toon) - Header delimiter mismatch
   - Declares pipe delimiter in brackets (`[N|]`) but uses comma-separated fields (`{a,b}`)

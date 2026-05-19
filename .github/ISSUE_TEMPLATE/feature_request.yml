@@ -58,7 +58,6 @@ body:
       placeholder: |
         ## Proposed Syntax
         ```toon
-        # Example of the new syntax
         ```
 
         ## Encoding Rules
@@ -82,17 +81,14 @@ body:
       placeholder: |
         ### Before (current spec)
         ```toon
-        # Current syntax
         ```
 
         ### After (proposed)
         ```toon
-        # New syntax
         ```
 
         ### Use Case Example
         ```toon
-        # Real-world usage
         ```
       render: markdown
     validations:

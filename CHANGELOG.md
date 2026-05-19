@@ -8,16 +8,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
-- §8 / §14.6: duplicate sibling keys at the same depth – strict mode MUST error; non-strict mode MUST apply last-write-wins (LWW) in document order silently.
+- §8 / §14.4: duplicate sibling keys at the same depth – strict mode MUST error; non-strict mode MUST apply last-write-wins (LWW) in document order silently.
 - §14.2: header delimiter mismatch (bracket-segment delimiter ≠ field-list delimiter) is a strict-mode header syntax error, independent of row width/count checks.
+- §14.2: enumerated malformed bracket lengths, intervening content, multiple root primitives, and the indentation/blank-line invariants previously split across §14.3 and §14.4.
 - §9.4: explicit form for nested arrays of objects or non-uniform arrays as list items (`- [M<delim?>]:` followed by items at depth +2).
 
 ### Changed
 
+- §14: collapsed §14.3 (Indentation Errors) and §14.4 (Structural Errors) into §14.2; renumbered §14.5/§14.6 to §14.3/§14.4.
+- §17 (Interoperability and Mappings) merged into the Introduction; subsequent sections renumbered.
+- §18 (Versioning and Extensibility) and §19 (Intellectual Property Considerations) relocated above the appendices.
+- §13.1 encoder checklist: emit `key: []` for empty object-field arrays; legacy `key[0]:` MAY be emitted for backward compatibility (§9.1).
 - §6: strict header parsing rejects invalid bracket lengths, leading-zero lengths (e.g., `[03]`), and any content between the bracket segment, optional fields segment, and colon. Non-strict mode MAY fall through to key-value parsing.
 - §6: the "one space after colon" rule is encoder-only; decoder tolerance is governed by §12.
 - §9.3 tabular detection: arrays containing any empty object `{}` MUST NOT use tabular form (encoded via §9.4 expanded list instead).
-- §7.1 ABNF: `unescaped-char` extended to include U+0009 (HTAB), aligning the grammar with the prose tolerance for literal tabs in quoted strings.
+- §7.1 ABNF: `unescaped-char` extended to include U+0009 (HTAB), expressing decoder leniency only; encoders MUST emit `\t` per the escape table.
 - §7.1 escape table (Supplementary row): clarify that supplementary scalars are emitted/accepted as literal UTF-8 and that surrogate `\uXXXX` escapes are not combined.
 
 ### Fixed
@@ -30,7 +35,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Removed
 
 - §16 ISO 8601 date SHOULD (out of scope; date encoding is application-level).
-- §19 "TOON Core Profile" section (cross-reference only; the full normative subset is §1–§16).
+- "TOON Core Profile" meta-section (cross-reference only; the full normative subset is §1–§16).
 
 ## [3.1] - 2026-05-18
 

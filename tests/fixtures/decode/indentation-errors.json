@@ -12,7 +12,7 @@
         "indent": 2,
         "strict": true
       },
-      "specSection": "14.3"
+      "specSection": "14.2"
     },
     {
       "name": "throws on list item with non-multiple indentation (3 spaces with indent=2)",
@@ -23,7 +23,7 @@
         "indent": 2,
         "strict": true
       },
-      "specSection": "14.3"
+      "specSection": "14.2"
     },
     {
       "name": "throws on non-multiple indentation with custom indent=4 (3 spaces)",
@@ -34,7 +34,7 @@
         "indent": 4,
         "strict": true
       },
-      "specSection": "14.3"
+      "specSection": "14.2"
     },
     {
       "name": "accepts correct indentation with custom indent size (4 spaces with indent=4)",
@@ -58,7 +58,7 @@
       "options": {
         "strict": true
       },
-      "specSection": "14.3"
+      "specSection": "14.2"
     },
     {
       "name": "throws on mixed tabs and spaces in indentation",
@@ -68,7 +68,7 @@
       "options": {
         "strict": true
       },
-      "specSection": "14.3"
+      "specSection": "14.2"
     },
     {
       "name": "throws on tab at start of line",
@@ -78,7 +78,7 @@
       "options": {
         "strict": true
       },
-      "specSection": "14.3"
+      "specSection": "14.2"
     },
     {
       "name": "accepts tabs in quoted string values",
@@ -140,43 +140,6 @@
       "options": {
         "indent": 2,
         "strict": false
-      },
-      "specSection": "12"
-    },
-    {
-      "name": "parses empty lines without validation errors",
-      "input": "a: 1\n\nb: 2",
-      "expected": {
-        "a": 1,
-        "b": 2
-      },
-      "options": {
-        "strict": true
-      },
-      "specSection": "12"
-    },
-    {
-      "name": "parses root-level content (0 indentation) as always valid",
-      "input": "a: 1\nb: 2\nc: 3",
-      "expected": {
-        "a": 1,
-        "b": 2,
-        "c": 3
-      },
-      "options": {
-        "strict": true
-      },
-      "specSection": "12"
-    },
-    {
-      "name": "parses lines with only spaces without validation if empty",
-      "input": "a: 1\n   \nb: 2",
-      "expected": {
-        "a": 1,
-        "b": 2
-      },
-      "options": {
-        "strict": true
       },
       "specSection": "12"
     }

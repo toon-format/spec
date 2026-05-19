@@ -88,7 +88,7 @@
         "expandPaths": "safe",
         "strict": true
       },
-      "specSection": "14.5"
+      "specSection": "14.3"
     },
     {
       "name": "throws on expansion conflict (object vs array) when strict=true",
@@ -99,7 +99,7 @@
         "expandPaths": "safe",
         "strict": true
       },
-      "specSection": "14.5"
+      "specSection": "14.3"
     },
     {
       "name": "applies LWW when strict=false (primitive overwrites expanded object)",

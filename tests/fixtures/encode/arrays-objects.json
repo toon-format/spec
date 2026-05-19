@@ -160,7 +160,7 @@
         "items": [{}, {}]
       },
       "expected": "items[2]:\n  -\n  -",
-      "specSection": "9.3",
+      "specSection": "9.4",
       "minSpecVersion": "3.2",
       "note": "Empty objects {} MUST NOT use tabular form per §9.3; encoded via §9.4 expanded list with bare hyphen markers per §10"
     }

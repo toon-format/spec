@@ -11,7 +11,7 @@
       "options": {
         "strict": true
       },
-      "specSection": "14.4"
+      "specSection": "14.2"
     },
     {
       "name": "throws on blank line inside tabular array",
@@ -21,7 +21,7 @@
       "options": {
         "strict": true
       },
-      "specSection": "14.4"
+      "specSection": "14.2"
     },
     {
       "name": "throws on multiple blank lines inside array",
@@ -31,7 +31,7 @@
       "options": {
         "strict": true
       },
-      "specSection": "14.4"
+      "specSection": "14.2"
     },
     {
       "name": "throws on blank line with spaces inside array",
@@ -41,7 +41,7 @@
       "options": {
         "strict": true
       },
-      "specSection": "14.4"
+      "specSection": "14.2"
     },
     {
       "name": "throws on blank line in nested list array",
@@ -51,7 +51,7 @@
       "options": {
         "strict": true
       },
-      "specSection": "14.4"
+      "specSection": "14.2"
     },
     {
       "name": "accepts blank line between root-level fields",

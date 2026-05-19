@@ -74,10 +74,9 @@ https://www.iso.org/standard/70907.html
 14. [Strict Mode Errors and Diagnostics (Authoritative Checklist)](#14-strict-mode-errors-and-diagnostics-authoritative-checklist)
 15. [Security Considerations](#15-security-considerations)
 16. [Internationalization](#16-internationalization)
-17. [Interoperability and Mappings (Informative)](#17-interoperability-and-mappings-informative)
-18. [IANA Considerations](#18-iana-considerations)
-19. [Versioning and Extensibility](#19-versioning-and-extensibility)
-20. [Intellectual Property Considerations](#20-intellectual-property-considerations)
+17. [IANA Considerations](#17-iana-considerations)
+18. [Versioning and Extensibility](#18-versioning-and-extensibility)
+19. [Intellectual Property Considerations](#19-intellectual-property-considerations)
 
 **Appendices:**
 - [Appendix A: Examples (Informative)](#appendix-a-examples-informative)
@@ -114,7 +113,7 @@ Out of scope:
 ### Relationship to JSON, CSV, and YAML (Informative)
 
 - **JSON**: TOON preserves the JSON data model. It is more compact for uniform arrays of objects by declaring length and fields once. For non-uniform or deeply nested data, JSON may be more efficient.
-- **CSV/TSV**: CSV is typically more compact for flat tables but lacks nesting and type awareness. TOON adds explicit lengths, per-array delimiter scoping, field lists, and deterministic quoting, while remaining lightweight.
+- **CSV/TSV**: CSV is typically more compact for flat tables but lacks nesting and type awareness. TOON adds explicit lengths, per-array delimiter scoping, inline field lists (no separate header row), and deterministic quoting, while remaining lightweight.
 - **YAML**: TOON uses indentation and hyphen markers but is more constrained and deterministic: no comments, explicit array headers with lengths, fixed quoting rules, and a narrow escape set.
 
 ### Example (Informative)
@@ -174,7 +173,7 @@ All normative text in this specification is contained in Sections 1–16. All ap
 ### 1.9 Key Folding and Path Expansion Terms
 
 - IdentifierSegment: A key segment eligible for safe folding and expansion, matching the pattern `^[A-Za-z_][A-Za-z0-9_]*$` (contains only letters, digits, and underscores; does not start with a digit; does not contain dots).
-- Path separator: The character used to join/split key segments during folding and expansion. Fixed to `"."` (U+002E, FULL STOP) in v1.5.
+- Path separator: The character used to join/split key segments during folding and expansion. Fixed to `"."` (U+002E, FULL STOP).
 - Note: Unquoted keys in TOON remain permissive per §7.3 (`^[A-Za-z_][A-Za-z0-9_.]*$`, allowing dots). IdentifierSegment is a stricter pattern used only for safe folding and expansion eligibility checks.
 
 ## 2. Data Model
@@ -233,9 +232,9 @@ Decoders map text tokens to host values:
     - Only finite numbers are expected from conforming encoders.
     - If a decoded numeric token is not representable in the host's default numeric type without loss, implementations MAY return a higher-precision numeric type, return a string, or return an approximate numeric value if that is the documented policy. Implementations MUST document their out-of-range policy; lossless-first is RECOMMENDED for libraries intended for data interchange or validation.
     - Decoding examples:
-      - `"1.5000"` → `1.5` (trailing zeros in fractional part accepted)
-      - `"-1E+03"` → `-1000` (exponent forms accepted)
-      - `"-0"` → `0` (negative zero decodes to zero; most host environments do not distinguish -0 from 0)
+      - `1.5000` → `1.5` (trailing zeros in fractional part accepted)
+      - `-1E+03` → `-1000` (exponent forms accepted)
+      - `-0` → `0` (negative zero decodes to zero; most host environments do not distinguish -0 from 0)
   - The literal token `[]` in object field position (`key: []`) and root position (`[]`) decodes as an empty array (§9.1).
   - Otherwise → string.
 - Keys:
@@ -256,7 +255,7 @@ TOON is a deterministic, line-oriented, indentation-based notation.
     - Tabular form when uniform and primitive-only: key[N<delim?>]{f1<delim>f2}: then one row per line.
     - Otherwise: expanded list items: key[N<delim?>]: with "- …" items (see Sections 9.4 and 10).
 - Root form discovery:
-  - If the first non-empty depth-0 line is a valid root array header per Section 6 (must include a colon), decode a root array.
+  - If the first non-empty depth-0 line is a valid root array header per Section 6, decode a root array.
   - Else if the document has exactly one non-empty line and it is the literal token `[]`, decode an empty root array (§9.1).
   - Else if the document has exactly one non-empty line and it is neither a valid array header nor a key-value line (quoted or unquoted key), decode a single primitive (examples: `hello`, `42`, `true`).
   - Otherwise, decode an object.
@@ -298,7 +297,7 @@ Spacing and delimiters:
 
 Normative header grammar (ABNF):
 ```
-; Core rules per RFC 5234 §B.1 (ALPHA, DIGIT, DQUOTE, HTAB, LF, SP)
+; Core rules per RFC 5234 §B.1 (ALPHA, DIGIT, DQUOTE, HTAB)
 
 bracket-seg   = "[" length [ delimsym ] "]"
 length        = "0" / ( %x31-39 *DIGIT )   ; non-negative integer, no leading zeros
@@ -319,7 +318,7 @@ Note: The ABNF does not express delimiter equality between the bracket and field
 
 Note: The grammar above specifies header syntax only. Tabular row disambiguation is defined in §9.3.
 
-No content may appear between `]` and `{`/`:`. Invalid bracket lengths (e.g., `[bar]`, `[03]`, `[-1]`) or intervening content (e.g., `[1][bar]:`, `[2]extra:`, `[2] :`) are strict-mode errors; non-strict decoders MAY parse the line as a key-value line, with the key treated as a literal token (not constrained by §7.3's unquoted-key regex).
+Content MUST NOT appear between `]` and `{`/`:`. Invalid bracket lengths (e.g., `[bar]`, `[03]`, `[-1]`) or intervening content (e.g., `[1][bar]:`, `[2]extra:`, `[2] :`) are strict-mode errors; non-strict decoders MAY parse the line as a key-value line, with the key treated as a literal token (not constrained by §7.3's unquoted-key regex).
 
 Decoding requirements:
 - The bracket segment MUST parse as a non-negative integer length N with no leading zeros (the single digit `0` is the only canonical form for length zero). Tokens like `[03]` or `[-1]` MUST NOT be interpreted as bracket segments.
@@ -361,7 +360,7 @@ unicode-escape = %x75 4HEXDIG
 
 Note: the ABNF lists BMP ranges (≤ U+FFFF) for readability. Supplementary scalars are also valid `unescaped-char` values and are handled per the Supplementary row of the escape table.
 
-Tabs are allowed inside quoted strings and as a declared delimiter; they MUST NOT be used for indentation (Section 12).
+Tabs are allowed inside quoted strings and as a declared delimiter; they MUST NOT be used for indentation (Section 12). Within quoted strings, encoders MUST emit HTAB as `\t` per the escape table above; the literal HTAB in `unescaped-char` expresses decoder leniency only.
 
 ### 7.2 Quoting Rules for String Values
 
@@ -409,7 +408,7 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
   - A line "key:" with nothing after the colon at depth d opens an object; subsequent lines at depth > d belong to that object until the depth decreases to ≤ d.
   - A bare `key:` (no value after the colon) MUST decode as an empty or nested object, NOT an empty array. Empty arrays use the explicit `key: []` form (§9.1).
   - Lines "key: value" at the same depth are sibling fields.
-  - Duplicate sibling keys at the same depth: see §14.6 for strict/non-strict behavior.
+  - Duplicate sibling keys at the same depth: see §14.4 for strict/non-strict behavior.
 
 ## 9. Arrays
 
@@ -421,7 +420,7 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
   - Empty arrays (root position): encoders SHOULD emit `[]` on its own line. Encoders MAY emit the legacy `[0<delim?>]:` form.
   - Root arrays: `[N<delim?>]: v1<delim>…`
 - Decoding:
-  - Split using the active delimiter declared by the header; non-active delimiters MUST NOT split values.
+  - Split using the active delimiter declared by the header (§11.2).
   - When splitting inline arrays, empty tokens (including those surrounded by whitespace) decode to the empty string.
   - In strict mode, the number of decoded values MUST equal N; otherwise MUST error.
   - Empty arrays: decoders MUST accept `key: []`, `[]`, and the legacy forms `key[0<delim?>]:` and `[0<delim?>]:` as empty arrays.
@@ -523,9 +522,8 @@ For an object appearing as a list item:
 
 ### 11.2 Decoding Rules
 
-- Active delimiter: Decoders use only the active delimiter declared by the nearest array header to split inline arrays and tabular rows.
 - Delimiter-aware parsing:
-  - Inline arrays and tabular rows MUST be split only on the active delimiter.
+  - Inline arrays and tabular rows MUST be split only on the active delimiter declared by the nearest array header.
   - Splitting MUST preserve empty tokens; surrounding spaces are trimmed, and empty tokens decode to the empty string.
   - Nested headers may change the active delimiter; decoding MUST use the delimiter declared by the nearest header.
 - Object field values (key: value): Decoders parse the entire post-colon token as a single value; document delimiter is not a decoder concept.
@@ -535,10 +533,10 @@ For an object appearing as a list item:
 - Encoding:
   - Encoders MUST use a consistent number of spaces per level (default 2; configurable).
   - Tabs MUST NOT be used for indentation.
-  - Exactly one space after ": " in key: value lines.
-  - Exactly one space after array headers when followed by inline values.
-  - No trailing spaces at the end of any line.
-  - No trailing newline at the end of the document.
+  - Encoders MUST emit exactly one ASCII space (U+0020) after the colon in key: value lines.
+  - Encoders MUST emit exactly one ASCII space (U+0020) after array headers when followed by inline values.
+  - Encoders MUST NOT emit trailing spaces at the end of any line.
+  - Encoders MUST NOT emit a trailing newline at the end of the document.
 - Decoding:
   - Strict mode:
     - The number of leading spaces on a line MUST be an exact multiple of indentSize; otherwise MUST error.
@@ -574,10 +572,10 @@ Strict-mode errors are enumerated in §14; validators MAY add informative diagno
 Conforming encoders MUST:
 - [ ] Produce UTF-8 output with LF (U+000A) line endings (§1.2)
 - [ ] Use consistent indentation (default 2 spaces, no tabs) (§12)
-- [ ] Escape per §7.1 in quoted strings; reject other escapes
+- [ ] Escape per §7.1 in quoted strings; never emit other escapes
 - [ ] Quote strings per §7.2 (the relevant delimiter is governed by §11.1: document delimiter for object-field values, active delimiter for inline array values and tabular row cells)
 - [ ] Emit array lengths [N] matching actual item count (§6, §9)
-- [ ] Prefer `key: []` for empty object-field arrays (§9.1)
+- [ ] Emit `key: []` for empty object-field arrays; legacy `key[0]:` MAY be emitted for backward compatibility (§9.1)
 - [ ] Preserve object key order as encountered (§2)
 - [ ] Normalize numbers to non-exponential decimal form (§2)
 - [ ] Convert -0 to 0 (§2)
@@ -597,7 +595,7 @@ Conforming decoders MUST:
 - [ ] Enforce strict-mode rules when `strict=true` (§14)
 - [ ] Preserve array order and object key order (§2)
 - [ ] When `expandPaths="safe"`, expansion MUST follow §13.4 (IdentifierSegment-only segments, deep merge, conflict rules)
-- [ ] When `expandPaths="safe"` with `strict=true`, MUST error on expansion conflicts per §14.5
+- [ ] When `expandPaths="safe"` with `strict=true`, MUST error on expansion conflicts per §14.3
 - [ ] When `expandPaths="safe"` with `strict=false`, apply LWW conflict resolution (§13.4)
 
 ### 13.3 Validator Conformance Checklist
@@ -693,27 +691,17 @@ When strict mode is enabled (default), decoders MUST error on the following cond
 - Tabular row width mismatches: any row's value count ≠ field count.
 - The count checks above apply only when an explicit `[N]` length is declared. The `key: []` form has no declared length; the count check is N/A (§9.1).
 
-### 14.2 Syntax Errors
+### 14.2 Syntax and Structural Errors
 
 - Missing colon in key context.
 - Invalid escape sequences or unterminated strings in quoted tokens.
 - Header delimiter mismatch (§6): MUST error as a header syntax error, independent of row width/count checks.
+- Malformed bracket lengths in headers (e.g., `[03]`, `[-1]`, `[bar]`); see §6.
 - Any content between a valid bracket segment and the colon (or fields segment) prevents array-header interpretation; decoders MUST NOT silently discard that content. In strict mode, decoders MUST error (see §6); in non-strict mode, decoders MAY fall through to key-value parsing.
+- Indentation and blank-line invariants per §12 (leading-space multiple of indentSize; no tabs in indentation; no blank lines inside arrays/tabular rows).
+- Multiple non-key-value lines at depth 0 in strict mode (§5).
 
-### 14.3 Indentation Errors
-
-See §12 for indentation semantics. In strict mode, decoders MUST error on:
-- Leading spaces not a multiple of indentSize.
-- Any tab used in indentation (tabs allowed in quoted strings and as HTAB delimiter).
-
-### 14.4 Structural Errors
-
-See §12 for blank line semantics. In strict mode, decoders MUST error on:
-- Blank lines inside arrays/tabular rows (between the first and last item/row).
-
-For root-form rules, including handling of empty documents, see §5.
-
-### 14.5 Path Expansion Conflicts
+### 14.3 Path Expansion Conflicts
 
 When `expandPaths="safe"` is enabled:
 - With `strict=true` (default): Decoders MUST error on any expansion conflict.
@@ -723,14 +711,14 @@ See §13.4 for complete conflict definitions, deep-merge semantics, and examples
 
 Note (informative): Implementations MAY expose conflict diagnostics via out-of-band mechanisms (e.g., debug hooks, verbose CLI flags, or separate validation APIs), but such facilities are non-normative and MUST NOT affect default decode behavior or output.
 
-### 14.6 Duplicate Object Keys
+### 14.4 Duplicate Object Keys
 
 When two or more sibling fields at the same depth share the same literal key (independent of `expandPaths`):
 
 - With `strict=true` (default): Decoders MUST error.
 - With `strict=false`: Decoders MUST apply deterministic last-write-wins (LWW) resolution in document order, silently (no diagnostic).
 
-This mirrors §14.5; the rule applies even when `expandPaths="off"`.
+This mirrors §14.3; the rule applies even when `expandPaths="off"`.
 
 ## 15. Security Considerations
 
@@ -746,34 +734,7 @@ This mirrors §14.5; the rule applies even when `expandPaths="off"`.
 - Full Unicode is supported in keys and values, subject to quoting and escaping rules.
 - Encoders MUST NOT apply locale-dependent formatting for numbers or booleans (e.g., no thousands separators).
 
-## 17. Interoperability and Mappings (Informative)
-
-This section describes TOON's relationship with other serialization formats and provides guidance on conversion and interoperability.
-
-### 17.1 JSON Interoperability
-
-TOON models the same data types as JSON [RFC8259]: objects, arrays, strings, numbers, booleans, and null. After normalization (§3), TOON can deterministically encode any JSON-compatible data structure. JSON → TOON → JSON round-trips preserve all JSON values, subject to: host-specific types (Date, Set, Map, BigInt) normalize per §3; NaN and ±Infinity normalize to null; -0 normalizes to 0; object key order is preserved.
-
-See Appendix A for representative encoding shapes.
-
-### 17.2 CSV Interoperability
-
-TOON's tabular form encodes the same shape as CSV [RFC4180], differing in:
-- Explicit array length declarations enable validation.
-- Field names declared in the header (no separate header row).
-- Supports nested structures (CSV is flat-only).
-- Three delimiter options (comma, tab, pipe) vs CSV's comma-only.
-- Type-aware encoding (primitives, not just strings).
-
-### 17.3 YAML Interoperability
-
-TOON shares YAML's indentation-based structure but is more constrained and deterministic:
-- TOON requires explicit array headers with lengths; YAML does not.
-- TOON uses colon-space as the only key-value separator.
-- TOON has no comment syntax.
-- TOON has a single canonical representation; YAML allows multiple.
-
-## 18. IANA Considerations
+## 17. IANA Considerations
 
 This specification does not request IANA registration at this time.
 
@@ -782,6 +743,22 @@ This specification does not request IANA registration at this time.
 - Charset: always UTF-8; the `charset=utf-8` parameter may be specified and is assumed if absent.
 
 When this specification reaches Candidate Standard status, formal registration will be requested following the procedures defined in [RFC6838]. The full RFC6838 template will be added at that time. The `text/toon` designation is provisional and may change before formal registration.
+
+## 18. Versioning and Extensibility
+
+For versioning policy and version history, see [VERSIONING.md](./VERSIONING.md) and [CHANGELOG.md](./CHANGELOG.md).
+
+### Extensibility
+
+- Backward-compatible evolutions should preserve current headers, quoting rules, and indentation semantics.
+- Reserved/structural characters (colon, brackets, braces, hyphen) retain their current meanings across versions.
+- The path separator is fixed to `"."` (see §1.9).
+
+## 19. Intellectual Property Considerations
+
+This specification is released under the MIT License (see repository and Appendix E for details). No patent disclosures are known at the time of publication. The authors intend this specification to be freely implementable without royalty requirements.
+
+Implementers should be aware that this is a community specification and not a formal standards-track document from a recognized standards body (such as IETF, W3C, or ISO). No formal patent review process has been conducted. Implementers are responsible for conducting their own intellectual property due diligence as appropriate for their use case.
 
 ## Appendix A: Examples (Informative)
 
@@ -917,7 +894,7 @@ Quoted keys with arrays (keys requiring quoting per Section 7.3):
     label: archived
 ```
 
-Key folding and path expansion (v1.5+):
+Key folding and path expansion:
 
 Encoding - basic folding (safe mode, depth=Infinity):
 
@@ -987,7 +964,7 @@ Output: `{"a": 2}`
 
 ## Appendix B: Parsing Helpers (Informative)
 
-These sketches illustrate structure and common decoding helpers. They are informative; normative behavior is defined in Sections 4–12 and 14.
+These sketches illustrate structure and common decoding helpers. They are informative; normative behavior is defined in §1–§16 (per §1.1).
 
 ### B.1 Decoding Overview
 
@@ -1019,7 +996,7 @@ These sketches illustrate structure and common decoding helpers. They are inform
 - If token starts with a quote, it must be a properly quoted string (no trailing characters after the closing quote). Unescape per §7.1; otherwise error.
 - Else if token is true/false/null → boolean/null.
 - Else if token is numeric without forbidden leading zeros and finite → number.
-  - Examples: `"1.5000"` → `1.5`, `"-1E+03"` → `-1000`, `"-0"` → `0` (host normalization applies)
+  - Examples: `1.5000` → `1.5`, `-1E+03` → `-1000`, `-0` → `0` (host normalization applies)
 - Else → string.
 
 ### B.5 Object and List Item Parsing
@@ -1073,7 +1050,7 @@ This specification and reference implementation are released under the MIT Licen
 
 ## Appendix F: Host Type Normalization Examples (Informative)
 
-This appendix provides non-normative guidance on how implementations in different programming languages may normalize host-specific types to the JSON data model before encoding. The normative requirement is in §3: implementations must normalize non-JSON types to the JSON data model and must document their normalization policy.
+This appendix provides non-normative guidance on how implementations in different programming languages may normalize host-specific types to the JSON data model before encoding. Normative behavior is defined in §3.
 
 ### F.1 Go
 
@@ -1178,18 +1155,3 @@ Implementations in any language should:
 2. Provide configuration options where multiple strategies are reasonable (e.g., lossless vs. approximate numeric encoding).
 3. Ensure that normalization is deterministic: encoding the same host value twice produces identical TOON output.
 
-## 19. Versioning and Extensibility
-
-For versioning policy and version history, see [VERSIONING.md](./VERSIONING.md) and [CHANGELOG.md](./CHANGELOG.md).
-
-### Extensibility
-
-- Backward-compatible evolutions should preserve current headers, quoting rules, and indentation semantics.
-- Reserved/structural characters (colon, brackets, braces, hyphen) retain their current meanings across versions.
-- The path separator is fixed to `"."` (see §1.9).
-
-## 20. Intellectual Property Considerations
-
-This specification is released under the MIT License (see repository and Appendix E for details). No patent disclosures are known at the time of publication. The authors intend this specification to be freely implementable without royalty requirements.
-
-Implementers should be aware that this is a community specification and not a formal standards-track document from a recognized standards body (such as IETF, W3C, or ISO). No formal patent review process has been conducted. Implementers are responsible for conducting their own intellectual property due diligence as appropriate for their use case.
