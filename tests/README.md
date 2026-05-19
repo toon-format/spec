@@ -41,7 +41,7 @@ All test fixtures follow a standard JSON structure defined in [`fixtures.schema.
 
 ```json
 {
-  "version": "1.4",
+  "version": "3.1",
   "category": "encode",
   "description": "Brief description of test category",
   "tests": [
@@ -89,7 +89,9 @@ All test fixtures follow a standard JSON structure defined in [`fixtures.schema.
 
 - `delimiter`: `","` (comma, default), `"\t"` (tab), or `"|"` (pipe). Affects encoder output; decoders parse the delimiter declared in array headers
 - `indent`: Number of spaces per indentation level (default: `2`)
-- `keyFolding`: `"off"` (default) or `"safe"`. Enables key folding to collapse single-key object chains into dotted-path notation- `flattenDepth`: Integer. Maximum depth to fold key chains when `keyFolding` is `"safe"` (default: Infinity). Values less than 2 have no practical folding effect
+- `keyFolding`: `"off"` (default) or `"safe"`. Enables key folding to collapse single-key object chains into dotted-path notation
+- `flattenDepth`: Integer. Maximum depth to fold key chains when `keyFolding` is `"safe"` (default: Infinity). Values less than 2 have no practical folding effect
+
 #### Decoding Options
 
 ```json
@@ -101,7 +103,9 @@ All test fixtures follow a standard JSON structure defined in [`fixtures.schema.
 ```
 
 - `indent`: Expected number of spaces per indentation level (default: `2`)
-- `strict`: Enable strict validation (default: `true`). When `expandPaths` is `"safe"`, strict mode controls conflict resolution: errors on conflicts when `true`, LWW when `false`- `expandPaths`: `"off"` (default) or `"safe"`. Enables path expansion to split dotted keys into nested object structures
+- `strict`: Enable strict validation (default: `true`). When `expandPaths` is `"safe"`, strict mode controls conflict resolution: errors on conflicts when `true`, LWW when `false`
+- `expandPaths`: `"off"` (default) or `"safe"`. Enables path expansion to split dotted keys into nested object structures
+
 ### Error Tests
 
 Error tests use `shouldError: true` to indicate that the test expects an error to be thrown:
@@ -160,7 +164,7 @@ The fixture format is language-agnostic JSON, so you can load and iterate it usi
 | `delimiters.json` | Delimiter detection and parsing | §11 |
 | `whitespace.json` | Whitespace tolerance and token trimming | §12 |
 | `root-form.json` | Root form detection (empty, single primitive) | §5 |
-| `validation-errors.json` | Syntax errors, length mismatches, malformed input | §14 |
+| `validation-errors.json` | Syntax errors, length mismatches, malformed input | §6, §14 |
 | `indentation-errors.json` | Strict mode indentation validation | §14.3, §12 |
 | `blank-lines.json` | Blank line handling in arrays | §14.4, §12 |
 | `path-expansion.json` | Path expansion with safe mode, deep merge, strict-mode conflicts | §13.4, §14.5 |

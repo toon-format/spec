@@ -22,7 +22,7 @@ Adding new delimiter types (beyond comma/tab/pipe)
   Example: Supporting semicolon as delimiter
 
 Changing quoting or escape rules
-  Example: Adding new \uXXXX escape ranges
+  Example: Adding new short-form escapes (e.g., \v, \f)
   Example: Changing when colons require quotes
 
 Modifying tabular detection logic

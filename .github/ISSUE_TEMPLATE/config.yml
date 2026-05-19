@@ -5,7 +5,7 @@ contact_links:
     about: Ask questions, share ideas, or discuss the specification with the community
   - name: 📖 Read the Specification
     url: https://github.com/toon-format/spec/blob/main/SPEC.md
-    about: Read the complete TOON specification (v1.3)
+    about: Read the complete TOON specification
   - name: 🧪 Test Fixtures
     url: https://github.com/toon-format/spec/tree/main/tests
     about: Browse language-agnostic test fixtures for validating implementations

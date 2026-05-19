@@ -2,9 +2,9 @@
 
 ## Token-Oriented Object Notation
 
-**Version:** 3.1
+**Version:** 3.2
 
-**Date:** 2026-05-18
+**Date:** 2026-05-19
 
 **Status:** Working Draft
 
@@ -20,7 +20,7 @@ Token-Oriented Object Notation (TOON) is a line-oriented, indentation-based text
 
 ## Status of This Document
 
-This document is a Working Draft v3.1 and may be updated, replaced, or obsoleted. Implementers should monitor the canonical repository at https://github.com/toon-format/spec for changes.
+This document is a Working Draft v3.2 and may be updated, replaced, or obsoleted. Implementers should monitor the canonical repository at https://github.com/toon-format/spec for changes.
 
 This specification is stable for implementation but not yet finalized. Breaking changes may occur in future major versions.
 
@@ -148,13 +148,13 @@ All normative text in this specification is contained in Sections 1-16 and Secti
 
 - Header: The bracketed declaration for arrays, optionally followed by a field list, and terminating with a colon; e.g., key[3]: or items[2]{a,b}:.
 - Field list: Brace-enclosed, delimiter-separated list of field names for tabular arrays: {f1<delim>f2}.
-- List item: A line beginning with "- " at a given depth representing an element in an expanded array.
+- List item: A line beginning with "- " (or a bare "-" for an empty-object list item, §10) at a given depth representing an element in an expanded array.
 
 ### 1.5 Delimiter Terms
 
 - Delimiter: The character used to separate array/tabular values: comma (default), tab (HTAB, U+0009), or pipe ("|").
 - Document delimiter: The encoder-selected delimiter used for quoting decisions outside any array scope (default comma).
-- Active delimiter: The delimiter declared by the closest array header in scope, used to split inline primitive arrays and tabular rows under that header; it also governs quoting decisions for values within that array's scope.
+- Active delimiter: The delimiter declared by the closest array header in scope, used to split inline primitive arrays and tabular rows under that header. It governs quoting decisions for those inline values and row cells; object field values within the same scope use the document delimiter (see §11.1).
 
 ### 1.6 Type Terms
 
@@ -165,7 +165,7 @@ All normative text in this specification is contained in Sections 1-16 and Secti
 
 ### 1.7 Conformance Terms
 
-- Strict mode: Decoder mode that enforces counts, indentation, and delimiter consistency; also rejects invalid escapes and missing colons (default: true).
+- Strict mode: Decoder mode that enforces counts, indentation, and delimiter consistency; also rejects invalid escapes and missing colons (default: true). See §14 for the authoritative list of strict-mode errors.
 
 ### 1.8 Notation
 
@@ -354,10 +354,12 @@ Normative escape grammar:
 ```abnf
 HEXDIG         = DIGIT / %x41-46 / %x61-66
 quoted-char    = escaped-char / unescaped-char
-unescaped-char = %x20-21 / %x23-5B / %x5D-D7FF / %xE000-FFFF
+unescaped-char = %x09 / %x20-21 / %x23-5B / %x5D-D7FF / %xE000-FFFF
 escaped-char   = %x5C ( %x5C / DQUOTE / %x6E / %x72 / %x74 / unicode-escape )
 unicode-escape = %x75 4HEXDIG
 ```
+
+Note: the ABNF above defines `unescaped-char` only for the Basic Multilingual Plane (≤ U+FFFF) for readability. Supplementary code points (> U+FFFF) are accepted by decoders and emitted by encoders per the "Supplementary" row of the escape table; they are part of `unescaped-char` conceptually but cannot be expressed via single-codepoint ABNF range syntax.
 
 Tabs are allowed inside quoted strings and as a declared delimiter; they MUST NOT be used for indentation (Section 12).
 
@@ -407,6 +409,7 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
   - A line "key:" with nothing after the colon at depth d opens an object; subsequent lines at depth > d belong to that object until the depth decreases to ≤ d.
   - A bare `key:` (no value after the colon) MUST decode as an empty or nested object, NOT an empty array. Empty arrays use the explicit `key: []` form (§9.1).
   - Lines "key: value" at the same depth are sibling fields.
+  - Duplicate sibling keys at the same depth: in strict mode, decoders MUST error. In non-strict mode, decoders MUST apply deterministic last-write-wins (LWW) resolution in document order silently, mirroring the path-expansion conflict policy (§13.4, §14.5–§14.6).
 
 ## 9. Arrays
 
@@ -440,6 +443,7 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
 
 Tabular detection (encoding; MUST hold for all elements):
 - Every element is an object.
+- Each object has at least one key; arrays containing any empty object `{}` MUST NOT use tabular form (encode via §9.4 instead).
 - All objects have the same set of keys (order per object MAY vary).
 - All values across these keys are primitives (no nested arrays/objects).
 
@@ -472,7 +476,7 @@ When tabular requirements are not met (encoding):
   - Primitive: `- <primitive>`
   - Primitive array: `- [M<delim?>]: v1<delim>…`
   - Object: formatted per Section 10 (objects as list items).
-  - Complex arrays: `- key'[M<delim?>]:` followed by nested items as appropriate.
+  - Nested arrays: emitted via §9.2 (primitive-of-primitives) or §9.3/§9.4 within the list-item object form (§10) as appropriate.
 
 Decoding:
 - Header declares list length N and the active delimiter for any nested inline arrays.
@@ -538,7 +542,7 @@ For an object appearing as a list item:
 - Decoding:
   - Strict mode:
     - The number of leading spaces on a line MUST be an exact multiple of indentSize; otherwise MUST error.
-    - Tabs used as indentation MUST error. Tabs are allowed in quoted strings and as the HTAB delimiter.
+    - Tabs used as indentation MUST error (see §7.1 for tabs in quoted strings and as the HTAB delimiter).
   - Non-strict mode:
     - Depth MAY be computed as floor(indentSpaces / indentSize).
     - Implementations MAY accept tab characters in indentation. Depth computation for tabs is implementation-defined. Implementations MUST document their tab policy.
@@ -693,7 +697,7 @@ When strict mode is enabled (default), decoders MUST error on the following cond
 
 - Missing colon in key context.
 - Invalid escape sequences or unterminated strings in quoted tokens.
-- Delimiter mismatch (detected via width/count checks and header scope).
+- Header delimiter mismatch: the bracket segment's declared delimiter MUST equal the field-list segment's delimiter (§6); strict mode MUST error on mismatch as a header syntax error, independent of row width/count checks.
 - Non-whitespace content between a valid bracket segment and the colon (or fields segment) prevents array-header interpretation; decoders MUST NOT silently discard that content. In strict mode, decoders MUST error (see §6); in non-strict mode, decoders MAY fall through to key-value parsing.
 
 ### 14.3 Indentation Errors
@@ -719,13 +723,21 @@ See §13.4 for complete conflict definitions, deep-merge semantics, and examples
 
 Note (informative): Implementations MAY expose conflict diagnostics via out-of-band mechanisms (e.g., debug hooks, verbose CLI flags, or separate validation APIs), but such facilities are non-normative and MUST NOT affect default decode behavior or output.
 
+### 14.6 Duplicate Object Keys
+
+When two or more sibling fields at the same depth share the same literal key (independent of `expandPaths`):
+
+- With `strict=true` (default): Decoders MUST error.
+- With `strict=false`: Decoders MUST apply deterministic last-write-wins (LWW) resolution in document order, silently (no diagnostic).
+
+This mirrors §14.5; the rule applies even when `expandPaths="off"`.
+
 ## 15. Security Considerations
 
-- Injection and ambiguity are mitigated by quoting rules:
-  - Strings with colon, the relevant delimiter (document or active), hyphen marker cases ("-" or strings starting with "-"), control characters, or brackets/braces MUST be quoted.
+- Injection and ambiguity are mitigated by the quoting rules in §7.2; in particular, strings containing colons, the relevant delimiter (document or active), hyphen markers ("-" or strings starting with "-"), double quotes, backslashes, control characters, or brackets/braces MUST be quoted.
 - Strict-mode checks (Section 14) detect malformed strings, truncation, or injected rows/items via length and width mismatches.
 - Encoders SHOULD avoid excessive memory on large inputs; implement streaming/tabular row emission where feasible.
-- Control characters in quoted strings (`\uXXXX`, §7.1) are preserved as data values; encoders MUST NOT strip them during normalization.
+- Control characters in quoted strings (`\uXXXX`, §7.1) are preserved as data values; encoders MUST NOT strip them during normalization. Note (informative): downstream consumers that render decoded values into terminals, logs, or markup contexts SHOULD sanitize or escape control characters at that boundary, since TOON preserves them faithfully as data.
 - Unicode:
   - Encoders SHOULD avoid altering Unicode beyond required escaping; decoders SHOULD accept valid UTF-8 in quoted strings/keys (with the escape repertoire defined in §7.1).
 

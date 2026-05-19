@@ -6,17 +6,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [3.2] - 2026-05-19
 
+### Added
+
+- §8 / §14.6: duplicate sibling keys at the same depth – strict mode MUST error; non-strict mode MUST apply last-write-wins (LWW) in document order silently.
+- §14.2: header delimiter mismatch (bracket-segment delimiter ≠ field-list delimiter) is a strict-mode header syntax error, independent of row width/count checks.
+
 ### Changed
 
-- §6 header syntax: in strict mode, decoders MUST error on bracket segments that fail to parse as a non-negative integer length, and on non-whitespace content between a valid bracket segment and the colon (or fields segment). Non-strict mode MAY fall through to key-value parsing.
+- §6: in strict mode, decoders MUST error on bracket segments that fail to parse as a non-negative integer length, and on non-whitespace content between a valid bracket segment and the colon (or fields segment). Non-strict mode MAY fall through to key-value parsing.
+- §9.3 tabular detection: arrays containing any empty object `{}` MUST NOT use tabular form (encoded via §9.4 expanded list instead).
+- §7.1 ABNF: `unescaped-char` extended to include U+0009 (HTAB), aligning the grammar with the prose tolerance for literal tabs in quoted strings.
 
 ### Fixed
 
-- ABNF: defined the previously-undefined `quoted-key` production; added `quoted-char` and `unescaped-char` productions in §7.1. Literal codepoints in quoted keys (e.g., `"my-key"`) were ungrammatical under the prior `*escaped-char` content rule.
-- ABNF: header rule allows `*SP` between `]`, `{`, and `:`, matching the §6 prose.
-- ABNF: `escaped-char` uses `%x5C` for backslash (RFC 5234 standard syntax).
-- §7.1 escape table: precedence clarified ("first matching row applies"). Without it, the Other-BMP row's literal range overlapped the row-specific MUST escapes for U+0022 (`"`) and U+005C (`\`).
-- §14.2 syntax-errors checklist aligned with §6's strict-mode behavior.
+- §7.1 ABNF: defined the previously-undefined `quoted-key`, `quoted-char`, and `unescaped-char` productions; literal codepoints in quoted keys were ungrammatical under the prior `*escaped-char` rule.
+- §7.1 ABNF: header rule now allows `*SP` between `]`, `{`, and `:`, matching the §6 prose.
+- §7.1 escape table: precedence rule made explicit ("first matching row applies"). Without it, the Other-BMP row overlapped the row-specific MUST escapes for U+0022 (`"`) and U+005C (`\`).
+
+### Removed
+
+- §16 ISO 8601 date SHOULD (out of scope; date encoding is application-level).
 
 ## [3.1] - 2026-05-18
 
@@ -41,14 +50,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
-- Encoding/decoding rules (§10) simplified to describe only the YAML-style pattern; legacy layouts are treated as generic nesting and are not covered by conformance tests.
-- Nested tabular list-item example in Appendix A updated to the canonical v3.0 form.
+- §10 simplified to describe only the YAML-style pattern; legacy layouts are treated as generic nesting and are not covered by conformance tests.
 
 ### Migration from v2.1
 
 - Update encoders to emit the YAML-style form for list-item objects whose first field is a tabular array.
 - If you rely on v2.0/v2.1 layouts, keep decoder compatibility in non-strict or implementation-defined modes; the spec no longer requires or tests these patterns.
-- Optionally regenerate existing `.toon` files for consistent v3 formatting.
 
 ## [2.1] - 2025-11-23
 
@@ -92,26 +99,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
-- Generalized normalization rules and defined canonical number format for encoders (no exponent notation, no trailing zeros, no leading zeros except `"0"`), plus decoder handling of exponent forms and out-of-range numbers (§2-§3).
+- Generalized normalization rules and defined canonical number format for encoders (no exponent notation, no trailing zeros, no leading zeros except `"0"`), plus decoder handling of exponent forms and out-of-range numbers (§2–§3).
 - Replaced `\w` with explicit `[A-Za-z0-9_]` in key regexes for cross-language clarity (§7.3).
 - Clarified non-strict mode tab handling as implementation-defined (§12).
-
-### Added
-
-- Host Type Normalization Examples appendix (Go, JavaScript, Python, Rust); now Appendix F.
 
 ## [1.3] - 2025-10-31
 
 ### Added
 
 - Numeric precision requirements: JavaScript implementations SHOULD use `Number.toString()` precision (15–17 digits); all implementations MUST preserve round-trip fidelity (§2).
-- RFC 5234 core rules (ALPHA, DIGIT, DQUOTE, HTAB, LF, SP) to ABNF grammar definitions (§6).
 
 ## [1.2] - 2025-10-29
 
 ### Changed
 
-- Tightened delimiter scoping, indentation, blank-line handling, and hyphen-based quoting rules (§11-§12).
+- Tightened delimiter scoping, indentation, blank-line handling, and hyphen-based quoting rules (§11–§12).
 - Clarified BigInt normalization (out-of-range values → quoted decimal strings) and row/key disambiguation (first unquoted delimiter vs colon) (§2, §9.3).
 
 ## [1.1] - 2025-10-29

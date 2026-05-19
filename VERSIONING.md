@@ -13,7 +13,7 @@ The TOON specification follows [Semantic Versioning](https://semver.org/) with a
 - **MAJOR version** - Incremented for breaking changes that are incompatible with previous versions
 - **MINOR version** - Incremented for backward-compatible additions, clarifications, or non-breaking changes
 
-**Example:** Moving from v1.5 to v1.6 means your implementation keeps working. Moving from v1.5 to v2.0 means you'll likely need to update your code.
+**Example:** Moving from v3.1 to v3.2 is non-breaking – your implementation keeps working. Moving from v2.1 to v3.0 was a MAJOR transition that required encoder updates.
 
 ## What Constitutes a Breaking Change
 
@@ -92,7 +92,7 @@ If we need to make a breaking change (MAJOR version bump):
 
 When in doubt, we err on the side of caution and treat potentially breaking changes as MAJOR version bumps.
 
-Implementations should document the supported spec version (e.g. `"toon-spec": "3.1"`) and may support multiple versions concurrently: default to the latest, let users target a specific version, and document version-specific behavior. A new MINOR version keeps existing conformant implementations conformant. A new MAJOR version may require updates; previous-version implementations remain valid, and a migration note is provided in CHANGELOG.md.
+Implementations should document the supported spec version (e.g. `"toon-spec": "3.2"`) and may support multiple versions concurrently: default to the latest, let users target a specific version, and document version-specific behavior. A new MINOR version keeps existing conformant implementations conformant. A new MAJOR version may require updates; previous-version implementations remain valid, and a migration note is provided in CHANGELOG.md.
 
 ## Version History
 

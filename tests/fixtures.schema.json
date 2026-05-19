@@ -75,18 +75,18 @@
               "keyFolding": {
                 "type": "string",
                 "enum": ["off", "safe"],
-                "description": "Key folding mode for encoders (v1.5+): 'off' (default) or 'safe' (encode only)",
+                "description": "Key folding mode for encoders: 'off' (default) or 'safe' (encode only)",
                 "default": "off"
               },
               "flattenDepth": {
                 "type": "integer",
-                "description": "Maximum depth to fold key chains when keyFolding is 'safe' (v1.5+). Values less than 2 have no practical folding effect (encode only)",
+                "description": "Maximum depth to fold key chains when keyFolding is 'safe'. Values less than 2 have no practical folding effect (encode only)",
                 "minimum": 0
               },
               "expandPaths": {
                 "type": "string",
                 "enum": ["off", "safe"],
-                "description": "Path expansion mode for decoders (v1.5+): 'off' (default) or 'safe' (decode only)",
+                "description": "Path expansion mode for decoders: 'off' (default) or 'safe' (decode only)",
                 "default": "off"
               }
             },
