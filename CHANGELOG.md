@@ -10,22 +10,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - §8 / §14.6: duplicate sibling keys at the same depth – strict mode MUST error; non-strict mode MUST apply last-write-wins (LWW) in document order silently.
 - §14.2: header delimiter mismatch (bracket-segment delimiter ≠ field-list delimiter) is a strict-mode header syntax error, independent of row width/count checks.
+- §9.4: explicit list-item form for nested arrays of objects or non-uniform arrays (`- [M<delim?>]:` followed by nested list items or tabular rows at depth +2).
 
 ### Changed
 
-- §6: in strict mode, decoders MUST error on bracket segments that fail to parse as a non-negative integer length, and on non-whitespace content between a valid bracket segment and the colon (or fields segment). Non-strict mode MAY fall through to key-value parsing.
+- §6: in strict mode, decoders MUST error on bracket segments that fail to parse as a non-negative integer length, and on any content between a valid bracket segment and the colon (or fields segment). Non-strict mode MAY fall through to key-value parsing.
+- §6 ABNF: header tightened to `bracket-seg [ fields-seg ] ":"` – no whitespace permitted between the bracket segment, an optional fields segment, and the colon.
+- §6 ABNF: bracket-segment length tightened to disallow leading zeros (`length = "0" / ( %x31-39 *DIGIT )`); decoders MUST reject `[03]`, `[-1]`, and similar non-canonical forms.
+- §6: encoder-only scope made explicit on the "exactly one space after the colon" rule; decoder whitespace tolerance lives in §12.
 - §9.3 tabular detection: arrays containing any empty object `{}` MUST NOT use tabular form (encoded via §9.4 expanded list instead).
 - §7.1 ABNF: `unescaped-char` extended to include U+0009 (HTAB), aligning the grammar with the prose tolerance for literal tabs in quoted strings.
+- §7.1 escape table (Supplementary row): wording rephrased to distinguish scalar values from UTF-8 byte sequences and to clarify that surrogate-pair `\uXXXX` escapes are not combined.
 
 ### Fixed
 
 - §7.1 ABNF: defined the previously-undefined `quoted-key`, `quoted-char`, and `unescaped-char` productions; literal codepoints in quoted keys were ungrammatical under the prior `*escaped-char` rule.
-- §6 ABNF: header rule now allows `*SP` between `]`, `{`, and `:`, matching the §6 prose.
 - §7.1 escape table: precedence rule made explicit ("first matching row applies"). Without it, the Other-BMP row overlapped the row-specific MUST escapes for U+0022 (`"`) and U+005C (`\`).
+- §15: SHOULD inside the downstream-consumer informative note demoted to advisory language (the spec has no authority over downstream consumers).
+- Appendix A: `"x-items"[2]:` example reshaped to non-uniform objects; the previous example violated the §9.3 tabular-form MUST.
 
 ### Removed
 
 - §16 ISO 8601 date SHOULD (out of scope; date encoding is application-level).
+- §19 "TOON Core Profile" section: it was a cross-reference index rather than a normative subset and added no constraints beyond §1–§16; readers are directed to §1–§16 for the full normative requirements.
 
 ## [3.1] - 2026-05-18
 

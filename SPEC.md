@@ -76,9 +76,8 @@ https://www.iso.org/standard/70907.html
 16. [Internationalization](#16-internationalization)
 17. [Interoperability and Mappings (Informative)](#17-interoperability-and-mappings-informative)
 18. [IANA Considerations](#18-iana-considerations)
-19. [TOON Core Profile (Normative Subset)](#19-toon-core-profile-normative-subset)
-20. [Versioning and Extensibility](#20-versioning-and-extensibility)
-21. [Intellectual Property Considerations](#21-intellectual-property-considerations)
+19. [Versioning and Extensibility](#19-versioning-and-extensibility)
+20. [Intellectual Property Considerations](#20-intellectual-property-considerations)
 
 **Appendices:**
 - [Appendix A: Examples (Informative)](#appendix-a-examples-informative)
@@ -132,7 +131,7 @@ users[2]{id,name,role}:
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC2119] and [RFC8174] when, and only when, they appear in all capitals, as shown here.
 
-All normative text in this specification is contained in Sections 1-16 and Section 19. All appendices are informative except where explicitly marked normative. Examples throughout this document are informative unless explicitly stated otherwise.
+All normative text in this specification is contained in Sections 1–16. All appendices are informative except where explicitly marked normative. Examples throughout this document are informative unless explicitly stated otherwise.
 
 ### 1.2 Core Concepts
 
@@ -212,7 +211,7 @@ Encoders MUST normalize non-JSON values to the JSON data model before encoding. 
   - NaN, +Infinity, -Infinity → null.
 - Implementations MAY honor host-language–specific serialization hooks (for example, a `toJSON()` method in JavaScript or an equivalent mechanism) as part of host-type normalization. When supported, such hooks SHOULD be applied before other host-type mappings and their behavior MUST be documented by the implementation.
 - Examples of host-type normalization (non-normative):
-  - Date/time objects → ISO 8601 string representation.
+  - Date/time objects → ISO 8601 string representation [ISO8601].
   - Set-like collections → array.
   - Map-like collections → object (with string keys).
   - Undefined, function, symbol, or unrecognized types → null.
@@ -288,7 +287,7 @@ Where:
 
 Spacing and delimiters:
 - Every header MUST include a colon after the bracket segment and optional fields segment.
-- When inline values follow a header on the same line (non-empty primitive arrays), there MUST be exactly one space after the colon before the first value.
+- When inline values follow a header on the same line (non-empty primitive arrays), encoders MUST emit exactly one ASCII space (U+0020) after the colon before the first value. Decoder whitespace tolerance is governed by §12.
 - The active delimiter declared by the bracket segment applies to:
   - splitting inline primitive arrays on that header line,
   - splitting tabular field names in "{…}",
@@ -301,14 +300,15 @@ Normative header grammar (ABNF):
 ```
 ; Core rules per RFC 5234 §B.1 (ALPHA, DIGIT, DQUOTE, HTAB, LF, SP)
 
-bracket-seg   = "[" 1*DIGIT [ delimsym ] "]"
+bracket-seg   = "[" length [ delimsym ] "]"
+length        = "0" / ( %x31-39 *DIGIT )   ; non-negative integer, no leading zeros
 delimsym      = HTAB / "|"
 ; Field names are keys (quoted/unquoted) separated by the active delimiter
 fields-seg    = "{" fieldname *( delim fieldname ) "}"
 delim         = delimsym / ","
 fieldname     = key
 
-header        = [ key ] bracket-seg *SP [ fields-seg *SP ] ":"
+header        = [ key ] bracket-seg [ fields-seg ] ":"
 key           = unquoted-key / quoted-key
 unquoted-key  = ( ALPHA / "_" ) *( ALPHA / DIGIT / "_" / "." )
 quoted-key    = DQUOTE *quoted-char DQUOTE
@@ -319,10 +319,10 @@ Note: The ABNF grammar above cannot enforce that the delimiter used in the field
 
 Note: The grammar above specifies header syntax only. Tabular row disambiguation is defined in §9.3.
 
-Between the closing bracket `]` of the bracket segment and the opening brace `{` of a fields segment (or the colon `:` if no fields segment is present), only whitespace MAY appear. If the bracket segment fails to parse as a non-negative integer length (e.g., `[bar]`), or if a decoder encounters non-whitespace content in these positions (e.g., `[1][bar]:` or `[2]extra:`), the line MUST NOT be interpreted as an array header. In strict mode, decoders MUST error. In non-strict mode, decoders MAY fall through to key-value parsing (Section 8); the resulting key is a literal token not constrained by §7.3's unquoted-key regex.
+Between the closing bracket `]` of the bracket segment and the opening brace `{` of a fields segment (or the colon `:` if no fields segment is present), no content MAY appear. If the bracket segment fails to parse as a non-negative integer length (e.g., `[bar]`, `[03]`, `[-1]`), or if a decoder encounters any content in these positions (e.g., `[1][bar]:`, `[2]extra:`, or `[2] :`), the line MUST NOT be interpreted as an array header. In strict mode, decoders MUST error. In non-strict mode, decoders MAY fall through to key-value parsing (Section 8); the resulting key is a literal token not constrained by §7.3's unquoted-key regex.
 
 Decoding requirements:
-- The bracket segment MUST parse as a non-negative integer length N.
+- The bracket segment MUST parse as a non-negative integer length N with no leading zeros (the single digit `0` is the only canonical form for length zero). Tokens like `[03]` or `[-1]` MUST NOT be interpreted as bracket segments.
 - If a trailing tab or pipe appears inside the brackets, it selects the active delimiter; otherwise comma is active.
 - If a fields segment occurs between the bracket and the colon, parse field names using the active delimiter; quoted names MUST be unescaped per Section 7.1.
 - A colon MUST follow the bracket and optional fields; missing colon MUST error.
@@ -345,7 +345,7 @@ In quoted strings and keys, codepoints are encoded according to the following ta
 | Other U+0000–U+001F controls                           | MUST emit `\uXXXX` (lowercase hex SHOULD)     | MUST decode `\uXXXX` (case-insensitive hex)                     |
 | U+D800–U+DFFF lone surrogates                          | (not produced by valid encoders)              | MUST reject when decoded from `\uXXXX`                          |
 | Other BMP codepoints (U+0020–U+D7FF, U+E000–U+FFFF)    | SHOULD emit literal UTF-8; MAY emit `\uXXXX`  | MUST accept either form                                         |
-| Supplementary (> U+FFFF)                               | MUST emit literal UTF-8                       | MUST accept literal UTF-8; surrogate-pair `\uXXXX` not recognized |
+| Supplementary scalar values (U+10000–U+10FFFF)         | MUST emit the scalar value as UTF-8 bytes     | MUST accept the scalar value as UTF-8 bytes; two `\uXXXX` escapes forming a UTF-16 surrogate pair MUST NOT be combined (each surrogate is rejected by the row above) |
 
 Decoders MUST reject any escape sequence not listed above, MUST reject `\u` followed by fewer than four hex digits, and MUST reject unterminated strings.
 
@@ -359,7 +359,7 @@ escaped-char   = %x5C ( %x5C / DQUOTE / %x6E / %x72 / %x74 / unicode-escape )
 unicode-escape = %x75 4HEXDIG
 ```
 
-Note: the ABNF above defines `unescaped-char` only for the Basic Multilingual Plane (≤ U+FFFF) for readability. Supplementary code points (> U+FFFF) are accepted by decoders and emitted by encoders per the "Supplementary" row of the escape table; they are part of `unescaped-char` conceptually but cannot be expressed via single-codepoint ABNF range syntax.
+Note: the ABNF above expresses `unescaped-char` over the Basic Multilingual Plane only (≤ U+FFFF) for readability. Supplementary scalar values (U+10000–U+10FFFF) are conceptually part of `unescaped-char` and are required to be accepted by decoders and emitted by encoders as their UTF-8 byte sequence per the "Supplementary" row of the escape table. They cannot be expressed via the `\uXXXX` escape, which is limited to four hex digits (≤ U+FFFF); UTF-16 surrogate-pair sequences are not recognized and each surrogate `\uXXXX` MUST be rejected per the lone-surrogate row.
 
 Tabs are allowed inside quoted strings and as a declared delimiter; they MUST NOT be used for indentation (Section 12).
 
@@ -409,7 +409,7 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
   - A line "key:" with nothing after the colon at depth d opens an object; subsequent lines at depth > d belong to that object until the depth decreases to ≤ d.
   - A bare `key:` (no value after the colon) MUST decode as an empty or nested object, NOT an empty array. Empty arrays use the explicit `key: []` form (§9.1).
   - Lines "key: value" at the same depth are sibling fields.
-  - Duplicate sibling keys at the same depth: in strict mode, decoders MUST error. In non-strict mode, decoders MUST apply deterministic last-write-wins (LWW) resolution in document order silently (see §14.6; this mirrors the path-expansion conflict policy in §13.4 / §14.5).
+  - Duplicate sibling keys at the same depth: see §14.6 for strict/non-strict behavior.
 
 ## 9. Arrays
 
@@ -475,8 +475,8 @@ When tabular requirements are not met (encoding):
 - Each element is rendered as a list item at depth +1 under the header:
   - Primitive: `- <primitive>`
   - Primitive array: `- [M<delim?>]: v1<delim>…`
+  - Array of objects or non-uniform array: `- [M<delim?>]:` on the hyphen line, followed by the nested array's list items at depth +2 (or tabular rows at depth +2 when the nested array satisfies §9.3).
   - Object: formatted per Section 10 (objects as list items).
-  - Nested arrays: emitted via §9.2 (primitive-of-primitives) or §9.3/§9.4 within the list-item object form (§10) as appropriate.
 
 Decoding:
 - Header declares list length N and the active delimiter for any nested inline arrays.
@@ -697,8 +697,8 @@ When strict mode is enabled (default), decoders MUST error on the following cond
 
 - Missing colon in key context.
 - Invalid escape sequences or unterminated strings in quoted tokens.
-- Header delimiter mismatch: the bracket segment's declared delimiter MUST equal the field-list segment's delimiter (§6); strict mode MUST error on mismatch as a header syntax error, independent of row width/count checks.
-- Non-whitespace content between a valid bracket segment and the colon (or fields segment) prevents array-header interpretation; decoders MUST NOT silently discard that content. In strict mode, decoders MUST error (see §6); in non-strict mode, decoders MAY fall through to key-value parsing.
+- Header delimiter mismatch (§6): MUST error as a header syntax error, independent of row width/count checks.
+- Any content between a valid bracket segment and the colon (or fields segment) prevents array-header interpretation; decoders MUST NOT silently discard that content. In strict mode, decoders MUST error (see §6); in non-strict mode, decoders MAY fall through to key-value parsing.
 
 ### 14.3 Indentation Errors
 
@@ -737,7 +737,7 @@ This mirrors §14.5; the rule applies even when `expandPaths="off"`.
 - Injection and ambiguity are mitigated by the quoting rules in §7.2; in particular, strings containing colons, the relevant delimiter (document or active), hyphen markers ("-" or strings starting with "-"), double quotes, backslashes, control characters, or brackets/braces MUST be quoted.
 - Strict-mode checks (Section 14) detect malformed strings, truncation, or injected rows/items via length and width mismatches.
 - Encoders SHOULD avoid excessive memory on large inputs; implement streaming/tabular row emission where feasible.
-- Control characters in quoted strings (`\uXXXX`, §7.1) are preserved as data values; encoders MUST NOT strip them during normalization. Note (informative): downstream consumers that render decoded values into terminals, logs, or markup contexts SHOULD sanitize or escape control characters at that boundary, since TOON preserves them faithfully as data.
+- Control characters in quoted strings (`\uXXXX`, §7.1) are preserved as data values; encoders MUST NOT strip them during normalization. Note (informative): downstream consumers that render decoded values into terminals, logs, or markup contexts are advised to sanitize or escape control characters at that boundary, since TOON preserves them faithfully as data.
 - Unicode:
   - Encoders SHOULD avoid altering Unicode beyond required escaping; decoders SHOULD accept valid UTF-8 in quoted strings/keys (with the escape repertoire defined in §7.1).
 
@@ -914,6 +914,7 @@ Quoted keys with arrays (keys requiring quoting per Section 7.3):
 "x-items"[2]:
   - id: 1
   - id: 2
+    label: archived
 ```
 
 Key folding and path expansion (v1.5+):
@@ -1046,7 +1047,7 @@ These sketches illustrate structure and common decoding helpers. They are inform
 
 ## Appendix C: Test Suite and Compliance (Informative)
 
-A language-agnostic reference test suite is maintained at [tests/](./tests/); see [tests/README.md](./tests/README.md) for the per-fixture index. The suite is versioned alongside this specification. Implementations are encouraged to validate against it, but conformance is determined solely by adherence to the normative requirements in Sections 1-16 and Section 19; test coverage does not define the specification.
+A language-agnostic reference test suite is maintained at [tests/](./tests/); see [tests/README.md](./tests/README.md) for the per-fixture index. The suite is versioned alongside this specification. Implementations are encouraged to validate against it, but conformance is determined solely by adherence to the normative requirements in Sections 1–16; test coverage does not define the specification.
 
 Host-type normalization tests (e.g., BigInt, Date, Set, Map) are language-specific and maintained in implementation repositories. See Appendix F for normalization guidance.
 
@@ -1177,23 +1178,7 @@ Implementations in any language should:
 2. Provide configuration options where multiple strategies are reasonable (e.g., lossless vs. approximate numeric encoding).
 3. Ensure that normalization is deterministic: encoding the same host value twice produces identical TOON output.
 
-## 19. TOON Core Profile (Normative Subset)
-
-This profile captures the most common, memory-friendly rules by reference to normative sections.
-
-- Character set and line endings: As defined in §1 (Core Concepts) and §12.
-- Indentation: MUST conform to §12 (2 spaces per level by default; strict mode enforces indentSize multiples).
-- Keys and colon syntax: MUST conform to §7.3 (unquoted keys match ^[A-Za-z_][A-Za-z0-9_.]*$; quoted otherwise) and §7.4 (colon required after keys).
-- Strings and quoting: MUST be quoted as defined in §7.2 (deterministic quoting rules for empty strings, whitespace, reserved literals, control characters, delimiters, leading hyphens, and structural tokens).
-- Escape sequences: MUST conform to §7.1.
-- Numbers: Encoders MUST emit canonical form per §2; decoders MUST accept input per §4.
-- Arrays and headers: Header syntax MUST conform to §6; array encoding as defined in §9.
-- Delimiters: Delimiter scoping and quoting rules as defined in §11.
-- Objects as list items: Indentation rules as defined in §10.
-- Root form determination: As defined in §5.
-- Strict mode validation: All checks enumerated in §14.
-
-## 20. Versioning and Extensibility
+## 19. Versioning and Extensibility
 
 For versioning policy and version history, see [VERSIONING.md](./VERSIONING.md) and [CHANGELOG.md](./CHANGELOG.md).
 
@@ -1201,9 +1186,9 @@ For versioning policy and version history, see [VERSIONING.md](./VERSIONING.md) 
 
 - Backward-compatible evolutions should preserve current headers, quoting rules, and indentation semantics.
 - Reserved/structural characters (colon, brackets, braces, hyphen) retain their current meanings across versions.
-- The path separator (see §1.9) is fixed to `"."` in v1.5; future versions may make this configurable.
+- The path separator is fixed to `"."` (see §1.9).
 
-## 21. Intellectual Property Considerations
+## 20. Intellectual Property Considerations
 
 This specification is released under the MIT License (see repository and Appendix E for details). No patent disclosures are known at the time of publication. The authors intend this specification to be freely implementable without royalty requirements.
 
