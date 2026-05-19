@@ -10,14 +10,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - §8 / §14.4: duplicate sibling keys at the same depth – strict mode MUST error; non-strict mode MUST apply last-write-wins (LWW) in document order silently.
 - §14.2: header delimiter mismatch (bracket-segment delimiter ≠ field-list delimiter) is a strict-mode header syntax error, independent of row width/count checks.
-- §14.2: enumerated malformed bracket lengths, intervening content, multiple root primitives, and the indentation/blank-line invariants previously split across §14.3 and §14.4.
+- §14.2: enumerated malformed bracket lengths, intervening content, multiple root primitives, and the indentation/blank-line invariants previously split across the old Indentation Errors and Structural Errors subsections.
 - §9.4: explicit form for nested arrays of objects or non-uniform arrays as list items (`- [M<delim?>]:` followed by items at depth +2).
 
 ### Changed
 
-- §14: collapsed §14.3 (Indentation Errors) and §14.4 (Structural Errors) into §14.2; renumbered §14.5/§14.6 to §14.3/§14.4.
-- §17 (Interoperability and Mappings) merged into the Introduction; subsequent sections renumbered.
-- §18 (Versioning and Extensibility) and §19 (Intellectual Property Considerations) relocated above the appendices.
+- §14: collapsed the former Indentation Errors and Structural Errors subsections into §14.2; Path Expansion Conflicts moved to §14.3, Duplicate Object Keys moved to §14.4.
+- Interoperability and Mappings content merged into the Introduction; IANA Considerations, Versioning and Extensibility, and Intellectual Property Considerations now occupy §17–§19.
+- Versioning and Extensibility (§18) and Intellectual Property Considerations (§19) relocated above the appendices.
 - §13.1 encoder checklist: emit `key: []` for empty object-field arrays; legacy `key[0]:` MAY be emitted for backward compatibility (§9.1).
 - §6: strict header parsing rejects invalid bracket lengths, leading-zero lengths (e.g., `[03]`), and any content between the bracket segment, optional fields segment, and colon. Non-strict mode MAY fall through to key-value parsing.
 - §6: the "one space after colon" rule is encoder-only; decoder tolerance is governed by §12.

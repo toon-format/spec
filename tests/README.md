@@ -167,11 +167,11 @@ The fixture format is language-agnostic JSON, so you can load and iterate it usi
 | `whitespace.json` | Whitespace tolerance and token trimming | §12 |
 | `root-form.json` | Root form detection (empty, single primitive) | §5 |
 | `validation-errors.json` | Syntax errors, length mismatches, malformed input | §6, §14 |
-
-**Coverage note:** §3 host-type normalization (NaN/±Infinity → null, host Date/Set/Map/BigInt mappings) is intentionally outside these JSON fixtures, since the fixture format cannot express non-JSON encode inputs. Implementations should cover §3 in their language-local test suites.
 | `indentation-errors.json` | Strict mode indentation validation | §14.2, §12 |
 | `blank-lines.json` | Blank line handling in arrays | §14.2, §12 |
 | `path-expansion.json` | Path expansion with safe mode, deep merge, strict-mode conflicts | §13.4, §14.3 |
+
+**Coverage note:** §3 host-type normalization (NaN/±Infinity → null, host Date/Set/Map/BigInt mappings) is intentionally outside these JSON fixtures, since the fixture format cannot express non-JSON encode inputs. Implementations should cover §3 in their language-local test suites.
 
 ## Validating Fixtures
 
