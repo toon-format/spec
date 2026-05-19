@@ -39,6 +39,18 @@
       "specSection": "8"
     },
     {
+      "name": "applies last-write-wins for duplicate sibling keys in non-strict mode",
+      "input": "name: Ada\nname: Bob",
+      "expected": {
+        "name": "Bob"
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "14.6",
+      "minSpecVersion": "3.2"
+    },
+    {
       "name": "parses quoted object value with colon",
       "input": "note: \"a:b\"",
       "expected": {

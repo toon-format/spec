@@ -20,7 +20,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Fixed
 
 - §7.1 ABNF: defined the previously-undefined `quoted-key`, `quoted-char`, and `unescaped-char` productions; literal codepoints in quoted keys were ungrammatical under the prior `*escaped-char` rule.
-- §7.1 ABNF: header rule now allows `*SP` between `]`, `{`, and `:`, matching the §6 prose.
+- §6 ABNF: header rule now allows `*SP` between `]`, `{`, and `:`, matching the §6 prose.
 - §7.1 escape table: precedence rule made explicit ("first matching row applies"). Without it, the Other-BMP row overlapped the row-specific MUST escapes for U+0022 (`"`) and U+005C (`\`).
 
 ### Removed
@@ -36,7 +36,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
-- Empty object-field arrays SHOULD now encode as `key: []` (§9.1). Decoders MUST accept both `key: []` and the legacy `key[0]:` form.
+- Empty arrays canonicalized: encoders SHOULD emit `key: []` for object-field position and `[]` for root position (§9.1, §5). Decoders MUST accept both canonical (`key: []`, `[]`) and legacy (`key[0]:`, `[0]:`) forms.
 
 ## [3.0] - 2025-11-24
 

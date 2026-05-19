@@ -77,11 +77,12 @@
       "specSection": "5"
     },
     {
-      "name": "throws on delimiter mismatch (header declares tab, row uses comma)",
+      "name": "throws on row width mismatch when rows use a different delimiter than the active delimiter",
       "input": "items[2\t]{a\tb}:\n  1,2\n  3,4",
       "expected": null,
       "shouldError": true,
-      "specSection": "14.2"
+      "specSection": "14.1",
+      "note": "Active delimiter is tab; rows using comma each parse as 1 value, failing the row width check"
     },
     {
       "name": "throws on mismatched delimiter between bracket and brace fields",
@@ -91,7 +92,8 @@
       "options": {
         "strict": true
       },
-      "specSection": "6"
+      "specSection": "6",
+      "minSpecVersion": "3.2"
     },
     {
       "name": "throws on extra brackets between bracket segment and colon in strict mode",
@@ -102,7 +104,8 @@
         "strict": true
       },
       "specSection": "6",
-      "note": "Non-whitespace content between ] and : must error in strict mode (§6 fall-through is non-strict only)"
+      "note": "Non-whitespace content between ] and : must error in strict mode (§6 fall-through is non-strict only)",
+      "minSpecVersion": "3.2"
     },
     {
       "name": "throws on text between bracket segment and colon in strict mode",
@@ -112,7 +115,30 @@
       "options": {
         "strict": true
       },
-      "specSection": "6"
+      "specSection": "6",
+      "minSpecVersion": "3.2"
+    },
+    {
+      "name": "throws on non-integer bracket segment in strict mode",
+      "input": "foo[bar]: 10",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "6",
+      "minSpecVersion": "3.2"
+    },
+    {
+      "name": "throws on duplicate sibling keys in strict mode",
+      "input": "name: Ada\nname: Bob",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "14.6",
+      "minSpecVersion": "3.2"
     }
   ]
 }

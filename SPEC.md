@@ -409,7 +409,7 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
   - A line "key:" with nothing after the colon at depth d opens an object; subsequent lines at depth > d belong to that object until the depth decreases to ≤ d.
   - A bare `key:` (no value after the colon) MUST decode as an empty or nested object, NOT an empty array. Empty arrays use the explicit `key: []` form (§9.1).
   - Lines "key: value" at the same depth are sibling fields.
-  - Duplicate sibling keys at the same depth: in strict mode, decoders MUST error. In non-strict mode, decoders MUST apply deterministic last-write-wins (LWW) resolution in document order silently, mirroring the path-expansion conflict policy (§13.4, §14.5–§14.6).
+  - Duplicate sibling keys at the same depth: in strict mode, decoders MUST error. In non-strict mode, decoders MUST apply deterministic last-write-wins (LWW) resolution in document order silently (see §14.6; this mirrors the path-expansion conflict policy in §13.4 / §14.5).
 
 ## 9. Arrays
 
@@ -575,7 +575,7 @@ Conforming encoders MUST:
 - [ ] Produce UTF-8 output with LF (U+000A) line endings (§1.2)
 - [ ] Use consistent indentation (default 2 spaces, no tabs) (§12)
 - [ ] Escape per §7.1 in quoted strings; reject other escapes
-- [ ] Quote strings containing active delimiter, colon, or structural characters (§7.2)
+- [ ] Quote strings per §7.2 (the relevant delimiter is governed by §11.1: document delimiter for object-field values, active delimiter for inline array values and tabular row cells)
 - [ ] Emit array lengths [N] matching actual item count (§6, §9)
 - [ ] Prefer `key: []` for empty object-field arrays (§9.1)
 - [ ] Preserve object key order as encountered (§2)

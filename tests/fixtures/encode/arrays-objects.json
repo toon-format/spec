@@ -153,6 +153,16 @@
       },
       "expected": "items[2]:\n  - id: 1\n    data: string\n  - id: 2\n    data:\n      nested: true",
       "specSection": "9.4"
+    },
+    {
+      "name": "uses expanded list for arrays containing empty objects",
+      "input": {
+        "items": [{}, {}]
+      },
+      "expected": "items[2]:\n  -\n  -",
+      "specSection": "9.3",
+      "minSpecVersion": "3.2",
+      "note": "Empty objects {} MUST NOT use tabular form per §9.3; encoded via §9.4 expanded list with bare hyphen markers per §10"
     }
   ]
 }

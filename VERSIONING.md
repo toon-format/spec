@@ -36,7 +36,7 @@ Breaking changes (requiring a MAJOR version bump) include:
 ### Conformance Changes
 
 - Making previously valid TOON invalid.
-- Adding new MUST requirements that existing implementations don't meet.
+- Adding new MUST requirements that existing implementations don't meet, except strict-mode-only tightening (see Non-Breaking Changes).
 - Changing error handling in ways that break round-trip compatibility.
 
 ## What Constitutes a Non-Breaking Change
@@ -57,6 +57,7 @@ Non-breaking changes (MINOR version bump) include:
 - Expanding the specification to cover previously undefined behavior (if done in a backward-compatible way).
 - Adding new test cases that existing conformant implementations already pass.
 - Adding a normative decoder requirement that broadens accepted input, compatible with existing encoder output.
+- Tightening strict-mode validation (adding new strict-mode errors that formalize previously-undefined behavior). Strict mode is opt-in; non-strict mode remains compatible with prior accepted inputs, so no documents previously accepted by a conforming non-strict decoder become invalid.
 
 ### Documentation Improvements
 
