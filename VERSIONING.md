@@ -4,7 +4,7 @@ This document outlines the versioning policy for the TOON specification.
 
 ## Semantic Versioning
 
-The TOON specification follows [Semantic Versioning](https://semver.org/) with a `MAJOR.MINOR` format (specifications don't need PATCH versions).
+The TOON specification follows [Semantic Versioning](https://semver.org/) with a `MAJOR.MINOR` format.
 
 ### Version Format
 
@@ -14,6 +14,10 @@ The TOON specification follows [Semantic Versioning](https://semver.org/) with a
 - **MINOR version** - Incremented for backward-compatible additions, clarifications, or non-breaking changes
 
 **Example:** Moving from v3.1 to v3.2 is non-breaking – your implementation keeps working. Moving from v2.1 to v3.0 was a MAJOR transition that required encoder updates.
+
+### Specification Version vs Published Package Version
+
+The specification version (e.g., `3.2`) is `MAJOR.MINOR`. Published npm artifacts (`@toon-format/spec`) use full SemVer `MAJOR.MINOR.PATCH` (e.g., `3.2.0`, `3.2.1`); PATCH releases are packaging or editorial-only and do not change the specification version. Implementations targeting a spec version should pin to the `MAJOR.MINOR` line.
 
 ## What Constitutes a Breaking Change
 

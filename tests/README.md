@@ -41,7 +41,7 @@ All test fixtures follow a standard JSON structure defined in [`fixtures.schema.
 
 ```json
 {
-  "version": "3.1",
+  "version": "<spec-version>",
   "category": "encode",
   "description": "Brief description of test category",
   "tests": [
@@ -56,6 +56,8 @@ All test fixtures follow a standard JSON structure defined in [`fixtures.schema.
   ]
 }
 ```
+
+`<spec-version>` records the spec version at which the behavior tested by the fixture stabilized (e.g., `"1.4"`, `"3.2"`), not the current spec version. See the field-descriptions table below.
 
 ### Field Descriptions
 
@@ -171,15 +173,15 @@ The fixture format is language-agnostic JSON, so you can load and iterate it usi
 
 ## Validating Fixtures
 
-All fixture files should validate against [`fixtures.schema.json`](./fixtures.schema.json). You can use standard JSON Schema validators:
+All fixture files should validate against [`fixtures.schema.json`](./fixtures.schema.json). Run the commands below from the repository root:
 
 ```bash
 # Using ajv-cli
-npx ajv-cli validate -s fixtures.schema.json -d "fixtures/**/*.json"
+npx ajv-cli validate -s tests/fixtures.schema.json -d "tests/fixtures/**/*.json"
 
 # Using check-jsonschema (Python)
 pip install check-jsonschema
-check-jsonschema --schemafile fixtures.schema.json fixtures/**/*.json
+check-jsonschema --schemafile tests/fixtures.schema.json tests/fixtures/**/*.json
 ```
 
 ## Contributing Test Cases
