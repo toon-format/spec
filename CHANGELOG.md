@@ -14,18 +14,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
-- §6: in strict mode, decoders MUST error on bracket segments that fail to parse as a non-negative integer length, and on any content between a valid bracket segment and the colon (or fields segment). Non-strict mode MAY fall through to key-value parsing.
-- §6 ABNF: no whitespace permitted between the bracket segment, optional fields segment, and the colon.
-- §6: bracket-segment length disallows leading zeros (e.g., `[03]` MUST be rejected).
+- §6: strict header parsing rejects invalid bracket lengths, leading-zero lengths (e.g., `[03]`), and any content between the bracket segment, optional fields segment, and colon. Non-strict mode MAY fall through to key-value parsing.
 - §6: the "one space after colon" rule is encoder-only; decoder tolerance is governed by §12.
 - §9.3 tabular detection: arrays containing any empty object `{}` MUST NOT use tabular form (encoded via §9.4 expanded list instead).
 - §7.1 ABNF: `unescaped-char` extended to include U+0009 (HTAB), aligning the grammar with the prose tolerance for literal tabs in quoted strings.
-- §7.1 escape table (Supplementary row): clarify that scalar values are emitted/accepted as UTF-8 bytes and that surrogate-pair `\uXXXX` escapes are not combined.
+- §7.1 escape table (Supplementary row): clarify that supplementary scalars are emitted/accepted as literal UTF-8 and that surrogate `\uXXXX` escapes are not combined.
 
 ### Fixed
 
 - §7.1 ABNF: defined the previously-undefined `quoted-key`, `quoted-char`, and `unescaped-char` productions; literal codepoints in quoted keys were ungrammatical under the prior `*escaped-char` rule.
-- §7.1 escape table: precedence rule made explicit ("first matching row applies"). Without it, the Other-BMP row overlapped the row-specific MUST escapes for U+0022 (`"`) and U+005C (`\`).
+- §7.1 escape table: made first-match precedence explicit.
 - §15: downstream-consumer informative note demoted from SHOULD to advisory language.
 - Appendix A: `"x-items"[2]:` example reshaped to non-uniform objects (previous example violated §9.3).
 

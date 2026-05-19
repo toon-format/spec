@@ -315,11 +315,11 @@ quoted-key    = DQUOTE *quoted-char DQUOTE
 ; quoted-char is defined in §7.1
 ```
 
-Note: The ABNF grammar above cannot enforce that the delimiter used in the fields segment (braces) matches the delimiter declared in the bracket segment. This equality requirement is normative per the "same delimiter symbol" rule above in this section and MUST be enforced by implementations. Mismatched delimiters between bracket and brace segments MUST error in strict mode.
+Note: The ABNF does not express delimiter equality between the bracket and fields segments; implementations enforce the same-delimiter rule above. Mismatched delimiters MUST error in strict mode.
 
 Note: The grammar above specifies header syntax only. Tabular row disambiguation is defined in §9.3.
 
-Between the closing bracket `]` of the bracket segment and the opening brace `{` of a fields segment (or the colon `:` if no fields segment is present), no content MAY appear. If the bracket segment fails to parse as a non-negative integer length (e.g., `[bar]`, `[03]`, `[-1]`), or if a decoder encounters any content in these positions (e.g., `[1][bar]:`, `[2]extra:`, or `[2] :`), the line MUST NOT be interpreted as an array header. In strict mode, decoders MUST error. In non-strict mode, decoders MAY fall through to key-value parsing (Section 8); the resulting key is a literal token not constrained by §7.3's unquoted-key regex.
+No content may appear between `]` and `{`/`:`. Invalid bracket lengths (e.g., `[bar]`, `[03]`, `[-1]`) or intervening content (e.g., `[1][bar]:`, `[2]extra:`, `[2] :`) are strict-mode errors; non-strict decoders MAY parse the line as a key-value line, with the key treated as a literal token (not constrained by §7.3's unquoted-key regex).
 
 Decoding requirements:
 - The bracket segment MUST parse as a non-negative integer length N with no leading zeros (the single digit `0` is the only canonical form for length zero). Tokens like `[03]` or `[-1]` MUST NOT be interpreted as bracket segments.
@@ -345,7 +345,7 @@ In quoted strings and keys, codepoints are encoded according to the following ta
 | Other U+0000–U+001F controls                           | MUST emit `\uXXXX` (lowercase hex SHOULD)     | MUST decode `\uXXXX` (case-insensitive hex)                     |
 | U+D800–U+DFFF lone surrogates                          | (not produced by valid encoders)              | MUST reject when decoded from `\uXXXX`                          |
 | Other BMP codepoints (U+0020–U+D7FF, U+E000–U+FFFF)    | SHOULD emit literal UTF-8; MAY emit `\uXXXX`  | MUST accept either form                                         |
-| Supplementary scalar values (U+10000–U+10FFFF)         | MUST emit the scalar value as UTF-8 bytes     | MUST accept the scalar value as UTF-8 bytes; two `\uXXXX` escapes forming a UTF-16 surrogate pair MUST NOT be combined (each surrogate is rejected by the row above) |
+| Supplementary scalar values (U+10000–U+10FFFF)         | MUST emit as literal UTF-8                    | MUST accept literal UTF-8; surrogate `\uXXXX` escapes MUST be rejected (see row above) |
 
 Decoders MUST reject any escape sequence not listed above, MUST reject `\u` followed by fewer than four hex digits, and MUST reject unterminated strings.
 
@@ -359,7 +359,7 @@ escaped-char   = %x5C ( %x5C / DQUOTE / %x6E / %x72 / %x74 / unicode-escape )
 unicode-escape = %x75 4HEXDIG
 ```
 
-Note: the ABNF above expresses `unescaped-char` over the Basic Multilingual Plane only (≤ U+FFFF) for readability. Supplementary scalar values (U+10000–U+10FFFF) are conceptually part of `unescaped-char` and are required to be accepted by decoders and emitted by encoders as their UTF-8 byte sequence per the "Supplementary" row of the escape table. They cannot be expressed via the `\uXXXX` escape, which is limited to four hex digits (≤ U+FFFF); UTF-16 surrogate-pair sequences are not recognized and each surrogate `\uXXXX` MUST be rejected per the lone-surrogate row.
+Note: the ABNF lists BMP ranges (≤ U+FFFF) for readability. Supplementary scalars are also valid `unescaped-char` values and are handled per the Supplementary row of the escape table.
 
 Tabs are allowed inside quoted strings and as a declared delimiter; they MUST NOT be used for indentation (Section 12).
 

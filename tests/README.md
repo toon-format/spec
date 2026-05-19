@@ -57,13 +57,13 @@ All test fixtures follow a standard JSON structure defined in [`fixtures.schema.
 }
 ```
 
-`<spec-version>` records the spec version at which the behavior tested by the fixture stabilized (e.g., `"1.4"`, `"3.2"`), not the current spec version. See the field-descriptions table below.
+`<spec-version>` is the baseline spec version for the file (e.g., `"1.4"`, `"3.2"`); individual tests MAY override with `minSpecVersion` when they exercise a newer feature. See the field-descriptions table below.
 
 ### Field Descriptions
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `version` | Yes | Earliest TOON spec version at which the behavior tested by this fixture was finalized. Fixtures remain valid for all later versions; the field records when the test content stabilized, not when it was last touched. |
+| `version` | Yes | Baseline TOON spec version for this file. Per-test `minSpecVersion` overrides this for individual tests that exercise newer behavior. Fixtures remain valid for all later versions. |
 | `category` | Yes | Test category: `"encode"` or `"decode"` |
 | `description` | Yes | Brief description of what this fixture tests |
 | `tests` | Yes | Array of test cases |

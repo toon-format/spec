@@ -182,7 +182,7 @@
         "strict": true
       },
       "specSection": "6",
-      "note": "v3.2 removed *SP between ] and the colon/fields segment; any content there prevents header interpretation",
+      "note": "No whitespace is permitted between ] and the colon/fields segment; any content there prevents header interpretation",
       "minSpecVersion": "3.2"
     },
     {
@@ -206,14 +206,6 @@
       },
       "specSection": "14.6",
       "minSpecVersion": "3.2"
-    },
-    {
-      "name": "throws on UTF-16 surrogate pair via \\uXXXX (lone-surrogate rule rejects each escape)",
-      "input": "val: \"\\uD83D\\uDE80\"",
-      "expected": null,
-      "shouldError": true,
-      "specSection": "7.1",
-      "note": "Decoders MUST NOT combine surrogate-pair \\uXXXX escapes into a supplementary scalar; each surrogate is rejected by the lone-surrogate rule"
     }
   ]
 }

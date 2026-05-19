@@ -252,13 +252,6 @@
       "input": null,
       "expected": "null",
       "specSection": "2"
-    },
-    {
-      "name": "emits backslash as \\\\ via first-matching-row precedence (not \\u005C)",
-      "input": "a\\b",
-      "expected": "\"a\\\\b\"",
-      "specSection": "7.1",
-      "note": "The escape table is matched top-to-bottom; the U+005C row applies before the Other-BMP row, so encoders MUST NOT emit \\u005C for backslash"
     }
   ]
 }

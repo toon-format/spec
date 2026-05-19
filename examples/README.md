@@ -81,9 +81,7 @@ Complete, valid TOON files demonstrating core features:
   - Spec: §13.4 Path Expansion
 
 - [`valid/key-folding-non-identifier.toon`](valid/key-folding-non-identifier.toon) - Non-identifier segments
-  - Paired with [`valid/key-folding-non-identifier.json`](valid/key-folding-non-identifier.json); the JSON has literal dotted keys (e.g., `"user.first-name"`) containing hyphenated segments
-  - Hyphens are not in the unquoted-key character set (§7.3), so the encoder emits the keys quoted verbatim. `keyFolding="safe"` does not apply here because there are no chains of single-key wrapper objects to fold
-  - When decoded with `expandPaths="safe"`, these keys remain literal: the post-dot segments (e.g., `first-name`) fail the IdentifierSegment check, so path expansion is skipped
+  - Paired with [`valid/key-folding-non-identifier.json`](valid/key-folding-non-identifier.json); quoted dotted keys with non-IdentifierSegment parts remain literal under `expandPaths="safe"`
   - Spec: §13.4 Safe Mode Requirements, §1.9 IdentifierSegment, §7.3 Key Encoding
 
 ## Invalid Examples
@@ -96,8 +94,7 @@ Examples that intentionally violate TOON syntax rules:
   - Spec: §14.1 Strict Mode (Array Count & Width)
 
 - [`invalid/missing-colon.toon`](invalid/missing-colon.toon) - Missing colon after key
-  - Keys must be followed by `:`; encoders emit `: ` (colon + single ASCII space) before inline values (§6). Decoder whitespace tolerance for the post-colon position is covered in §12.
-  - Demonstrates a common syntax error
+  - Keys require `:`; this file omits it
   - Spec: §5 Concrete Syntax (root form)
 
 - [`invalid/path-expansion-conflict-strict.toon`](invalid/path-expansion-conflict-strict.toon) - Path expansion conflict
