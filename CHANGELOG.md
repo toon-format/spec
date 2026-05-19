@@ -4,6 +4,20 @@ All notable changes to the TOON specification will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). The project follows the MAJOR.MINOR versioning policy described in [VERSIONING.md](./VERSIONING.md).
 
+## [3.2] - 2026-05-19
+
+### Changed
+
+- §6 header syntax: in strict mode, decoders MUST error on bracket segments that fail to parse as a non-negative integer length, and on non-whitespace content between a valid bracket segment and the colon (or fields segment). Non-strict mode MAY fall through to key-value parsing.
+
+### Fixed
+
+- ABNF: defined the previously-undefined `quoted-key` production; added `quoted-char` and `unescaped-char` productions in §7.1. Literal codepoints in quoted keys (e.g., `"my-key"`) were ungrammatical under the prior `*escaped-char` content rule.
+- ABNF: header rule allows `*SP` between `]`, `{`, and `:`, matching the §6 prose.
+- ABNF: `escaped-char` uses `%x5C` for backslash (RFC 5234 standard syntax).
+- §7.1 escape table: precedence clarified ("first matching row applies"). Without it, the Other-BMP row's literal range overlapped the row-specific MUST escapes for U+0022 (`"`) and U+005C (`\`).
+- §14.2 syntax-errors checklist aligned with §6's strict-mode behavior.
+
 ## [3.1] - 2026-05-18
 
 ### Added
