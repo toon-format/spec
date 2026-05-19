@@ -305,6 +305,36 @@
         }
       },
       "specSection": "8"
+    },
+    {
+      "name": "applies LWW for nested duplicate sibling keys in non-strict mode",
+      "input": "outer:\n  name: Ada\n  name: Bob",
+      "expected": {
+        "outer": {
+          "name": "Bob"
+        }
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "14.6",
+      "minSpecVersion": "3.2"
+    },
+    {
+      "name": "applies LWW for duplicate keys within a list-item object in non-strict mode",
+      "input": "items[1]:\n  - id: 1\n    id: 2",
+      "expected": {
+        "items": [
+          {
+            "id": 2
+          }
+        ]
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "14.6",
+      "minSpecVersion": "3.2"
     }
   ]
 }
