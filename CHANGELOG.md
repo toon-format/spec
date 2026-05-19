@@ -15,10 +15,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
-- §14: collapsed the former Indentation Errors and Structural Errors subsections into §14.2; Path Expansion Conflicts moved to §14.3, Duplicate Object Keys moved to §14.4.
+- §14: collapsed the former Indentation Errors and Structural Errors subsections into §14.2; Path Expansion Conflicts moved to §14.3.
 - Interoperability and Mappings content merged into the Introduction; IANA Considerations, Versioning and Extensibility, and Intellectual Property Considerations now occupy §17–§19.
 - Versioning and Extensibility (§18) and Intellectual Property Considerations (§19) relocated above the appendices.
-- §13.1 encoder checklist: emit `key: []` for empty object-field arrays; legacy `key[0]:` MAY be emitted for backward compatibility (§9.1).
 - §6: strict header parsing rejects invalid bracket lengths, leading-zero lengths (e.g., `[03]`), and any content between the bracket segment, optional fields segment, and colon. Non-strict mode MAY fall through to key-value parsing.
 - §6: the "one space after colon" rule is encoder-only; decoder tolerance is governed by §12.
 - §9.3 tabular detection: arrays containing any empty object `{}` MUST NOT use tabular form (encoded via §9.4 expanded list instead).
@@ -27,7 +26,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Fixed
 
-- §7.1 ABNF: defined the previously-undefined `quoted-key`, `quoted-char`, and `unescaped-char` productions; literal codepoints in quoted keys were ungrammatical under the prior `*escaped-char` rule.
+- §12: clarified that whitespace-only lines MAY be treated as blank regardless of leading-space count.
+- Appendix B.2: corrected array-header parsing sketch to identify the optional (possibly quoted) key before locating the bracket segment.
+- §6 and §7.1 ABNF: defined the previously-undefined `quoted-key` (§6), `quoted-char`, and `unescaped-char` (§7.1) productions; literal codepoints in quoted keys were ungrammatical under the prior `*escaped-char` rule.
 - §7.1 escape table: made first-match precedence explicit.
 - §15: downstream-consumer informative note demoted from SHOULD to advisory language.
 - Appendix A: `"x-items"[2]:` example reshaped to non-uniform objects (previous example violated §9.3).
@@ -97,7 +98,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 
 - Optional key folding for encoders: `keyFolding="safe"` with `flattenDepth` to collapse single-key object chains into dotted paths (§13.4).
-- Optional path expansion for decoders: `expandPaths="safe"` to split dotted keys into nested objects with deep-merge semantics and conflict handling tied to `strict` (§13.4, §14.5).
+- Optional path expansion for decoders: `expandPaths="safe"` to split dotted keys into nested objects with deep-merge semantics and conflict handling tied to `strict` (§13.4, §14.3).
 - IdentifierSegment terminology and fixed `"."` path separator for safe folding/expansion (§1.9).
 
 ### Changed

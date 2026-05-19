@@ -61,7 +61,7 @@ Non-breaking changes (MINOR version bump) include:
 - Expanding the specification to cover previously undefined behavior (if done in a backward-compatible way).
 - Adding new test cases that existing conformant implementations already pass.
 - Adding a normative decoder requirement that broadens accepted input, compatible with existing encoder output.
-- Tightening strict-mode validation (adding new strict-mode errors that formalize previously-undefined behavior). Strict mode is opt-in; non-strict mode remains compatible with prior accepted inputs, so no documents previously accepted by a conforming non-strict decoder become invalid.
+- Tightening strict-mode validation (adding new strict-mode errors that formalize previously-undefined behavior). Strict mode is the default, but non-strict mode (`strict=false`) remains a conformant option; documents previously accepted by a non-strict decoder remain accepted.
 
 ### Documentation Improvements
 

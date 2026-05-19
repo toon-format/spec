@@ -171,7 +171,7 @@
       "note": "Active delimiter is tab, but object values use document delimiter for quoting"
     },
     {
-      "name": "object values with comma must be quoted when document delimiter is comma",
+      "name": "parses quoted comma in object values",
       "input": "items[2]:\n  - status: \"a,b\"\n  - status: \"c,d\"",
       "expected": {
         "items": [{ "status": "a,b" }, { "status": "c,d" }]

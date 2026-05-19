@@ -9,7 +9,7 @@
 - [ ] 📝 Clarification (typo fix, grammar improvement, clarifying language)
 - [ ] 📚 Documentation (adding examples, improving structure)
 - [ ] ✨ Minor change (backward-compatible addition or clarification)
-- [ ] 🔥 Major change (breaking change, new syntax, conformance requirement change)
+- [ ] 🔥 Major change (breaking change or incompatible syntax/behavior change)
 - [ ] 🧪 Test fixtures (adding or updating test cases)
 - [ ] 🔧 Other (please describe):
 

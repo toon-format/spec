@@ -173,7 +173,7 @@ body:
       label: Affected Specification Sections
       description: Which sections of SPEC.md need to be updated?
       placeholder: |
-        - Section 7.2: Arrays of Objects
+        - Section 9.3: Arrays of Objects - Tabular Form
         - Section 6: Header Syntax
         - Appendix A: Examples
     validations:

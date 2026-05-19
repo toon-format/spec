@@ -8,7 +8,7 @@
   "properties": {
     "version": {
       "type": "string",
-      "description": "Earliest TOON specification version at which the behavior tested by this fixture was finalized. Fixtures remain valid for all later versions; the field records when the test content stabilized, not when it was last touched.",
+      "description": "Baseline TOON spec version for this file. Per-test `minSpecVersion` overrides this for individual tests that exercise newer behavior. Fixtures remain valid for all later versions.",
       "pattern": "^\\d+\\.\\d+$",
       "examples": ["1.4", "1.5", "3.1"]
     },

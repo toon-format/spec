@@ -66,6 +66,19 @@
       "specSection": "12"
     },
     {
+      "name": "accepts whitespace-only line at non-multiple indent as blank in strict mode",
+      "input": "a: 1\n   \nb: 2",
+      "expected": {
+        "a": 1,
+        "b": 2
+      },
+      "options": {
+        "strict": true
+      },
+      "specSection": "12",
+      "minSpecVersion": "3.2"
+    },
+    {
       "name": "accepts trailing newline at end of file",
       "input": "a: 1\n",
       "expected": {
