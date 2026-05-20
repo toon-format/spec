@@ -4,7 +4,7 @@
 
 **Version:** 3.2
 
-**Date:** 2026-05-19
+**Date:** 2026-05-20
 
 **Status:** Working Draft
 
@@ -292,7 +292,7 @@ Spacing and delimiters:
   - splitting tabular field names in "{…}",
   - splitting all rows/items within the header's scope,
   - unless a nested header changes it.
-- The same delimiter symbol declared in the bracket MUST be used in the fields segment and in all row/value splits in that scope.
+- Decoders MUST split the fields segment and all rows/items in the header's scope using the declared delimiter; other delimiter characters appearing unquoted in row content are literal data and MUST NOT be re-interpreted as structural delimiters.
 - Absence of a delimiter symbol in a bracket segment ALWAYS means comma, regardless of any parent header.
 
 Normative header grammar (ABNF):
@@ -474,7 +474,7 @@ When tabular requirements are not met (encoding):
 - Each element is rendered as a list item at depth +1 under the header:
   - Primitive: `- <primitive>`
   - Primitive array: `- [M<delim?>]: v1<delim>…`
-  - Array of objects or non-uniform array: `- [M<delim?>]:` on the hyphen line, followed by the nested array's list items at depth +2 (or tabular rows at depth +2 when the nested array satisfies §9.3).
+  - Array of objects or non-uniform array: `- [M<delim?>]:` on the hyphen line, followed by the nested array's list items at depth +1 relative to the hyphen line (i.e. +2 from the outer array header). Items are encoded recursively per §9.1–§9.4 as each item's shape requires; tabular form (§9.3) is not available in this position (the field list has no place to appear) – encoders MUST use the expanded list form.
   - Object: formatted per §10 (objects as list items).
 
 Decoding:
