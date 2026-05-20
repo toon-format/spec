@@ -198,6 +198,18 @@
       "minSpecVersion": "3.2"
     },
     {
+      "name": "throws on whitespace between bracket segment and fields segment in strict mode",
+      "input": "items[2] {a,b}:\n  1,2\n  3,4",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "6",
+      "note": "No whitespace is permitted between ] and the fields segment; mirrors the ]-to-colon rule",
+      "minSpecVersion": "3.2"
+    },
+    {
       "name": "throws on nested duplicate sibling keys in strict mode",
       "input": "outer:\n  name: Ada\n  name: Bob",
       "expected": null,
