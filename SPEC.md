@@ -198,6 +198,7 @@ All normative text in this specification is contained in Sections 1–16. All ap
     - Emit a quoted string containing a lossless decimal representation (plain decimal or JSON exponent form); the chosen form MUST be documented.
     - Emit a number that round-trips to the host's numeric approximation (losing precision), provided it conforms to the rules above.
   - Encoders that can encounter numbers outside their lossless numeric domain SHOULD provide an option to choose lossless stringification for such numbers.
+- Booleans: Represented as the lowercase literals true and false.
 - Null: Represented as the literal null.
 
 Decoder numeric rules are defined in §4.
@@ -209,14 +210,14 @@ Encoders MUST normalize non-JSON values to the JSON data model before encoding. 
 - Number:
   - Finite → number per §2 number form rules. -0 → 0.
   - NaN, +Infinity, -Infinity → null.
-- Implementations MAY honor host-language–specific serialization hooks (for example, a `toJSON()` method in JavaScript or an equivalent mechanism) as part of host-type normalization. When supported, such hooks SHOULD be applied before other host-type mappings and their behavior MUST be documented by the implementation.
+- Implementations MAY honor host-language–specific serialization hooks (for example, JavaScript's `toJSON()`, Go's `json.Marshaler`, Python's `JSONEncoder.default`, Rust's `serde::Serialize`, or an equivalent mechanism) as part of host-type normalization. When supported, such hooks SHOULD be applied before other host-type mappings and their behavior MUST be documented by the implementation.
 - Examples of host-type normalization (non-normative):
   - Date/time objects → ISO 8601 string representation [ISO8601].
   - Set-like collections → array.
   - Map-like collections → object (with string keys).
-  - Undefined, function, symbol, or unrecognized types → null.
+  - Sentinel, non-serializable, or unrecognized host values → null.
 
-See Appendix F for non-normative language-specific examples (Go, JavaScript, Python, Rust).
+See Appendix F for non-normative language-specific examples.
 
 ## 4. Decoding Interpretation (Reference Decoder)
 
@@ -556,7 +557,7 @@ For an object appearing as a list item:
 
 Encoders, decoders, and validators each have a per-class checklist below (§13.1–§13.3). Conforming implementations MUST satisfy every applicable item.
 
-Option names throughout this specification are concept handles; implementations MAY use language-idiomatic spellings (e.g., `key_folding` in Python, `KeyFolding` in Go) when the mapping is documented.
+Option names throughout this specification are concept handles; implementations MAY use language-idiomatic spellings (e.g., `key_folding` in Python, `KeyFolding` in Go) when the mapping is documented. Option value tokens (e.g., `"off"`, `"safe"`) likewise denote modes; implementations MAY use enums, constants, or other host-idiomatic types.
 
 Options:
 - Encoder options:
@@ -582,6 +583,7 @@ Conforming encoders MUST:
 - [ ] Preserve object key order as encountered (§2)
 - [ ] Emit numbers per §2
 - [ ] Convert -0 to 0 (§2)
+- [ ] Emit booleans and null as lowercase literals (§2)
 - [ ] Convert NaN/±Infinity to null (§3)
 - [ ] Emit no trailing spaces or trailing newline (§12)
 - [ ] When `keyFolding="safe"`, folding MUST comply with §13.4 (IdentifierSegment validation, collision avoidance)
@@ -684,7 +686,7 @@ Examples:
 
 ## 14. Strict Mode Errors and Diagnostics (Authoritative Checklist)
 
-When strict mode is enabled (default), decoders MUST error on the following conditions.
+When strict mode is enabled (default), decoders MUST error on the following conditions. Error type, code, and message text are implementation-defined.
 
 ### 14.1 Array Count and Width Mismatches
 
@@ -1072,6 +1074,7 @@ Collection Types:
 
 Struct Types:
 - Structs with exported fields: Convert to object using JSON struct tags if present.
+- Types implementing `json.Marshaler`: Invoke `MarshalJSON()`, parse the returned bytes as JSON, and normalize the result recursively.
 
 Non-Serializable Types:
 - `nil`: Maps to `null`.
@@ -1117,7 +1120,7 @@ Collection Types:
 - `dict`: Preserve as object with string keys. Non-string keys must be coerced to strings.
 
 Object Types:
-- Custom objects: Extract attributes via `__dict__` or implement custom serialization; convert to object (dict) with string keys.
+- Custom objects: Extract attributes via `__dict__`, register a `JSONEncoder.default` callback, or use `dataclasses.asdict()` for dataclasses; convert to object (dict) with string keys.
 
 Non-Serializable Types:
 - `None`: Maps to `null`.
@@ -1148,7 +1151,30 @@ Non-Serializable Types:
 - `Option::Some(T)`: Unwrap and normalize `T`.
 - Function pointers, raw pointers: Not serializable; implementations should error or skip these fields.
 
-### F.5 General Guidance
+### F.5 Java
+
+Java implementations commonly normalize the following host types:
+
+Numeric Types:
+- `BigInteger`: If within `long` range, convert to number. Otherwise, convert to quoted decimal string per lossless policy.
+- `BigDecimal`: Convert to `double` if representable without loss, OR convert to a quoted decimal string via `.toPlainString()` for exact preservation.
+- `Double.NaN`, `Double.POSITIVE_INFINITY`, `Double.NEGATIVE_INFINITY`: Convert to `null`.
+
+Temporal Types:
+- `java.time.Instant`, `OffsetDateTime`, `ZonedDateTime`: Convert to ISO 8601 string via `.toString()`.
+- `LocalDate`, `LocalTime`, `LocalDateTime`: Convert to ISO 8601 representations via `.toString()`.
+- Legacy `java.util.Date`: Convert to an `Instant` via `.toInstant()` and emit via `.toString()`.
+
+Collection Types:
+- `Map<K, V>`: Convert to object. Keys must be strings or convertible to strings via `String.valueOf()`.
+- `Collection<T>` (List, Set): Convert to array.
+
+Non-Serializable Types:
+- `null`: Maps to `null`.
+- `Optional.empty()`: Maps to `null`. `Optional.of(x)`: unwrap and normalize `x`.
+- Functional interfaces (lambdas, method references), reflective types: Convert to `null`.
+
+### F.6 General Guidance
 
 Implementations in any language should:
 1. Document their normalization policy clearly, especially for:
