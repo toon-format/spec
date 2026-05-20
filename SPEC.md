@@ -1154,4 +1154,3 @@ Implementations in any language should:
   - Collection type mappings (order preservation for sets)
 2. Provide configuration options where multiple strategies are reasonable (e.g., lossless vs. approximate numeric encoding).
 3. Ensure that normalization is deterministic: encoding the same host value twice produces identical TOON output.
-

@@ -24,8 +24,8 @@ The specification includes ABNF snippets, encoding rules, validation requirement
 ```json
 {
   "users": [
-    {"id": 1, "name": "Ada"},
-    {"id": 2, "name": "Linus"}
+    { "id": 1, "name": "Ada" },
+    { "id": 2, "name": "Linus" }
   ]
 }
 ```
