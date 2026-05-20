@@ -186,17 +186,18 @@ All normative text in this specification is contained in Sections 1–16. All ap
   - Array order MUST be preserved.
   - Object key order MUST be preserved as encountered by the encoder.
 - Numbers (canonical form for encoding):
-  - Encoders MUST emit numbers in canonical decimal form:
+  - Encoders MUST emit finite numbers in canonical decimal form when n is integer-valued with |n| < 1e21, or when 1e-6 ≤ |n| < 1e21:
     - No exponent notation (e.g., 1e6 MUST be rendered as 1000000; 1e-6 as 0.000001).
     - No leading zeros except for the single digit "0" (e.g., "05" is not canonical).
     - No trailing zeros in the fractional part (e.g., 1.5000 MUST be rendered as 1.5).
     - If the fractional part is zero after normalization, emit as an integer (e.g., 1.0 → 1).
     - -0 MUST be normalized to 0.
-  - Encoders MUST emit sufficient precision to ensure round-trip fidelity within the encoder's host environment: decode(encode(x)) MUST equal x.
-  - If the encoder's host environment cannot represent a numeric value without loss (e.g., arbitrary-precision decimals or integers exceeding the host's numeric range), the encoder MAY:
-    - Emit a quoted string containing the exact decimal representation to preserve value fidelity, OR
-    - Emit a canonical number that round-trips to the host's numeric approximation (losing precision), provided it conforms to the canonical formatting rules above.
-  - Encoders SHOULD provide an option to choose lossless stringification for out-of-range numbers.
+  - For finite numbers outside the canonical range above (non-zero |n| < 1e-6, or |n| ≥ 1e21), encoders MAY emit JSON exponent form (e.g., 1e-7, 1e+21).
+  - Encoders MUST emit sufficient precision to ensure round-trip fidelity within the encoder's host environment: decode(encode(x)) MUST equal x under value-level structural equality over the §2 JSON data model, with numbers compared by value after the normalizations above (so -0 equals 0 and integer-valued floats equal their integer form).
+  - If the encoder cannot represent a numeric value within its documented numeric domain (e.g., arbitrary-precision decimals or integers exceeding that domain), the encoder MAY:
+    - Emit a quoted string containing a lossless decimal representation (plain decimal or JSON exponent form); the chosen form MUST be documented.
+    - Emit a number that round-trips to the host's numeric approximation (losing precision), provided it conforms to the rules above.
+  - Encoders that can encounter numbers outside their lossless numeric domain SHOULD provide an option to choose lossless stringification for such numbers.
 - Null: Represented as the literal null.
 
 Decoder numeric rules are defined in §4.
@@ -206,7 +207,7 @@ Decoder numeric rules are defined in §4.
 Encoders MUST normalize non-JSON values to the JSON data model before encoding. The mapping from host-specific types to JSON model is implementation-defined and MUST be documented.
 
 - Number:
-  - Finite → number (canonical decimal form per §2). -0 → 0.
+  - Finite → number per §2 number form rules. -0 → 0.
   - NaN, +Infinity, -Infinity → null.
 - Implementations MAY honor host-language–specific serialization hooks (for example, a `toJSON()` method in JavaScript or an equivalent mechanism) as part of host-type normalization. When supported, such hooks SHOULD be applied before other host-type mappings and their behavior MUST be documented by the implementation.
 - Examples of host-type normalization (non-normative):
@@ -230,7 +231,7 @@ Decoders map text tokens to host values:
     - Decoders MUST accept decimal and exponent forms on input (e.g., `42`, `-3.14`, `1e-6`, `-1E+9`).
     - Decoders MUST treat tokens with forbidden leading zeros in the integer part (e.g., `"05"`, `"0001"`, `"-05"`, `"-0001"`) as strings, not numbers. This rule does **not** apply to a single zero integer part followed by a fractional or exponent part (e.g., `0.5`, `0e1`, `-0.5`, `-0e1`), which are valid numbers.
     - Only finite numbers are expected from conforming encoders.
-    - If a decoded numeric token is not representable in the host's default numeric type without loss, implementations MAY return a higher-precision numeric type, return a string, or return an approximate numeric value if that is the documented policy. Implementations MUST document their out-of-range policy; lossless-first is RECOMMENDED for libraries intended for data interchange or validation.
+    - If a decoded numeric token is not representable within the implementation's documented numeric domain, implementations MAY return a higher-precision numeric type, return a string, or return an approximate numeric value if that is the documented policy. Implementations MUST document their out-of-range policy; lossless-first is RECOMMENDED for libraries intended for data interchange or validation.
     - Decoding examples:
       - `1.5000` → `1.5` (trailing zeros in fractional part accepted)
       - `-1E+03` → `-1000` (exponent forms accepted)
@@ -353,7 +354,7 @@ Normative escape grammar:
 ```abnf
 HEXDIG         = DIGIT / %x41-46 / %x61-66
 quoted-char    = escaped-char / unescaped-char
-unescaped-char = %x09 / %x20-21 / %x23-5B / %x5D-D7FF / %xE000-FFFF
+unescaped-char = %x09 / %x20-21 / %x23-5B / %x5D-D7FF / %xE000-FFFF / %x10000-10FFFF
 escaped-char   = %x5C ( %x5C / DQUOTE / %x6E / %x72 / %x74 / unicode-escape )
 unicode-escape = %x75 4HEXDIG
 ```
@@ -555,6 +556,8 @@ For an object appearing as a list item:
 
 Encoders, decoders, and validators each have a per-class checklist below (§13.1–§13.3). Conforming implementations MUST satisfy every applicable item.
 
+Option names throughout this specification are concept handles; implementations MAY use language-idiomatic spellings (e.g., `key_folding` in Python, `KeyFolding` in Go) when the mapping is documented.
+
 Options:
 - Encoder options:
   - indent (default: 2 spaces)
@@ -577,7 +580,7 @@ Conforming encoders MUST:
 - [ ] Quote strings per §7.2 (the relevant delimiter is governed by §11.1: document delimiter for object-field values, active delimiter for inline array values and tabular row cells)
 - [ ] Emit array lengths [N] matching actual item count (§6, §9)
 - [ ] Preserve object key order as encountered (§2)
-- [ ] Normalize numbers to non-exponential decimal form (§2)
+- [ ] Emit numbers per §2
 - [ ] Convert -0 to 0 (§2)
 - [ ] Convert NaN/±Infinity to null (§3)
 - [ ] Emit no trailing spaces or trailing newline (§12)

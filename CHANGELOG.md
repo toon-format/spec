@@ -4,6 +4,21 @@ All notable changes to the TOON specification will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). The project follows the MAJOR.MINOR versioning policy described in [VERSIONING.md](./VERSIONING.md).
 
+## [3.3] - TBD
+
+### Added
+
+- §13: note that option names are concept handles, not API spellings; implementations MAY use language-idiomatic spellings.
+- §7.1 ABNF `unescaped-char`: extended upper bound to include `%x10000-10FFFF` (supplementary scalars).
+
+### Changed
+
+- §2 number form: encoder canonical-decimal MUST scoped to `1e-6 ≤ |n| < 1e21` and integer-valued `|n| < 1e21`; outside this range, encoders MAY emit JSON exponent form.
+- §2 round-trip: equality defined as value-level structural over the §2 JSON data model.
+- §2 / §4: "host's numeric range" replaced with "implementation's documented numeric domain".
+- §2 lossless out-of-domain: quoted decimal string MAY use plain decimal or JSON exponent form; implementations MUST document the choice.
+- §3 / §13.1: number wording updated to reference §2.
+
 ## [3.2] - 2026-05-20
 
 ### Added
