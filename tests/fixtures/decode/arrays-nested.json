@@ -161,6 +161,16 @@
       "specSection": "9.4"
     },
     {
+      "name": "parses nested arrays with empty object list items",
+      "input": "items[2]:\n  - [1]:\n    -\n  - [2]:\n    - x\n    -",
+      "expected": {
+        "items": [[{}], ["x", {}]]
+      },
+      "specSection": "9.4",
+      "minSpecVersion": "3.2",
+      "note": "The bare hyphen marker for an empty object list item applies recursively inside nested expanded arrays"
+    },
+    {
       "name": "parses root-level array of arrays",
       "input": "[2]:\n  - [2]: 1,2\n  - [0]:",
       "expected": [[1, 2], []],
