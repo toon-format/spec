@@ -137,7 +137,7 @@ To validate your TOON implementation against these fixtures:
 
 The fixture format is language-agnostic JSON, so you can load and iterate it using your language's standard JSON parser and test framework.
 
-**Note (spec v3.3+):** Encoder fixtures for numbers inside the canonical range `[1e-6, 1e21)` (§2) are byte-equal across conformant implementations. For values outside that range, §2 permits multiple valid forms; such fixtures verify via decode-and-compare round-trip.
+**Note (spec v3.3+):** Encoder fixtures for numbers inside the canonical range (`n = 0` or `1e-6 ≤ |n| < 1e21`, per §2) are byte-equal across conformant implementations. For values outside that range, §2 permits multiple valid forms; such fixtures verify via decode-and-compare round-trip.
 
 ## Test Coverage
 

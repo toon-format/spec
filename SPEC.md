@@ -2,9 +2,9 @@
 
 ## Token-Oriented Object Notation
 
-**Version:** 3.2
+**Version:** 3.3
 
-**Date:** 2026-05-20
+**Date:** 2026-05-21
 
 **Status:** Working Draft
 
@@ -20,7 +20,7 @@ Token-Oriented Object Notation (TOON) is a line-oriented, indentation-based text
 
 ## Status of This Document
 
-This document is a Working Draft v3.2 and may be updated, replaced, or obsoleted. Implementers should monitor the canonical repository at https://github.com/toon-format/spec for changes.
+This document is a Working Draft v3.3 and may be updated, replaced, or obsoleted. Implementers should monitor the canonical repository at https://github.com/toon-format/spec for changes.
 
 This specification is stable for implementation but not yet finalized. Breaking changes may occur in future major versions.
 
@@ -186,20 +186,20 @@ All normative text in this specification is contained in Sections 1–16. All ap
   - Array order MUST be preserved.
   - Object key order MUST be preserved as encountered by the encoder.
 - Numbers (canonical form for encoding):
-  - Encoders MUST emit finite numbers in canonical decimal form when n is integer-valued with |n| < 1e21, or when 1e-6 ≤ |n| < 1e21:
+  - Encoders MUST emit finite numbers in canonical decimal form when n = 0, or when 1e-6 ≤ |n| < 1e21:
     - No exponent notation (e.g., 1e6 MUST be rendered as 1000000; 1e-6 as 0.000001).
     - No leading zeros except for the single digit "0" (e.g., "05" is not canonical).
     - No trailing zeros in the fractional part (e.g., 1.5000 MUST be rendered as 1.5).
     - If the fractional part is zero after normalization, emit as an integer (e.g., 1.0 → 1).
     - -0 MUST be normalized to 0.
-  - For finite numbers outside the canonical range above (non-zero |n| < 1e-6, or |n| ≥ 1e21), encoders MAY emit JSON exponent form (e.g., 1e-7, 1e+21).
-  - Encoders MUST emit sufficient precision to ensure round-trip fidelity within the encoder's host environment: decode(encode(x)) MUST equal x under value-level structural equality over the §2 JSON data model, with numbers compared by value after the normalizations above (so -0 equals 0 and integer-valued floats equal their integer form).
-  - If the encoder cannot represent a numeric value within its documented numeric domain (e.g., arbitrary-precision decimals or integers exceeding that domain), the encoder MAY:
+  - For finite numbers outside the canonical range above (non-zero |n| < 1e-6, or |n| ≥ 1e21), encoders MAY emit exponent notation conforming to the JSON number grammar [RFC8259] §6 (e.g., 1e-7, 1e+21). Encoders SHOULD use lowercase `e` and an explicit exponent sign for byte-for-byte determinism.
+  - Encoders MUST emit sufficient precision so that, after any §3 host-type normalization, decode(encode(x)) equals x under JSON-model equality: null equals null; booleans compare by value; strings compare by Unicode scalar-value sequence after §7.1 unescaping, with no Unicode normalization; arrays compare by length and pairwise element equality in order; objects compare by the same ordered key sequence and pairwise value equality; numbers compare by mathematical value after §2 numeric normalization, so -0 equals 0 and integer-valued numbers compare equal to their integer form.
+  - If a source value is outside the implementation's documented numeric domain (e.g., arbitrary-precision decimals or integers exceeding that domain), the encoder MAY:
     - Emit a quoted string containing a lossless decimal representation (plain decimal or JSON exponent form); the chosen form MUST be documented.
     - Emit a number that round-trips to the host's numeric approximation (losing precision), provided it conforms to the rules above.
-  - Encoders that can encounter numbers outside their lossless numeric domain SHOULD provide an option to choose lossless stringification for such numbers.
-- Booleans: Represented as the lowercase literals true and false.
-- Null: Represented as the literal null.
+  - Encoders SHOULD expose an option for lossless stringification of out-of-domain numbers.
+- Booleans: Encoders MUST emit the lowercase literals true and false.
+- Null: Encoders MUST emit the lowercase literal null.
 
 Decoder numeric rules are defined in §4.
 
@@ -208,9 +208,9 @@ Decoder numeric rules are defined in §4.
 Encoders MUST normalize non-JSON values to the JSON data model before encoding. The mapping from host-specific types to JSON model is implementation-defined and MUST be documented.
 
 - Number:
-  - Finite → number per §2 number form rules. -0 → 0.
+  - Finite → number per §2 number form rules.
   - NaN, +Infinity, -Infinity → null.
-- Implementations MAY honor host-language–specific serialization hooks (for example, JavaScript's `toJSON()`, Go's `json.Marshaler`, Python's `JSONEncoder.default`, Rust's `serde::Serialize`, or an equivalent mechanism) as part of host-type normalization. When supported, such hooks SHOULD be applied before other host-type mappings and their behavior MUST be documented by the implementation.
+- Implementations MAY honor host-language–specific serialization hooks (for example, JavaScript's `toJSON()`, Go's `json.Marshaler`, Python's `JSONEncoder.default`, Rust's `serde::Serialize`, or an equivalent mechanism) as part of host-type normalization. When supported, such hooks SHOULD take precedence over default host-type mappings for the same value, and their behavior MUST be documented by the implementation.
 - Examples of host-type normalization (non-normative):
   - Date/time objects → ISO 8601 string representation [ISO8601].
   - Set-like collections → array.
@@ -359,8 +359,6 @@ unescaped-char = %x09 / %x20-21 / %x23-5B / %x5D-D7FF / %xE000-FFFF / %x10000-10
 escaped-char   = %x5C ( %x5C / DQUOTE / %x6E / %x72 / %x74 / unicode-escape )
 unicode-escape = %x75 4HEXDIG
 ```
-
-Note: the ABNF lists BMP ranges (≤ U+FFFF) for readability. Supplementary scalars are also valid `unescaped-char` values and are handled per the Supplementary row of the escape table.
 
 Tabs are allowed inside quoted strings and as a declared delimiter; they MUST NOT be used for indentation (§12). Within quoted strings, encoders MUST emit HTAB as `\t` per the escape table above; the literal HTAB in `unescaped-char` expresses decoder leniency only.
 
@@ -561,12 +559,12 @@ Option names throughout this specification are concept handles; implementations 
 
 Options:
 - Encoder options:
-  - indent (default: 2 spaces)
+  - indentSize (default: 2 spaces)
   - delimiter (document delimiter; default: comma; alternatives: tab, pipe)
   - keyFolding (default: `"off"`; alternatives: `"safe"`)
   - flattenDepth (default: Infinity when keyFolding is `"safe"`; non-negative integer; values less than 2 have no practical effect)
 - Decoder options:
-  - indent (default: 2 spaces)
+  - indentSize (default: 2 spaces)
   - strict (default: `true`)
   - expandPaths (default: `"off"`; alternatives: `"safe"`)
 
@@ -1062,7 +1060,7 @@ This appendix provides non-normative guidance on how implementations in differen
 Go implementations commonly normalize the following host types:
 
 Numeric Types:
-- `big.Int`: If within `int64` range, convert to number. Otherwise, convert to quoted decimal string per lossless policy.
+- `big.Int`: If representable as a canonical decimal integer per §2, emit as number; otherwise convert to quoted decimal string per lossless policy.
 - `math.Inf()`, `math.NaN()`: Convert to `null`.
 
 Temporal Types:
@@ -1078,16 +1076,15 @@ Struct Types:
 
 Non-Serializable Types:
 - `nil`: Maps to `null`.
-- Functions, channels, `unsafe.Pointer`: Not serializable; implementations should error or skip these fields.
+- Functions, channels, `unsafe.Pointer`: Not serializable; behavior is implementation-defined per §3.
 
 ### F.2 JavaScript
 
 JavaScript implementations commonly normalize the following host types:
 
 Numeric Types:
-- `BigInt`: If the value is within `Number.MIN_SAFE_INTEGER` to `Number.MAX_SAFE_INTEGER`, convert to `number`. Otherwise, convert to a quoted decimal string (e.g., `BigInt(9007199254740993)` → `"9007199254740993"`).
+- `BigInt`: If the value is within `Number.MIN_SAFE_INTEGER` to `Number.MAX_SAFE_INTEGER`, convert to `number`. Otherwise, convert to a quoted decimal string.
 - `NaN`, `Infinity`, `-Infinity`: Convert to `null`.
-- `-0`: Normalize to `0`.
 
 Temporal Types:
 - `Date`: Convert to ISO 8601 string via `.toISOString()` (e.g., `"2025-01-01T00:00:00.000Z"`).
@@ -1097,7 +1094,7 @@ Collection Types:
 - `Map`: Convert to object using `String(key)` for keys and normalizing values recursively. Non-string keys are coerced to strings.
 
 Object Types:
-- Objects with a `toJSON()` method: Call `value.toJSON()` and then normalize the returned value recursively before encoding. This allows domain objects to override default normalization behavior in a controlled, deterministic way (similar to `JSON.stringify`). Implementations should guard against `toJSON()` returning the same object (to avoid infinite recursion) and may fall back to default normalization in that case.
+- Objects with a `toJSON()` method: Call `value.toJSON()` and normalize the returned value recursively before encoding.
 - Plain objects: Enumerate own enumerable string keys in encounter order; normalize values recursively.
 
 Non-Serializable Types:
@@ -1110,7 +1107,7 @@ Python implementations commonly normalize the following host types:
 Numeric Types:
 - `decimal.Decimal`: Convert to `float` if representable without loss, OR convert to quoted decimal string for exact preservation (implementation policy).
 - `float('inf')`, `float('-inf')`, `float('nan')`: Convert to `null`.
-- Arbitrary-precision integers (large `int`): Emit as number if within host numeric range, OR as quoted decimal string per lossless policy.
+- Arbitrary-precision integers (large `int`): Emit as number if within the implementation's documented numeric domain, OR as quoted decimal string per lossless policy.
 
 Temporal Types:
 - `datetime.datetime`, `datetime.date`, `datetime.time`: Convert to ISO 8601 string representation via `.isoformat()`.
@@ -1131,7 +1128,7 @@ Non-Serializable Types:
 Rust implementations commonly normalize the following host types (typically using serialization frameworks like `serde`):
 
 Numeric Types:
-- `i128`, `u128`: If within `i64`/`u64` range, emit as number. Otherwise, convert to quoted decimal string per lossless policy.
+- `i128`, `u128`: If representable as a canonical decimal integer per §2, emit as number; otherwise convert to quoted decimal string per lossless policy.
 - `f64::INFINITY`, `f64::NEG_INFINITY`, `f64::NAN`: Convert to `null`.
 
 Temporal Types:
@@ -1146,33 +1143,35 @@ Enum Types:
 - Unit variants: Convert to string of variant name (e.g., `Color::Red` → `"Red"`).
 - Tuple/struct variants: Typically convert to object with `"type"` field and data fields per `serde` conventions.
 
+Struct Types:
+- Types implementing `serde::Serialize`: invoke the trait via the implementation's serializer and normalize the produced JSON value.
+
 Non-Serializable Types:
 - `Option::None`: Convert to `null`.
 - `Option::Some(T)`: Unwrap and normalize `T`.
-- Function pointers, raw pointers: Not serializable; implementations should error or skip these fields.
+- Function pointers, raw pointers: Not serializable; behavior is implementation-defined per §3.
 
 ### F.5 Java
 
 Java implementations commonly normalize the following host types:
 
 Numeric Types:
-- `BigInteger`: If within `long` range, convert to number. Otherwise, convert to quoted decimal string per lossless policy.
+- `BigInteger`: If representable as a canonical decimal integer per §2, emit as number; otherwise convert to quoted decimal string per lossless policy.
 - `BigDecimal`: Convert to `double` if representable without loss, OR convert to a quoted decimal string via `.toPlainString()` for exact preservation.
 - `Double.NaN`, `Double.POSITIVE_INFINITY`, `Double.NEGATIVE_INFINITY`: Convert to `null`.
 
 Temporal Types:
-- `java.time.Instant`, `OffsetDateTime`, `ZonedDateTime`: Convert to ISO 8601 string via `.toString()`.
+- `java.time.Instant`, `OffsetDateTime`: Convert to ISO 8601 string via `.toString()`.
+- `ZonedDateTime`: Convert via `.toOffsetDateTime().toString()` to produce ISO 8601; `ZonedDateTime.toString()` appends a `[Zone/Id]` bracket that is not standard ISO 8601.
 - `LocalDate`, `LocalTime`, `LocalDateTime`: Convert to ISO 8601 representations via `.toString()`.
-- Legacy `java.util.Date`: Convert to an `Instant` via `.toInstant()` and emit via `.toString()`.
 
 Collection Types:
-- `Map<K, V>`: Convert to object. Keys must be strings or convertible to strings via `String.valueOf()`.
+- `Map<K, V>`: Convert to object. Keys MUST be non-null strings; non-string keys MUST be converted via the implementation's documented policy.
 - `Collection<T>` (List, Set): Convert to array.
 
 Non-Serializable Types:
-- `null`: Maps to `null`.
 - `Optional.empty()`: Maps to `null`. `Optional.of(x)`: unwrap and normalize `x`.
-- Functional interfaces (lambdas, method references), reflective types: Convert to `null`.
+- Functional interfaces (lambdas, method references), reflective types: Not serializable; behavior is implementation-defined per §3.
 
 ### F.6 General Guidance
 

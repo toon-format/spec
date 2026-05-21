@@ -4,30 +4,22 @@ All notable changes to the TOON specification will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). The project follows the MAJOR.MINOR versioning policy described in [VERSIONING.md](./VERSIONING.md).
 
-## [3.3] - TBD
+## [3.3] - 2026-05-21
 
 ### Added
 
-- §13: note that option names are concept handles, not API spellings; implementations MAY use language-idiomatic spellings.
-- §13: extend the concept-handles note to cover option value tokens (e.g., `"off"`, `"safe"`).
-- §7.1 ABNF `unescaped-char`: extended upper bound to include `%x10000-10FFFF` (supplementary scalars).
-- §2: explicit lowercase-literal MUST for booleans, parallel to the existing null bullet.
-- §13.1: conformance-checklist item for lowercase booleans and null.
-- §14: disclaimer that error type, code, and message text are implementation-defined.
-- Appendix F.5 Java: new informative section; existing F.5 General Guidance renumbered to F.6.
+- §2: explicit lowercase-literal MUST for booleans and null; §13.1 conformance checklist gains corresponding entries.
+- §7.1 ABNF `unescaped-char`: supplementary scalars (`%x10000-10FFFF`) included explicitly.
+- §13: option names and value tokens are concept handles; implementations MAY use language-idiomatic spellings or types.
+- Appendix F.5: informative Java mapping section.
 
 ### Changed
 
-- §2 number form: encoder canonical-decimal MUST scoped to `1e-6 ≤ |n| < 1e21` and integer-valued `|n| < 1e21`; outside this range, encoders MAY emit JSON exponent form.
-- §2 round-trip: equality defined as value-level structural over the §2 JSON data model.
-- §2 / §4: "host's numeric range" replaced with "implementation's documented numeric domain".
+- §2 number form: canonical-decimal MUST scoped to `n = 0 or 1e-6 ≤ |n| < 1e21`; outside this range, encoders MAY emit exponent notation per the JSON number grammar (lowercase `e`, explicit sign recommended).
+- §2 round-trip: equality predicate spelled out as JSON-model equality with ordered key sequences, codepoint-sequence string comparison (no Unicode normalization), array order, and mathematical number equality.
 - §2 lossless out-of-domain: quoted decimal string MAY use plain decimal or JSON exponent form; implementations MUST document the choice.
-- §3 / §13.1: number wording updated to reference §2.
-- §3:211: hook example now enumerates JavaScript `toJSON()`, Go `json.Marshaler`, Python `JSONEncoder.default`, Rust `serde::Serialize`.
-- §3:216: language-neutral phrasing for the host-value fallback.
-- §3:218: dropped enumeration of languages from the Appendix F cross-reference.
-- Appendix F.1 (Go): added `json.Marshaler` hook bullet under Struct Types.
-- Appendix F.3 (Python): expanded Custom Objects bullet with `JSONEncoder.default` and `dataclasses.asdict` hooks.
+- §3: hook examples extended to Go (`json.Marshaler`), Python (`JSONEncoder.default`), Rust (`serde::Serialize`); host hooks take precedence over default mappings.
+- §13: option name `indent` → `indentSize` for consistency with §1.3 / §12.
 
 ## [3.2] - 2026-05-20
 
