@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - §7.1 ABNF `unescaped-char`: supplementary scalars (`%x10000-10FFFF`) included explicitly.
 - §13: option names and value tokens are concept handles; implementations MAY use language-idiomatic spellings or types.
 - Appendix F.5: informative Java mapping section.
+- Tests: decode fixtures for ambiguous leading-plus tokens, matching reference behavior.
 
 ### Changed
 

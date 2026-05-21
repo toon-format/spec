@@ -90,6 +90,25 @@
       "note": "Exponent +00 results in the integer 5"
     },
     {
+      "name": "treats leading plus integer as string",
+      "input": "value: +1",
+      "expected": {
+        "value": "+1"
+      },
+      "specSection": "4",
+      "note": "The spec is silent on leading-plus tokens; the reference implementation treats them as strings"
+    },
+    {
+      "name": "treats leading plus numeric-looking tokens as strings",
+      "input": "values[3]: +1,+1.5,+1e2\nexponent: 1e+2",
+      "expected": {
+        "values": ["+1", "+1.5", "+1e2"],
+        "exponent": 100
+      },
+      "specSection": "4",
+      "note": "Reference behavior: exponent plus signs are numeric, but leading-plus tokens remain strings"
+    },
+    {
       "name": "parses zero with exponent as number",
       "input": "value: 0e1",
       "expected": {
