@@ -69,6 +69,7 @@ The TOON specification uses MAJOR.MINOR versioning. See [VERSIONING.md](./VERSIO
 - **Changelog:** [CHANGELOG.md](./CHANGELOG.md) - Version history and changes
 - **Reference Implementation:** [github.com/toon-format/toon](https://github.com/toon-format/toon) - TypeScript/JavaScript implementation
 - **Benchmarks:** [Reference repo benchmarks/](https://github.com/toon-format/toon/tree/main/benchmarks) - Token efficiency measurements and accuracy retrieval tests
+- **Validation Guide:** [github.com/apardawala/toon-validation-guide](https://github.com/apardawala/toon-validation-guide) - JSON Schema 2020-12 patterns for decoded TOON (community-maintained)
 
 ## License
 
