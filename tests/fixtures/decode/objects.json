@@ -123,6 +123,32 @@
       "specSection": "8"
     },
     {
+      "name": "parses quoted object value shaped like an inline array header",
+      "input": "a: \"[2]: x\"",
+      "expected": {
+        "a": "[2]: x"
+      },
+      "specSection": "8",
+      "note": "Quoted value is opaque (§4); the bracket-and-colon shape inside the quotes is data, not an array header (§6)"
+    },
+    {
+      "name": "parses quoted object value shaped like a count-matching inline array header",
+      "input": "a: \"[1]: x\"",
+      "expected": {
+        "a": "[1]: x"
+      },
+      "specSection": "8",
+      "note": "A matching fake count creates no header: §14.2 decides syntax independently of §14.1 counts, so the quoted value stays opaque (§4)"
+    },
+    {
+      "name": "parses quoted object value with bracket text and a later colon",
+      "input": "content: \"accept (process.argv[2]) and greet: name\"",
+      "expected": {
+        "content": "accept (process.argv[2]) and greet: name"
+      },
+      "specSection": "8"
+    },
+    {
       "name": "parses quoted key with colon",
       "input": "\"order:id\": 7",
       "expected": {
