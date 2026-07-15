@@ -186,6 +186,42 @@
       "minSpecVersion": "3.2"
     },
     {
+      "name": "throws on decimal bracket length in strict mode",
+      "input": "x[3.7]: a,b,c",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "6",
+      "note": "[3.7] is not an integer length (§6 length is DIGIT-only); decoders MUST NOT interpret it as a bracket segment",
+      "minSpecVersion": "3.2"
+    },
+    {
+      "name": "throws on bracket length with plus sign in strict mode",
+      "input": "x[+3]: a,b,c",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "6",
+      "note": "[+3] carries a sign and is not a non-negative integer length; decoders MUST NOT interpret it as a bracket segment",
+      "minSpecVersion": "3.2"
+    },
+    {
+      "name": "throws on bracket length in exponent form in strict mode",
+      "input": "x[1e1]: 1,2,3,4,5,6,7,8,9,10",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "6",
+      "note": "[1e1] is exponent notation, not a DIGIT-only integer length; decoders MUST NOT interpret it as a bracket segment",
+      "minSpecVersion": "3.2"
+    },
+    {
       "name": "throws on whitespace between bracket segment and colon in strict mode",
       "input": "items[2] :\n  1,2",
       "expected": null,
