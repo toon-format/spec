@@ -141,6 +141,24 @@
       "note": "A matching fake count creates no header: §14.2 decides syntax independently of §14.1 counts, so the quoted value stays opaque (§4)"
     },
     {
+      "name": "parses unquoted value shaped like an inline array header after the key",
+      "input": "key: foo [2]: bar",
+      "expected": {
+        "key": "foo [2]: bar"
+      },
+      "specSection": "6",
+      "note": "An unquoted key cannot contain a colon, so the first colon ends the key; the bracket-and-colon shape in the remainder is value text, not an array header"
+    },
+    {
+      "name": "parses unquoted value shaped like a tabular array header after the key",
+      "input": "a: b [2]{x,y}: 1,2",
+      "expected": {
+        "a": "b [2]{x,y}: 1,2"
+      },
+      "specSection": "6",
+      "note": "An unquoted key cannot contain a colon, so the first colon ends the key; the tabular-header shape in the remainder is value text, not an array header"
+    },
+    {
       "name": "parses quoted object value with bracket text and a later colon",
       "input": "content: \"accept (process.argv[2]) and greet: name\"",
       "expected": {
