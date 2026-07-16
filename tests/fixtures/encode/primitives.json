@@ -63,7 +63,7 @@
       "input": "05",
       "expected": "\"05\"",
       "specSection": "7.2",
-      "note": "Leading zeros make it non-numeric"
+      "note": "Matches the numeric-like pattern (05 is a listed §7.2 example), so it MUST be quoted"
     },
     {
       "name": "escapes newline in string",
@@ -198,8 +198,7 @@
       "name": "encodes negative zero as zero",
       "input": -0,
       "expected": "0",
-      "specSection": "2",
-      "note": "Negative zero normalizes to zero"
+      "specSection": "2"
     },
     {
       "name": "encodes scientific notation as decimal",

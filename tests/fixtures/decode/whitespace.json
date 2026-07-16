@@ -37,8 +37,7 @@
           { "id": 2, "name": "Bob" }
         ]
       },
-      "specSection": "12",
-      "note": "Values in tabular rows are trimmed"
+      "specSection": "12"
     },
     {
       "name": "tolerates spaces around delimiters with quoted values",

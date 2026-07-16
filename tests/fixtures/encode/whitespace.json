@@ -9,8 +9,7 @@
         "id": 123
       },
       "expected": "id: 123",
-      "specSection": "12",
-      "note": "Output should not end with newline character"
+      "specSection": "12"
     },
     {
       "name": "maintains proper indentation for nested structures",
@@ -37,8 +36,7 @@
       "specSection": "12",
       "options": {
         "indent": 4
-      },
-      "note": "4-space indentation for nested objects when indent option is set to 4"
+      }
     }
   ]
 }

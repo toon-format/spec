@@ -138,7 +138,7 @@
         "a": "[1]: x"
       },
       "specSection": "8",
-      "note": "A matching fake count creates no header: §14.2 decides syntax independently of §14.1 counts, so the quoted value stays opaque (§4)"
+      "note": "Quoting makes the value opaque (§4), so it is never parsed as a header – the matching count is irrelevant because a quoted scalar is never a header candidate"
     },
     {
       "name": "parses unquoted value shaped like an inline array header after the key",

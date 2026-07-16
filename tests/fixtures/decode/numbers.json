@@ -86,8 +86,7 @@
       "expected": {
         "value": 5
       },
-      "specSection": "4",
-      "note": "Exponent +00 results in the integer 5"
+      "specSection": "4"
     },
     {
       "name": "parses zero with exponent as number",

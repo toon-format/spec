@@ -133,7 +133,7 @@
         "flattenDepth": 0
       },
       "specSection": "13.4",
-      "note": "flattenDepth=0 disables all folding"
+      "note": "flattenDepth below 2 has no practical effect, leaving standard nesting (§13.4)"
     },
     {
       "name": "encodes standard nesting with keyFolding=off (baseline)",

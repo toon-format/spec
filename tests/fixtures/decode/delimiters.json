@@ -159,7 +159,7 @@
         "note": "a,b"
       },
       "specSection": "11",
-      "note": "Object values don't require comma quoting regardless of delimiter"
+      "note": "Object field values are parsed as the whole post-colon token, never split on a delimiter (§11.2)"
     },
     {
       "name": "object values in list items follow document delimiter",

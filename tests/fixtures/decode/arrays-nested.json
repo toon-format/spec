@@ -81,8 +81,7 @@
           }
         ]
       },
-      "specSection": "10",
-      "note": "Single-field list-item object: only the tabular array, no sibling fields"
+      "specSection": "10"
     },
     {
       "name": "parses objects containing arrays (including empty arrays) in list format",

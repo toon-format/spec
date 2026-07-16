@@ -59,7 +59,7 @@
       },
       "expected": "items[1]:\n  - users[2]{id,name}:\n      1,Ada\n      2,Bob\n    status: active",
       "specSection": "10",
-      "note": "YAML-style encoding for list-item objects with tabular array as first field"
+      "note": "Tabular header on hyphen line with rows at depth +2 and sibling fields at depth +1 (§10)"
     },
     {
       "name": "uses list format for nested object arrays with mismatched keys",
