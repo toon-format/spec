@@ -82,7 +82,7 @@
       "specSection": "9.3"
     },
     {
-      "name": "treats a same-depth key-value line whose value contains the active delimiter as end of rows, not a row",
+      "name": "treats a key-value line at header depth whose value contains the active delimiter as end of rows, not a row",
       "input": "t[2]{a,b}:\n  1,2\n  3,4\nx: 3,4",
       "expected": {
         "t": [
@@ -92,7 +92,7 @@
         "x": "3,4"
       },
       "specSection": "9.3",
-      "note": "First unquoted colon precedes the first unquoted delimiter, so the line ends the rows as a key-value pair (§9.3); the whole post-colon token is the value, non-numeric so a string (§11.2)"
+      "note": "The dedent to the header's depth closes the rows (§8); the line is a key-value pair, and the whole post-colon token is the value, non-numeric so a string (§11.2)"
     }
   ]
 }
