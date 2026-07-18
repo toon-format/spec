@@ -1,0 +1,4 @@
+project: TOON
+version: "3.0"
+tags[4]: serialization,llm,token-efficient,json-alternative
+scores[5]: 98,85,92,77,100
