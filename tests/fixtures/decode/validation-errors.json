@@ -252,6 +252,14 @@
         "strict": true
       },
       "specSection": "14.3"
+    },
+    {
+      "name": "throws on bracket segment without a length",
+      "input": "key[]: 1,2",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "14.2",
+      "note": "An absent length is a malformed bracket segment, same class as [03] and [-1]; only key: [] (bracket after the colon) means an empty array"
     }
   ]
 }

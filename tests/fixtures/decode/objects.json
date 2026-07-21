@@ -210,6 +210,18 @@
       "note": "Non-whitespace [bar] between ] and : prevents array header interpretation; non-strict fall-through produces a literal key not constrained by §7.3"
     },
     {
+      "name": "treats bracket segment without a length as literal key (non-strict)",
+      "input": "key[]: 1,2",
+      "options": {
+        "strict": false
+      },
+      "expected": {
+        "key[]": "1,2"
+      },
+      "specSection": "6",
+      "note": "An absent length prevents header interpretation; non-strict fall-through produces a literal key"
+    },
+    {
       "name": "treats non-integer bracket content as literal key (non-strict)",
       "input": "foo[bar][1]: 20",
       "options": {
