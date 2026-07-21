@@ -383,7 +383,7 @@ Tabs are allowed inside quoted strings and as a declared delimiter; they MUST NO
 
 A string value MUST be quoted if any of the following is true:
 - It is empty ("").
-- It has leading or trailing whitespace.
+- It has leading or trailing whitespace (U+0020 or U+0009).
 - It equals true, false, or null (case-sensitive).
 - It is numeric-like: matches /^-?\d+(?:\.\d+)?(?:e[+-]?\d+)?$/i (e.g., "42", "-3.14", "05", "1e-6").
 - It contains a colon (:), double quote ("), or backslash (\\).
@@ -541,7 +541,7 @@ For an object appearing as a list item:
 
 - Delimiter-aware parsing:
   - Inline arrays and tabular rows MUST be split only on the active delimiter declared by the nearest array header.
-  - Splitting MUST preserve empty tokens; surrounding spaces are trimmed, and empty tokens decode to the empty string.
+  - Splitting MUST preserve empty tokens; surrounding spaces (U+0020 only, §12) are trimmed, and empty tokens decode to the empty string.
   - Nested headers may change the active delimiter; decoding MUST use the delimiter declared by the nearest header.
 - Object field values (key: value): Decoders parse the entire post-colon token as a single value; document delimiter is not a decoder concept.
 
@@ -561,7 +561,7 @@ For an object appearing as a list item:
   - Non-strict mode:
     - Depth MAY be computed as floor(indentSpaces / indentSize).
     - Implementations MAY accept tab characters in indentation. Depth computation for tabs is implementation-defined. Implementations MUST document their tab policy.
-  - Surrounding whitespace around tokens SHOULD be tolerated; internal semantics follow quoting rules.
+  - Token trimming: when a value token is extracted (after a key-value colon, after an array-header colon, and around each delimiter-separated token), decoders MUST trim surrounding spaces – exactly U+0020, no other characters. Any other whitespace (e.g., NBSP, or HTAB outside its delimiter role) is part of the token; internal semantics follow quoting rules.
   - Comment lines (§5.1) are removed before any check in this section applies; they are not blank lines, may carry any number of leading spaces, and never count as rows or items.
   - Blank lines:
     - A line whose content trims to empty MAY be treated as blank regardless of leading-space count.
@@ -853,7 +853,7 @@ These sketches illustrate structure and common decoding helpers. They are inform
 - On a double quote, toggle inQuotes.
 - While inQuotes, treat backslash + next char as a literal pair (string parser validates later).
 - Only split on the active delimiter when not in quotes (unquoted occurrences).
-- Trim surrounding spaces around each token. Empty tokens decode to empty string.
+- Trim surrounding spaces (U+0020 only, §12) around each token. Empty tokens decode to empty string.
 
 ### B.4 Primitive Token Parsing
 

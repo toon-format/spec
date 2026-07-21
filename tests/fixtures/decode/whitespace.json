@@ -10,7 +10,7 @@
         "tags": ["a", "b", "c"]
       },
       "specSection": "12",
-      "note": "Surrounding whitespace SHOULD be tolerated; tokens are trimmed"
+      "note": "Tokens are trimmed of surrounding U+0020 spaces per §12"
     },
     {
       "name": "tolerates spaces around pipes in inline arrays",
@@ -55,6 +55,24 @@
       },
       "specSection": "12",
       "note": "Empty token (nothing between delimiters) decodes to empty string"
+    },
+    {
+      "name": "preserves NBSP-leading unquoted value",
+      "input": "k: \u00a0v",
+      "expected": {
+        "k": "\u00a0v"
+      },
+      "specSection": "12",
+      "note": "Token trimming removes U+0020 only; NBSP is part of the token"
+    },
+    {
+      "name": "preserves NBSP around inline array tokens",
+      "input": "items[2]: \u00a0a\u00a0,b",
+      "expected": {
+        "items": ["\u00a0a\u00a0", "b"]
+      },
+      "specSection": "12",
+      "note": "A host trim() that strips the full Unicode whitespace set corrupts this round-trip"
     }
   ]
 }
