@@ -251,6 +251,19 @@
       "input": null,
       "expected": "null",
       "specSection": "2"
+    },
+    {
+      "name": "quotes string equal to hash",
+      "input": "#",
+      "expected": "\"#\"",
+      "specSection": "7.2",
+      "note": "Comment marker at position 0 must be quoted"
+    },
+    {
+      "name": "quotes string starting with hash",
+      "input": "#hello",
+      "expected": "\"#hello\"",
+      "specSection": "7.2"
     }
   ]
 }

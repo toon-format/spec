@@ -6,9 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased] - 4.0
 
+### Breaking Changes
+
+- §5.1: full-line comment lines – a line whose first non-space character is `#` is removed by decoders in a lexical pre-pass (strict and non-strict alike), before indentation validation, root-form discovery, line classification, and all `[N]`/row/item counting. Comment lines never terminate scopes, may carry any leading spaces, and MUST NOT be emitted by encoders. This is v4's only wire change for existing v3 documents: unquoted `#`-leading tabular first cells, `#`-leading root scalars, and `#`-leading keys (accepted only by permissive v3 decoders) now read as comments. See [MIGRATION.md](./MIGRATION.md).
+
 ### Added
 
 - §15: prototype-key safety – encoders MUST emit and decoders MUST materialize `__proto__`, `constructor`, and `prototype` as ordinary own entries in every key position; decoding MUST NOT mutate the host object model. Conformance fixtures added for encode and decode.
+- §5.2: normative line classification – each comment-stripped line is classified by precedence (blank / list-item / array-header / key-value / row / scalar); a line whose first unquoted colon precedes any unquoted `[` is a key-value line, never a header; §9.3 remains authoritative for row-depth disambiguation. §5, §8–§10 reference the new classes.
+- §7.2 / §15: string values that equal `#` or start with `#` MUST be quoted (mirrors the leading-hyphen rule); the §15 quoting list gains comment markers.
+- §13.1 / §13.2: conformance checklist items – encoders emit no comment lines; decoders strip comment lines in a pre-pass.
+- Conformance fixtures for comment stripping (`tests/fixtures/decode/comments.json`) and `#` quoting in every value position.
 
 ### Removed
 
@@ -20,6 +28,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - §14.4 Duplicate Object Keys renumbered to §14.3; fixture `specSection` citations updated.
 - Test fixtures: file baselines normalized to `4.0`; redundant per-test `minSpecVersion` markers dropped.
 - Test fixtures: option `indent` renamed to `indentSize`, matching the §13 option name.
+- Introduction: non-goals now exclude only inline/trailing comments and annotations; the YAML comparison reflects decode-side full-line comments.
+- §5 root-form discovery, §12 indentation/blank-line rules, §14.1 counts, and §14.2 invariants operate on the comment-stripped line sequence; Appendix B.1 decoding sketch updated.
 
 ## [3.3] - 2026-05-21
 

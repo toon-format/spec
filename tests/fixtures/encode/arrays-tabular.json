@@ -68,6 +68,15 @@
       },
       "expected": "\"\"[2]{id,name}:\n  1,Ada\n  2,Bob",
       "specSection": "9.3"
+    },
+    {
+      "name": "quotes hash-leading string in tabular cell",
+      "input": {
+        "items": [{ "tag": "#a" }, { "tag": "b" }]
+      },
+      "expected": "items[2]{tag}:\n  \"#a\"\n  b",
+      "specSection": "7.2",
+      "note": "Unquoted, the first row would read as a comment line on decode"
     }
   ]
 }

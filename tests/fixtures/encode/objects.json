@@ -267,6 +267,14 @@
       },
       "expected": "rows[2]{__proto__,x}:\n  a,1\n  b,2",
       "specSection": "15"
+    },
+    {
+      "name": "quotes hash-leading string in object field value",
+      "input": {
+        "note": "#x"
+      },
+      "expected": "note: \"#x\"",
+      "specSection": "7.2"
     }
   ]
 }

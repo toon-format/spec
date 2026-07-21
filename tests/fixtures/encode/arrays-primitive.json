@@ -98,6 +98,14 @@
       },
       "expected": "items[3]: \"[5]\",\"- item\",\"{key}\"",
       "specSection": "9.1"
+    },
+    {
+      "name": "quotes hash-leading string in inline array",
+      "input": {
+        "tags": ["#a", "b"]
+      },
+      "expected": "tags[2]: \"#a\",b",
+      "specSection": "7.2"
     }
   ]
 }

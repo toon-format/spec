@@ -100,6 +100,14 @@
       },
       "expected": "items[2]:\n  - a: 1\n  - [2]: 1,2",
       "specSection": "9.4"
+    },
+    {
+      "name": "quotes hash-leading string as list item",
+      "input": {
+        "items": ["#x", { "a": 1 }]
+      },
+      "expected": "items[2]:\n  - \"#x\"\n  - a: 1",
+      "specSection": "7.2"
     }
   ]
 }
