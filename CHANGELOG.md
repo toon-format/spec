@@ -14,7 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 
 - §15: prototype-key safety – encoders MUST emit and decoders MUST materialize `__proto__`, `constructor`, and `prototype` as ordinary own entries in every key position; decoding MUST NOT mutate the host object model. Conformance fixtures added for encode and decode.
-- §5.2: normative line classification – each comment-stripped line is classified by precedence (blank / list-item / array-header / key-value / row / scalar); a line whose first unquoted colon precedes any unquoted `[` is a key-value line, never a header; §9.3 remains authoritative for row-depth disambiguation. §5, §8–§10 reference the new classes.
+- §5.2: normative line classification – each comment-stripped line is classified by precedence (blank / list-item / array-header / key-value / row / scalar); a line whose first unquoted colon precedes any unquoted `[` is a key-value line, never a header; §9.3 remains authoritative for row-depth disambiguation; §14.2 enumerates non-root scalar lines as structural errors. §5, §8–§10 reference the new classes.
 - §7.2 / §15: string values that equal `#` or start with `#` MUST be quoted (mirrors the leading-hyphen rule); the §15 quoting list gains comment markers.
 - §13.1 / §13.2: conformance checklist items – encoders emit no comment lines; decoders strip comment lines in a pre-pass.
 - Conformance fixtures for comment stripping (`tests/fixtures/decode/comments.json`) and `#` quoting in every value position.

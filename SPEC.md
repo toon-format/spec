@@ -653,6 +653,7 @@ When strict mode is enabled (default), decoders MUST error on the following cond
 - Indentation and blank-line invariants per §12, evaluated after comment removal (§5.1): leading-space multiple of indentSize; no tabs in indentation; no blank lines inside arrays/tabular rows. Comment lines are exempt and never count as blank lines, rows, or items.
 - Indentation depth jumps (§8): a line more than one level deeper than its enclosing scope (e.g., a depth d+2 line directly under a depth-d parent).
 - Ill-formed UTF-8 in byte input (§4).
+- A scalar line (§5.2) anywhere other than root primitive position – e.g., a bare token line inside an array or object scope.
 - Two or more non-empty depth-0 lines that are neither headers nor key-value lines (§5).
 
 ### 14.3 Duplicate Object Keys
