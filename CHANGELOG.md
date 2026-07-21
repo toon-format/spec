@@ -4,6 +4,17 @@ All notable changes to the TOON specification will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). The project follows the MAJOR.MINOR versioning policy described in [VERSIONING.md](./VERSIONING.md).
 
+## [Unreleased] - 4.0
+
+### Removed
+
+- §1.9, §13.4, §14.3: key folding and path expansion removed entirely – encoder options `keyFolding`/`flattenDepth`, decoder option `expandPaths`, the IdentifierSegment and path-separator terms, the related conformance checklist items, the Appendix A examples, and the `key-folding`/`path-expansion` fixtures and examples. Dotted keys remain single literal keys unconditionally (§8). See [MIGRATION.md](./MIGRATION.md).
+- §18: path-separator extensibility bullet (folding-specific).
+
+### Changed
+
+- §14.4 Duplicate Object Keys renumbered to §14.3; fixture `specSection` citations updated.
+
 ## [3.3] - 2026-05-21
 
 ### Added

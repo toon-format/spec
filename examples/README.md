@@ -51,30 +51,6 @@ Complete, valid TOON files demonstrating core features:
   - Shows that object field values still follow document delimiter quoting rules
   - Spec: §11
 
-### Key Folding and Path Expansion
-
-> Examples with a `.json` sidecar can be regenerated via a conforming encoder with `keyFolding="safe"`. Decode the `.toon` with `expandPaths="safe"` to reconstruct the paired JSON shape.
-
-- [`valid/key-folding-basic.toon`](valid/key-folding-basic.toon) - Basic dotted-key notation
-  - Demonstrates how `keyFolding="safe"` only folds chains of single-key objects (e.g. `server.host: localhost`)
-  - Spec: §13.4
-
-- [`valid/key-folding-with-array.toon`](valid/key-folding-with-array.toon) - Dotted keys with arrays
-  - Shows folding combined with inline arrays: `data.meta.items[3]: widget,gadget,tool`
-  - Adds folded scalar `stats.meta.count: 3` plus folded array `user.preferences.tags[2]: …`
-  - Arrays terminate the folded chain as the leaf value; the parent chain still folds and the array stays inline
-  - Spec: §13.4
-
-- [`valid/key-folding-mixed.toon`](valid/key-folding-mixed.toon) - Mixed folding strategies
-  - Combines standard nested objects (`app`, `server`) with folded keys (`database.connection.url`, `feature.flags.beta`)
-  - Shows the encoder mixing folded and non-folded sections within the same document
-  - Useful when only some branches meet the single-key-chain requirement
-  - Spec: §13.4
-
-- [`valid/key-folding-non-identifier.toon`](valid/key-folding-non-identifier.toon) - Non-identifier segments
-  - Quoted dotted keys (quoting forced by hyphens per §7.3) remain literal under `expandPaths="safe"`
-  - Spec: §13.4, §7.3
-
 ## Invalid Examples
 
 Examples that intentionally violate TOON syntax rules:

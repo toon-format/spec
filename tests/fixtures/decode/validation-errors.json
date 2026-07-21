@@ -137,7 +137,7 @@
       "options": {
         "strict": true
       },
-      "specSection": "14.4",
+      "specSection": "14.3",
       "minSpecVersion": "3.2"
     },
     {
@@ -253,7 +253,7 @@
       "options": {
         "strict": true
       },
-      "specSection": "14.4",
+      "specSection": "14.3",
       "minSpecVersion": "3.2"
     },
     {
@@ -264,7 +264,7 @@
       "options": {
         "strict": true
       },
-      "specSection": "14.4",
+      "specSection": "14.3",
       "minSpecVersion": "3.2"
     }
   ]

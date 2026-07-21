@@ -1,7 +1,7 @@
 {
   "version": "3.1",
   "category": "decode",
-  "description": "Object decoding - fields, nested objects, key parsing, §6 fall-through (non-strict), and §14.4 duplicate-key LWW",
+  "description": "Object decoding - fields, nested objects, key parsing, §6 fall-through (non-strict), and §14.3 duplicate-key LWW",
   "tests": [
     {
       "name": "parses objects with primitive values",
@@ -47,7 +47,7 @@
       "options": {
         "strict": false
       },
-      "specSection": "14.4",
+      "specSection": "14.3",
       "minSpecVersion": "3.2"
     },
     {
@@ -369,7 +369,7 @@
       "options": {
         "strict": false
       },
-      "specSection": "14.4",
+      "specSection": "14.3",
       "minSpecVersion": "3.2"
     },
     {
@@ -385,7 +385,7 @@
       "options": {
         "strict": false
       },
-      "specSection": "14.4",
+      "specSection": "14.3",
       "minSpecVersion": "3.2"
     }
   ]

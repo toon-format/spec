@@ -2,9 +2,9 @@
 
 ## Token-Oriented Object Notation
 
-**Version:** 3.3
+**Version:** 4.0 (unreleased draft)
 
-**Date:** 2026-05-21
+**Date:** Unreleased
 
 **Status:** Working Draft
 
@@ -20,7 +20,7 @@ Token-Oriented Object Notation (TOON) is a line-oriented, indentation-based text
 
 ## Status of This Document
 
-This document is a Working Draft v3.3 and may be updated, replaced, or obsoleted. Implementers should monitor the canonical repository at https://github.com/toon-format/spec for changes.
+This document is a Working Draft v4.0 and may be updated, replaced, or obsoleted. Implementers should monitor the canonical repository at https://github.com/toon-format/spec for changes.
 
 This specification is stable for implementation but not yet finalized. Breaking changes may occur in future major versions.
 
@@ -169,12 +169,6 @@ All normative text in this specification is contained in Sections 1–16. All ap
 
 - Regular expressions appear in slash-delimited form.
 - ABNF snippets follow RFC 5234; HTAB means the U+0009 character.
-
-### 1.9 Key Folding and Path Expansion Terms
-
-- IdentifierSegment: A key segment eligible for safe folding and expansion, matching the pattern `^[A-Za-z_][A-Za-z0-9_]*$` (contains only letters, digits, and underscores; does not start with a digit; does not contain dots).
-- Path separator: The character used to join/split key segments during folding and expansion. Fixed to `"."` (U+002E, FULL STOP).
-- Note: Unquoted keys in TOON remain permissive per §7.3 (`^[A-Za-z_][A-Za-z0-9_.]*$`, allowing dots). IdentifierSegment is a stricter pattern used only for safe folding and expansion eligibility checks.
 
 ## 2. Data Model
 
@@ -328,7 +322,7 @@ Decoding requirements:
 - If a fields segment occurs between the bracket and the colon, parse field names using the active delimiter; quoted names MUST be unescaped per §7.1.
 - A colon MUST follow the bracket and optional fields; missing colon MUST error.
 
-Note: Key folding (§13.4) affects only the key prefix in headers. The header grammar remains unchanged. Example: `data.meta.items[2]{id,name}:` is a valid header with a folded key prefix `data.meta.items`, followed by a standard bracket segment, field list, and colon. Parsing treats folded keys as literal keys; see §13.4 for optional path expansion.
+Note: Dotted keys are ordinary literal keys in headers. Example: `data.meta.items[2]{id,name}:` is a valid header whose key is the single literal key `data.meta.items`, followed by a standard bracket segment, field list, and colon.
 
 ## 7. Strings and Keys
 
@@ -387,8 +381,6 @@ Object keys and tabular field names:
 
 Keys requiring quoting per the above rules MUST be quoted in all contexts, including array headers (e.g., "my-key"[N]:).
 
-Encoders MAY perform key folding when enabled (see §13.4 for complete folding rules and requirements).
-
 ### 7.4 Decoding Rules for Strings and Keys
 
 Decoding of value tokens follows §4 (unquoted type inference, quoted strings, numeric rules). This section adds key-specific requirements:
@@ -403,12 +395,12 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
   - Nested or empty objects: key: on its own line. If non-empty, nested fields appear at depth +1.
   - Key order: Implementations MUST preserve encounter order when emitting fields.
   - An empty object at the root yields an empty document (no lines).
-- Dotted keys (e.g., `user.name`) are valid literal keys in TOON. Decoders MUST treat them as single literal keys unless path expansion is explicitly enabled (see §13.4). This preserves backward compatibility and allows safe opt-in expansion behavior.
+- Dotted keys (e.g., `user.name`) are valid literal keys in TOON. Decoders MUST treat them as single literal keys; the dot has no structural meaning.
 - Decoding:
   - A line "key:" with nothing after the colon at depth d opens an object; subsequent lines at depth > d belong to that object until the depth decreases to ≤ d.
   - A bare `key:` (no value after the colon) MUST decode as an empty or nested object, NOT an empty array. Empty arrays use the explicit `key: []` form (§9.1).
   - Lines "key: value" at the same depth are sibling fields.
-  - Duplicate sibling keys at the same depth: see §14.4 for strict/non-strict behavior.
+  - Duplicate sibling keys at the same depth: see §14.3 for strict/non-strict behavior.
 
 ## 9. Arrays
 
@@ -555,18 +547,15 @@ For an object appearing as a list item:
 
 Encoders, decoders, and validators each have a per-class checklist below (§13.1–§13.3). Conforming implementations MUST satisfy every applicable item.
 
-Option names throughout this specification are concept handles; implementations MAY use language-idiomatic spellings (e.g., `key_folding` in Python, `KeyFolding` in Go) when the mapping is documented. Option value tokens (e.g., `"off"`, `"safe"`) likewise denote modes; implementations MAY use enums, constants, or other host-idiomatic types.
+Option names throughout this specification are concept handles; implementations MAY use language-idiomatic spellings (e.g., `indent_size` in Python, `IndentSize` in Go) when the mapping is documented. Option value tokens (e.g., the delimiter modes comma, tab, and pipe) likewise denote modes; implementations MAY use enums, constants, or other host-idiomatic types.
 
 Options:
 - Encoder options:
   - indentSize (default: 2 spaces)
   - delimiter (document delimiter; default: comma; alternatives: tab, pipe)
-  - keyFolding (default: `"off"`; alternatives: `"safe"`)
-  - flattenDepth (default: Infinity when keyFolding is `"safe"`; non-negative integer; values less than 2 have no practical effect)
 - Decoder options:
   - indentSize (default: 2 spaces)
   - strict (default: `true`)
-  - expandPaths (default: `"off"`; alternatives: `"safe"`)
 
 Strict-mode errors are enumerated in §14; validators MAY add informative diagnostics for style and encoding invariants.
 
@@ -584,8 +573,6 @@ Conforming encoders MUST:
 - [ ] Emit booleans and null as lowercase literals (§2)
 - [ ] Convert NaN/±Infinity to null (§3)
 - [ ] Emit no trailing spaces or trailing newline (§12)
-- [ ] When `keyFolding="safe"`, folding MUST comply with §13.4 (IdentifierSegment validation, collision avoidance)
-- [ ] When `flattenDepth` is set, folding MUST stop at the configured segment count (§13.4)
 
 ### 13.2 Decoder Conformance Checklist
 
@@ -597,9 +584,6 @@ Conforming decoders MUST:
 - [ ] Type unquoted primitives: true/false/null → booleans/null, numeric → number, else → string (§4)
 - [ ] Enforce strict-mode rules when `strict=true` (§14)
 - [ ] Preserve array order and object key order (§2)
-- [ ] When `expandPaths="safe"`, expansion MUST follow §13.4 (IdentifierSegment-only segments, deep merge, conflict rules)
-- [ ] When `expandPaths="safe"` with `strict=true`, MUST error on expansion conflicts per §14.3
-- [ ] When `expandPaths="safe"` with `strict=false`, apply LWW conflict resolution (§13.4)
 
 ### 13.3 Validator Conformance Checklist
 
@@ -609,78 +593,6 @@ Validators SHOULD verify:
 - [ ] Delimiter consistency between headers and rows
 - [ ] Array length counts match declared [N]
 - [ ] All strict-mode requirements (§14)
-
-### 13.4 Key Folding and Path Expansion
-
-Key folding and path expansion are optional transformations for compact dotted-path notation. Both default to `"off"`.
-
-#### Encoder: Key Folding
-
-Key folding allows encoders to collapse chains of single-key objects into dotted-path notation, reducing verbosity for deeply nested structures.
-
-Mode: `"off"` | `"safe"` (default: `"off"`)
-- `"off"`: No folding is performed. All objects are encoded with standard nesting.
-- `"safe"`: Fold eligible chains according to the rules below.
-
-flattenDepth: The maximum number of segments from K1 to include in the folded path (default: Infinity when keyFolding is `"safe"`; values less than 2 have no practical effect).
-- A value of 2 folds the first two segments of an eligible chain: `{a: {b: val}}` → `a.b: val`; longer chains continue nested below the folded key.
-- A value of Infinity folds entire eligible chains: `{a: {b: {c: val}}}` → `a.b.c: val`.
-
-Foldable chain: A chain of L segments K1 → K2 → ... → KL is foldable when:
-- Each Ki (where 1 ≤ i < L) is an object with exactly one key Ki+1.
-- The chain stops at the first non-single-key object or when encountering a leaf value.
-- Arrays are not considered single-key objects; a chain stops at arrays.
-- The leaf value at KL is either a primitive, an array, or an empty object.
-
-Safe mode requirements (all MUST hold for a chain to be folded):
-1. All folded segments K1 through Kd (where d = min(L, flattenDepth)) MUST be IdentifierSegments (§1.9): matching `^[A-Za-z_][A-Za-z0-9_]*$`.
-2. The resulting folded key string MUST NOT equal any existing sibling literal key at the same object depth (collision avoidance).
-
-Folding process:
-- For a foldable chain of L segments, determine d = min(L, flattenDepth).
-- Fold segments K1 through Kd into a single key: `K1.K2.....Kd`.
-- If d < L, emit the remaining structure (Kd+1 through KL) as normal nested objects.
-- The leaf value at KL is encoded normally (primitive, array, or empty object).
-
-Examples:
-- `{a: {b: {c: 1}}}` with safe mode, depth=Infinity → `a.b.c: 1`
-- `{a: {b: {c: {d: 1}}}}` with safe mode, depth=2 → produces `a.b:` followed by nested `c:` and `d: 1` at appropriate depths
-- `{data: {"full-name": {x: 1}}}` → safe mode skips (segment `"full-name"` is not an IdentifierSegment); emits standard nested structure
-
-#### Decoder: Path Expansion
-
-Path expansion allows decoders to split dotted keys into nested object structures, enabling round-trip compatibility with folded encodings.
-
-Mode: `"off"` | `"safe"` (default: `"off"`)
-- `"off"`: Dotted keys are treated as literal keys. No expansion is performed.
-- `"safe"`: Expand eligible dotted keys according to the rules below.
-
-Safe mode behavior:
-- Any unquoted key containing the path separator (`.`) is considered for expansion; quoted keys remain literal after unescaping.
-- Split the key into segments at each occurrence of `.`.
-- Only expand when ALL resulting segments are IdentifierSegments (§1.9).
-- Keys that do not meet the expansion criteria remain as literal keys.
-
-Deep merge semantics:
-When multiple expanded keys construct overlapping object paths, the decoder MUST merge them recursively:
-- Object + Object: Deep merge recursively (recurse into nested keys and apply these rules).
-- Object + Non-object (array or primitive): This is a conflict. Apply conflict resolution policy.
-- Array + Array or Primitive + Primitive: This is a conflict. Apply conflict resolution policy. Arrays are never merged element-wise.
-- Key ordering: During expansion, newly created keys are inserted in encounter order (the order they appear in the document). When merging creates nested keys, keys from later lines are appended after existing keys at the same depth. This ensures deterministic, predictable key order in the resulting object.
-
-Conflict resolution:
-- Conflict definition: A conflict occurs when expansion requires an object at a given path but finds a non-object value (array or primitive), or vice versa. A conflict also occurs when a final leaf key already exists with a non-object value that must be overwritten.
-- `strict=true` (default): Decoders MUST error on any conflict. This ensures data integrity and catches structural inconsistencies.
-- `strict=false`: Last-write-wins (LWW) conflict resolution: keys appearing later in document order (encounter order during parsing) overwrite earlier values. This provides deterministic behavior for lenient parsing.
-
-Application order: Path expansion is applied AFTER all base parsing rules (§4–12) have been applied and BEFORE the final decoded value is returned to the caller. Structural validations enumerated in §14 (strict-mode errors for array counts, indentation, etc.) operate on the pre-expanded structure and remain unaffected by expansion.
-
-Examples:
-- Input: `data.meta.items[2]: a,b` with `expandPaths="safe"` → Output: `{"data": {"meta": {"items": ["a", "b"]}}}`
-- Input: `user.name: Ada` with `expandPaths="off"` → Output: `{"user.name": "Ada"}`
-- Input: `a.b.c: 1` and `a.b.d: 2` and `a.e: 3` with `expandPaths="safe"` → Output: `{"a": {"b": {"c": 1, "d": 2}, "e": 3}}` (deep merge)
-- Input: `a.b: 1` then `a: 2` with `expandPaths="safe"` and `strict=true` → Error: "Expansion conflict at path 'a' (object vs primitive)"
-- Input: `a.b: 1` then `a: 2` with `expandPaths="safe"` and `strict=false` → Output: `{"a": 2}` (LWW)
 
 ## 14. Strict Mode Errors and Diagnostics (Authoritative Checklist)
 
@@ -704,24 +616,12 @@ When strict mode is enabled (default), decoders MUST error on the following cond
 - Indentation and blank-line invariants per §12 (leading-space multiple of indentSize; no tabs in indentation; no blank lines inside arrays/tabular rows).
 - Two or more non-empty depth-0 lines that are neither headers nor key-value lines (§5).
 
-### 14.3 Path Expansion Conflicts
+### 14.3 Duplicate Object Keys
 
-When `expandPaths="safe"` is enabled:
-- With `strict=true` (default): Decoders MUST error on any expansion conflict.
-- With `strict=false`: Decoders MUST apply deterministic last-write-wins (LWW) resolution in document order. Implementations MUST resolve conflicts silently and MUST NOT emit diagnostics during normal decode operations.
-
-See §13.4 for complete conflict definitions, deep-merge semantics, and examples.
-
-Note (informative): Implementations MAY expose conflict diagnostics via out-of-band mechanisms (e.g., debug hooks, verbose CLI flags, or separate validation APIs), but such facilities are non-normative and MUST NOT affect default decode behavior or output.
-
-### 14.4 Duplicate Object Keys
-
-When two or more sibling fields at the same depth share the same literal key (independent of `expandPaths`):
+When two or more sibling fields at the same depth share the same literal key:
 
 - With `strict=true` (default): Decoders MUST error.
 - With `strict=false`: Decoders MUST apply deterministic last-write-wins (LWW) resolution in document order, silently (no diagnostic).
-
-This mirrors §14.3.
 
 ## 15. Security Considerations
 
@@ -755,7 +655,6 @@ For versioning policy and version history, see [VERSIONING.md](./VERSIONING.md) 
 
 - Backward-compatible evolutions should preserve current headers, quoting rules, and indentation semantics.
 - Reserved/structural characters (colon, brackets, braces, hyphen) retain their current meanings across versions.
-- The path separator is fixed to `"."` (see §1.9).
 
 ## 19. Intellectual Property Considerations
 
@@ -896,74 +795,6 @@ Quoted keys with arrays (keys requiring quoting per §7.3):
   - id: 2
     label: archived
 ```
-
-Key folding and path expansion:
-
-Encoding - basic folding (safe mode, depth=Infinity):
-
-Input: `{"a": {"b": {"c": 1}}}`
-```
-a.b.c: 1
-```
-
-Encoding - folding with inline array:
-
-Input: `{"data": {"meta": {"items": ["x", "y"]}}}`
-```
-data.meta.items[2]: x,y
-```
-
-Encoding - folding with tabular array:
-
-Input: `{"a": {"b": {"items": [{"id": 1, "name": "A"}, {"id": 2, "name": "B"}]}}}`
-```
-a.b.items[2]{id,name}:
-  1,A
-  2,B
-```
-
-Encoding - partial folding (flattenDepth=2):
-
-Input: `{"a": {"b": {"c": {"d": 1}}}}`
-```
-a.b:
-  c:
-    d: 1
-```
-
-Decoding - basic expansion (safe mode round-trip):
-
-Input: `data.meta.items[2]: a,b` with options `{expandPaths: "safe"}`
-
-Output: `{"data": {"meta": {"items": ["a", "b"]}}}`
-
-Decoding - deep merge (multiple expanded keys):
-
-Input with options `{expandPaths: "safe"}`:
-```
-a.b.c: 1
-a.b.d: 2
-a.e: 3
-```
-Output: `{"a": {"b": {"c": 1, "d": 2}, "e": 3}}`
-
-Decoding - conflict error (strict=true, default):
-
-Input with options `{expandPaths: "safe", strict: true}`:
-```
-a.b: 1
-a: 2
-```
-Result: Error - "Expansion conflict at path 'a' (object vs primitive)"
-
-Decoding - conflict LWW (strict=false):
-
-Input with options `{expandPaths: "safe", strict: false}`:
-```
-a.b: 1
-a: 2
-```
-Output: `{"a": 2}`
 
 ## Appendix B: Parsing Helpers (Informative)
 

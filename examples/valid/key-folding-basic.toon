@@ -1,5 +1,0 @@
-server.host: localhost
-database.connection.username: admin
-app.info.name: MyApp
-release.meta.version: 1.0.0
-cache.layer.ttlSeconds: 300

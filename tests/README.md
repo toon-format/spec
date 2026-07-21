@@ -16,8 +16,7 @@ tests/
 │   │   ├── arrays-nested.json
 │   │   ├── arrays-objects.json
 │   │   ├── delimiters.json
-│   │   ├── whitespace.json
-│   │   └── key-folding.json
+│   │   └── whitespace.json
 │   └── decode/             # Decoding tests (TOON → JSON)
 │       ├── primitives.json
 │       ├── numbers.json
@@ -30,8 +29,7 @@ tests/
 │       ├── root-form.json
 │       ├── validation-errors.json
 │       ├── indentation-errors.json
-│       ├── blank-lines.json
-│       └── path-expansion.json
+│       └── blank-lines.json
 └── README.md               # This file
 ```
 
@@ -83,30 +81,24 @@ All test fixtures follow a standard JSON structure defined in [`fixtures.schema.
 ```json
 {
   "delimiter": ",",
-  "indent": 2,
-  "keyFolding": "safe",
-  "flattenDepth": 3
+  "indent": 2
 }
 ```
 
 - `delimiter`: `","` (comma, default), `"\t"` (tab), or `"|"` (pipe). Affects encoder output; decoders parse the delimiter declared in array headers
 - `indent`: Number of spaces per indentation level (default: `2`)
-- `keyFolding`: `"off"` (default) or `"safe"`. Enables key folding to collapse single-key object chains into dotted-path notation
-- `flattenDepth`: Integer. Maximum depth to fold key chains when `keyFolding` is `"safe"` (default: Infinity). Values less than 2 have no practical folding effect
 
 #### Decoding Options
 
 ```json
 {
   "indent": 2,
-  "strict": true,
-  "expandPaths": "safe"
+  "strict": true
 }
 ```
 
 - `indent`: Expected number of spaces per indentation level (default: `2`)
-- `strict`: Enable strict validation (default: `true`). When `expandPaths` is `"safe"`, strict mode controls conflict resolution: errors on conflicts when `true`, LWW when `false`
-- `expandPaths`: `"off"` (default) or `"safe"`. Enables path expansion to split dotted keys into nested object structures
+- `strict`: Enable strict validation (default: `true`)
 
 ### Error Tests
 
@@ -153,7 +145,6 @@ The fixture format is language-agnostic JSON, so you can load and iterate it usi
 | `arrays-objects.json` | Objects as list items, complex nesting | §9, §10 |
 | `delimiters.json` | Tab and pipe delimiter options | §11 |
 | `whitespace.json` | Formatting invariants and indentation | §12 |
-| `key-folding.json` | Key folding with safe mode, depth control, collision avoidance | §13.4 |
 
 ### Decoding Tests (`fixtures/decode/`)
 
@@ -171,7 +162,6 @@ The fixture format is language-agnostic JSON, so you can load and iterate it usi
 | `validation-errors.json` | Syntax errors, length mismatches, malformed input | §6, §14 |
 | `indentation-errors.json` | Strict mode indentation validation | §14.2, §12 |
 | `blank-lines.json` | Blank line handling in arrays | §14.2, §12 |
-| `path-expansion.json` | Path expansion with safe mode, deep merge, strict-mode conflicts | §13.4, §14.3 |
 
 **Coverage note:** §3 host-type normalization (NaN/±Infinity → null, host Date/Set/Map/BigInt mappings) is intentionally outside these JSON fixtures, since the fixture format cannot express non-JSON encode inputs. Implementations should cover §3 in their language-local test suites.
 
