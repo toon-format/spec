@@ -31,6 +31,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Test fixtures: option `indent` renamed to `indentSize`, matching the §13 option name.
 - Introduction: non-goals now exclude only inline/trailing comments and annotations; the YAML comparison reflects decode-side full-line comments.
 - §5 root-form discovery, §12 indentation/blank-line rules, §14.1 counts, and §14.2 invariants operate on the comment-stripped line sequence; Appendix B.1 decoding sketch updated.
+- §2 round-trip equality: tabular-encoded array elements compare after reordering to the header's field order – resolves the contradiction with §9.3's key-order tolerance (`[{a,b},{b,a}]` was unsatisfiable under the previous wording).
 
 ## [3.3] - 2026-05-21
 
