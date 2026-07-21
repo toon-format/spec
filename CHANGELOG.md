@@ -18,6 +18,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Changed
 
 - §14.4 Duplicate Object Keys renumbered to §14.3; fixture `specSection` citations updated.
+- Test fixtures: file baselines normalized to `4.0`; redundant per-test `minSpecVersion` markers dropped.
+- Test fixtures: option `indent` renamed to `indentSize`, matching the §13 option name.
 
 ## [3.3] - 2026-05-21
 

@@ -81,23 +81,23 @@ All test fixtures follow a standard JSON structure defined in [`fixtures.schema.
 ```json
 {
   "delimiter": ",",
-  "indent": 2
+  "indentSize": 2
 }
 ```
 
 - `delimiter`: `","` (comma, default), `"\t"` (tab), or `"|"` (pipe). Affects encoder output; decoders parse the delimiter declared in array headers
-- `indent`: Number of spaces per indentation level (default: `2`)
+- `indentSize`: Number of spaces per indentation level (default: `2`)
 
 #### Decoding Options
 
 ```json
 {
-  "indent": 2,
+  "indentSize": 2,
   "strict": true
 }
 ```
 
-- `indent`: Expected number of spaces per indentation level (default: `2`)
+- `indentSize`: Expected number of spaces per indentation level (default: `2`)
 - `strict`: Enable strict validation (default: `true`)
 
 ### Error Tests

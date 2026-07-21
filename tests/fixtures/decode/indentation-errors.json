@@ -9,7 +9,7 @@
       "expected": null,
       "shouldError": true,
       "options": {
-        "indent": 2,
+        "indentSize": 2,
         "strict": true
       },
       "specSection": "14.2"
@@ -20,7 +20,7 @@
       "expected": null,
       "shouldError": true,
       "options": {
-        "indent": 2,
+        "indentSize": 2,
         "strict": true
       },
       "specSection": "14.2"
@@ -31,7 +31,7 @@
       "expected": null,
       "shouldError": true,
       "options": {
-        "indent": 4,
+        "indentSize": 4,
         "strict": true
       },
       "specSection": "14.2"
@@ -45,7 +45,7 @@
         }
       },
       "options": {
-        "indent": 4,
+        "indentSize": 4,
         "strict": true
       },
       "specSection": "12"
@@ -122,7 +122,7 @@
         }
       },
       "options": {
-        "indent": 2,
+        "indentSize": 2,
         "strict": false
       },
       "specSection": "12"
@@ -138,7 +138,7 @@
         }
       },
       "options": {
-        "indent": 2,
+        "indentSize": 2,
         "strict": false
       },
       "specSection": "12"
