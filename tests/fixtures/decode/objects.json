@@ -403,6 +403,24 @@
       "specSection": "7.4"
     },
     {
+      "name": "accepts unquoted hyphen-leading value in strict mode",
+      "input": "k: -x",
+      "expected": {
+        "k": "-x"
+      },
+      "specSection": "7.4",
+      "note": "Encoders must quote hyphen-leading strings (§7.2); decoders accept the unquoted form as data"
+    },
+    {
+      "name": "accepts unquoted colon-containing value in strict mode",
+      "input": "k: b:c",
+      "expected": {
+        "k": "b:c"
+      },
+      "specSection": "7.4",
+      "note": "The first unquoted colon ends the key; the entire post-colon token is the value (§11.2)"
+    },
+    {
       "name": "materializes __proto__ as an ordinary own key",
       "input": "__proto__: polluted",
       "expected": {

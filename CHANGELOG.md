@@ -35,6 +35,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - §2 round-trip equality: tabular-encoded array elements compare after reordering to the header's field order – resolves the contradiction with §9.3's key-order tolerance (`[{a,b},{b,a}]` was unsatisfiable under the previous wording).
 - §12: token trimming promoted to MUST and fixed to exactly U+0020 (stated once, referenced from §11.2 and Appendix B.3); §7.2's leading/trailing-whitespace quoting trigger fixed to U+0020/U+0009. Closes the divergence between ASCII trimming and host `trim()` implementations (discussion [#56](https://github.com/toon-format/spec/discussions/56), thanks @liquidaty).
 - §7.4: normative decoder key-token rule – the unquoted key is everything before the first unquoted colon; decoders accept keys outside §7.3's encoder pattern (e.g. `foo-bar`, `2key`) in strict mode.
+- §7.4: strict decoders MUST accept unquoted value tokens that encoders were required to quote (e.g. `key: -x` → string `-x`); §7.2 adds no decoder-side rejection.
 
 ## [3.3] - 2026-05-21
 
