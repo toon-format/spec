@@ -38,6 +38,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - §7.4: strict decoders MUST accept unquoted value tokens that encoders were required to quote (e.g. `key: -x` → string `-x`); §7.2 adds no decoder-side rejection.
 - §6 / §14.2: a bracket segment without a length (`key[]:`) is a malformed bracket segment – strict error, non-strict key-value fall-through; the `key: []` empty-array form is unaffected.
 - §9.2 / §9.4: decoders accept `- []` as an empty inner-array list item (encoders still emit `- [0]:`), matching shipped reference-implementation behavior.
+- §4: rejecting out-of-range numeric tokens is now a permitted documented policy alongside higher-precision, string, and approximation.
 
 ## [3.3] - 2026-05-21
 
