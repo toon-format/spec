@@ -73,7 +73,7 @@ All test fixtures follow a standard JSON structure defined in [`fixtures.schema.
 | `tests[].options` | No | Encoder/decoder options (see below) |
 | `tests[].specSection` | No | Reference to specification section (e.g., `"7.2"`, `"§6"`) |
 | `tests[].note` | No | Optional explanation for special cases |
-| `tests[].minSpecVersion` | No | Minimum spec version required (e.g., `"1.3"`) |
+| `tests[].minSpecVersion` | No | Minimum spec version required (e.g., `"4.1"`) |
 
 ### Options
 

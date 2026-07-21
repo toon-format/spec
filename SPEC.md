@@ -402,7 +402,7 @@ Otherwise, the string MAY be emitted without quotes. Unicode, emoji, and strings
 ### 7.3 Key Encoding
 
 Object keys and tabular field names:
-- MAY be unquoted only if they match: ^[A-Za-z_][A-Za-z0-9_.]*$.
+- MAY be unquoted only if they match: `^[A-Za-z_][A-Za-z0-9_.]*$`.
 - Otherwise, they MUST be quoted and escaped per §7.1.
 
 Keys requiring quoting per the above rules MUST be quoted in all contexts, including array headers (e.g., "my-key"[N]:).
@@ -590,6 +590,8 @@ Options:
   - strict (default: `true`)
 
 Strict-mode errors are enumerated in §14; validators MAY add informative diagnostics for style and encoding invariants.
+
+Implementations SHOULD declare the specification version they target (e.g., `toon-spec: 4.0`) in their documentation; see [VERSIONING.md](./VERSIONING.md) for multi-version support guidance.
 
 ### 13.1 Encoder Conformance Checklist
 
