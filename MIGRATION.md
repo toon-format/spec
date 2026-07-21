@@ -28,6 +28,12 @@ v4 tabular headers may declare nested field groups (§6, §9.3): `orders[2]{id,c
 
 The new header form does not parse under v3 – strict v3 decoders reject it at the header (fail closed). Pipelines that feed v4 encoder output into v3 decoders must upgrade the decoders first; implementations MAY ship decoder support ahead of encoder support for exactly this rollout.
 
+## Keyed objects in tabular form
+
+v4 objects whose values are uniform non-empty objects collapse into a keyed tabular form (§6, §9.5): `users[2:]{age,city}:` followed by one `alice: 30,Berlin` entry row per entry. The colon after the bracket length marks the keyed header; at the root the key is omitted (`[2:]{age,city}:`). Decode-side this is a pure addition – every v3 document decodes identically under v4 – but unlike nested field groups, the encoder change is visible wherever an eligible object occurs: any object with at least two entries whose values share one uniform shape now encodes in keyed form. Objects with heterogeneous values (mixed shapes, primitives, arrays, or differing key sets) keep the nested form, which in practice leaves most configuration-style maps unchanged.
+
+Keyed headers do not parse under v3, and legacy decoders diverge by mode. Strict v3 decoders reject the document (fail closed). Non-strict v3 decoders silently mis-decode it: `users[2:]{age,city}:` falls through to a key-value line with key `users[2` and value `]{age,city}:`, and the entry rows corrupt from there. Pipelines that feed v4 encoder output into legacy decoders – strict or not – must upgrade the decoders first; implementations MAY ship decoder support ahead of encoder support for this rollout.
+
 ## Strict-mode depth jumps
 
 v4 makes indentation depth jumps a strict-mode error (§8, §14.2): the first line of a non-empty nested scope must sit exactly one level deeper than its parent. Conforming encoders have never produced jumps, but v3 had no rule rejecting them, so a hand-authored document such as `a:` followed by `b: 1` indented two levels decoded to `{"a":{"b":1}}` under v3 strict mode and now errors. The rule is strict-only; non-strict decoders may still accept the jump. To migrate hand-authored documents, re-indent the over-indented scope – or decode once in non-strict mode and re-encode.
