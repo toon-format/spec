@@ -18,11 +18,13 @@
       "name": "uses list format for objects with nested values",
       "input": {
         "items": [
-          { "id": 1, "nested": { "x": 1 } }
+          { "id": 1, "nested": { "x": 1 } },
+          { "id": 2, "nested": { "y": 2 } }
         ]
       },
-      "expected": "items[1]:\n  - id: 1\n    nested:\n      x: 1",
-      "specSection": "9.4"
+      "expected": "items[2]:\n  - id: 1\n    nested:\n      x: 1\n  - id: 2\n    nested:\n      y: 2",
+      "specSection": "9.4",
+      "note": "The nested column mixes key sets {x} and {y}, so it is not nested-uniform (§9.3) and the array uses the expanded list form"
     },
     {
       "name": "preserves field order in list items - array first",
