@@ -55,7 +55,7 @@ All test fixtures follow a standard JSON structure defined in [`fixtures.schema.
 }
 ```
 
-`<spec-version>` is the baseline spec version for the file (e.g., `"1.4"`, `"3.2"`); individual tests MAY override with `minSpecVersion` when they exercise a newer feature. See the field-descriptions table below.
+`<spec-version>` is the baseline spec version for the file (currently `"4.0"` across all files); individual tests MAY override with `minSpecVersion` when they exercise a newer feature. See the field-descriptions table below.
 
 ### Field Descriptions
 

@@ -1,5 +1,5 @@
 {
-  "version": "3.1",
+  "version": "4.0",
   "category": "decode",
   "description": "Nested and mixed array decoding - list format, arrays of arrays, root arrays, mixed types",
   "tests": [

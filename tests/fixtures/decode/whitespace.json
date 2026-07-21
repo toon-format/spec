@@ -1,5 +1,5 @@
 {
-  "version": "1.4",
+  "version": "4.0",
   "category": "decode",
   "description": "Whitespace tolerance in decoding - surrounding spaces around delimiters and values",
   "tests": [

@@ -1,5 +1,5 @@
 {
-  "version": "1.4",
+  "version": "4.0",
   "category": "decode",
   "description": "Delimiter decoding - tab and pipe delimiter parsing, delimiter-aware value splitting",
   "tests": [

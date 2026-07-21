@@ -1,5 +1,5 @@
 {
-  "version": "3.1",
+  "version": "4.0",
   "category": "encode",
   "description": "Arrays of objects encoding - list format for non-uniform objects and complex structures",
   "tests": [
@@ -161,7 +161,6 @@
       },
       "expected": "items[2]:\n  -\n  -",
       "specSection": "9.4",
-      "minSpecVersion": "3.2",
       "note": "Empty objects {} MUST NOT use tabular form per §9.3; encoded via §9.4 expanded list with bare hyphen markers per §10"
     }
   ]

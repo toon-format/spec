@@ -1,5 +1,5 @@
 {
-  "version": "1.4",
+  "version": "4.0",
   "category": "decode",
   "description": "Blank line handling - strict mode errors on blank lines inside arrays, accepts blank lines outside arrays",
   "tests": [
@@ -75,8 +75,7 @@
       "options": {
         "strict": true
       },
-      "specSection": "12",
-      "minSpecVersion": "3.2"
+      "specSection": "12"
     },
     {
       "name": "accepts trailing newline at end of file",

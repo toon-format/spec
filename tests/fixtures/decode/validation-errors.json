@@ -1,5 +1,5 @@
 {
-  "version": "3.1",
+  "version": "4.0",
   "category": "decode",
   "description": "Validation errors - length mismatches, invalid escapes, syntax errors, delimiter mismatches",
   "tests": [
@@ -92,8 +92,7 @@
       "options": {
         "strict": true
       },
-      "specSection": "6",
-      "minSpecVersion": "3.2"
+      "specSection": "6"
     },
     {
       "name": "throws on extra brackets between bracket segment and colon in strict mode",
@@ -104,8 +103,7 @@
         "strict": true
       },
       "specSection": "6",
-      "note": "Non-whitespace content between ] and : must error in strict mode (§6 fall-through is non-strict only)",
-      "minSpecVersion": "3.2"
+      "note": "Non-whitespace content between ] and : must error in strict mode (§6 fall-through is non-strict only)"
     },
     {
       "name": "throws on text between bracket segment and colon in strict mode",
@@ -115,8 +113,7 @@
       "options": {
         "strict": true
       },
-      "specSection": "6",
-      "minSpecVersion": "3.2"
+      "specSection": "6"
     },
     {
       "name": "throws on non-integer bracket segment in strict mode",
@@ -126,8 +123,7 @@
       "options": {
         "strict": true
       },
-      "specSection": "6",
-      "minSpecVersion": "3.2"
+      "specSection": "6"
     },
     {
       "name": "throws on duplicate sibling keys in strict mode",
@@ -137,8 +133,7 @@
       "options": {
         "strict": true
       },
-      "specSection": "14.3",
-      "minSpecVersion": "3.2"
+      "specSection": "14.3"
     },
     {
       "name": "throws on array header missing colon",
@@ -170,8 +165,7 @@
         "strict": true
       },
       "specSection": "6",
-      "note": "[03] is not a canonical non-negative integer length; decoders MUST NOT interpret it as a bracket segment",
-      "minSpecVersion": "3.2"
+      "note": "[03] is not a canonical non-negative integer length; decoders MUST NOT interpret it as a bracket segment"
     },
     {
       "name": "throws on negative bracket length in strict mode",
@@ -182,8 +176,7 @@
         "strict": true
       },
       "specSection": "6",
-      "note": "[-1] is not a non-negative integer length; decoders MUST NOT interpret it as a bracket segment",
-      "minSpecVersion": "3.2"
+      "note": "[-1] is not a non-negative integer length; decoders MUST NOT interpret it as a bracket segment"
     },
     {
       "name": "throws on decimal bracket length in strict mode",
@@ -194,8 +187,7 @@
         "strict": true
       },
       "specSection": "6",
-      "note": "[3.7] is not an integer length (§6 length is DIGIT-only); decoders MUST NOT interpret it as a bracket segment",
-      "minSpecVersion": "3.2"
+      "note": "[3.7] is not an integer length (§6 length is DIGIT-only); decoders MUST NOT interpret it as a bracket segment"
     },
     {
       "name": "throws on bracket length with plus sign in strict mode",
@@ -206,8 +198,7 @@
         "strict": true
       },
       "specSection": "6",
-      "note": "[+3] carries a sign and is not a non-negative integer length; decoders MUST NOT interpret it as a bracket segment",
-      "minSpecVersion": "3.2"
+      "note": "[+3] carries a sign and is not a non-negative integer length; decoders MUST NOT interpret it as a bracket segment"
     },
     {
       "name": "throws on bracket length in exponent form in strict mode",
@@ -218,8 +209,7 @@
         "strict": true
       },
       "specSection": "6",
-      "note": "[1e1] is exponent notation, not a DIGIT-only integer length; decoders MUST NOT interpret it as a bracket segment",
-      "minSpecVersion": "3.2"
+      "note": "[1e1] is exponent notation, not a DIGIT-only integer length; decoders MUST NOT interpret it as a bracket segment"
     },
     {
       "name": "throws on whitespace between bracket segment and colon in strict mode",
@@ -230,8 +220,7 @@
         "strict": true
       },
       "specSection": "6",
-      "note": "No whitespace is permitted between ] and the colon/fields segment; any content there prevents header interpretation",
-      "minSpecVersion": "3.2"
+      "note": "No whitespace is permitted between ] and the colon/fields segment; any content there prevents header interpretation"
     },
     {
       "name": "throws on whitespace between bracket segment and fields segment in strict mode",
@@ -242,8 +231,7 @@
         "strict": true
       },
       "specSection": "6",
-      "note": "No whitespace is permitted between ] and the fields segment; mirrors the ]-to-colon rule",
-      "minSpecVersion": "3.2"
+      "note": "No whitespace is permitted between ] and the fields segment; mirrors the ]-to-colon rule"
     },
     {
       "name": "throws on nested duplicate sibling keys in strict mode",
@@ -253,8 +241,7 @@
       "options": {
         "strict": true
       },
-      "specSection": "14.3",
-      "minSpecVersion": "3.2"
+      "specSection": "14.3"
     },
     {
       "name": "throws on duplicate keys within a list-item object in strict mode",
@@ -264,8 +251,7 @@
       "options": {
         "strict": true
       },
-      "specSection": "14.3",
-      "minSpecVersion": "3.2"
+      "specSection": "14.3"
     }
   ]
 }

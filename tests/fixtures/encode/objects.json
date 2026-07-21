@@ -1,5 +1,5 @@
 {
-  "version": "1.4",
+  "version": "4.0",
   "category": "encode",
   "description": "Object encoding - simple objects, nested objects, key encoding",
   "tests": [
@@ -202,8 +202,7 @@
         "a\u0004b": 1
       },
       "expected": "\"a\\u0004b\": 1",
-      "specSection": "7.1",
-      "minSpecVersion": "3.1"
+      "specSection": "7.1"
     },
     {
       "name": "escapes U+001F control character in key via \\uXXXX",
@@ -211,8 +210,7 @@
         "x\u001fy": 2
       },
       "expected": "\"x\\u001fy\": 2",
-      "specSection": "7.1",
-      "minSpecVersion": "3.1"
+      "specSection": "7.1"
     },
     {
       "name": "encodes deeply nested objects",
@@ -242,7 +240,6 @@
       },
       "expected": "__proto__: polluted\nsafe: true",
       "specSection": "15",
-      "minSpecVersion": "4.0",
       "note": "§15: encoders MUST NOT drop or reinterpret prototype-named own entries"
     },
     {
@@ -252,8 +249,7 @@
         "prototype": 2
       },
       "expected": "constructor: 1\nprototype: 2",
-      "specSection": "15",
-      "minSpecVersion": "4.0"
+      "specSection": "15"
     },
     {
       "name": "encodes __proto__ as a tabular field name",
@@ -270,8 +266,7 @@
         ]
       },
       "expected": "rows[2]{__proto__,x}:\n  a,1\n  b,2",
-      "specSection": "15",
-      "minSpecVersion": "4.0"
+      "specSection": "15"
     }
   ]
 }

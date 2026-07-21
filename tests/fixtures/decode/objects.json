@@ -1,5 +1,5 @@
 {
-  "version": "3.1",
+  "version": "4.0",
   "category": "decode",
   "description": "Object decoding - fields, nested objects, key parsing, §6 fall-through (non-strict), and §14.3 duplicate-key LWW",
   "tests": [
@@ -47,8 +47,7 @@
       "options": {
         "strict": false
       },
-      "specSection": "14.3",
-      "minSpecVersion": "3.2"
+      "specSection": "14.3"
     },
     {
       "name": "parses quoted object value with colon",
@@ -369,8 +368,7 @@
       "options": {
         "strict": false
       },
-      "specSection": "14.3",
-      "minSpecVersion": "3.2"
+      "specSection": "14.3"
     },
     {
       "name": "applies LWW for duplicate keys within a list-item object in non-strict mode",
@@ -385,8 +383,7 @@
       "options": {
         "strict": false
       },
-      "specSection": "14.3",
-      "minSpecVersion": "3.2"
+      "specSection": "14.3"
     },
     {
       "name": "materializes __proto__ as an ordinary own key",
@@ -395,7 +392,6 @@
         "__proto__": "polluted"
       },
       "specSection": "15",
-      "minSpecVersion": "4.0",
       "note": "§15: decoding MUST NOT mutate the host object model; the decoded object carries __proto__ as an own entry"
     },
     {
@@ -405,8 +401,7 @@
         "constructor": 1,
         "prototype": 2
       },
-      "specSection": "15",
-      "minSpecVersion": "4.0"
+      "specSection": "15"
     },
     {
       "name": "materializes __proto__ opening a nested object as an ordinary own key",
@@ -417,7 +412,6 @@
         }
       },
       "specSection": "15",
-      "minSpecVersion": "4.0",
       "note": "§15: the classic pollution shape – the nested object becomes an own entry, never the prototype"
     },
     {
@@ -426,8 +420,7 @@
       "expected": {
         "__proto__": "x"
       },
-      "specSection": "15",
-      "minSpecVersion": "4.0"
+      "specSection": "15"
     },
     {
       "name": "materializes __proto__ tabular field name as ordinary own keys",
@@ -444,8 +437,7 @@
           }
         ]
       },
-      "specSection": "15",
-      "minSpecVersion": "4.0"
+      "specSection": "15"
     }
   ]
 }

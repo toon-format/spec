@@ -1,5 +1,5 @@
 {
-  "version": "1.4",
+  "version": "4.0",
   "category": "decode",
   "description": "Root form detection - empty document, single primitive, literal empty array",
   "tests": [
