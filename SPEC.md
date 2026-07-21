@@ -145,7 +145,9 @@ All normative text in this specification is contained in Sections 1–16. All ap
 ### 1.4 Array Terms
 
 - Header: The bracketed declaration for arrays, optionally followed by a field list, and terminating with a colon; e.g., key[3]: or items[2]{a,b}:.
-- Field list: Brace-enclosed, delimiter-separated list of field names for tabular arrays: {f1<delim>f2}.
+- Field list: Brace-enclosed, delimiter-separated list of field entries for tabular arrays: {f1<delim>f2}. A field entry MAY carry its own nested field group (§9.3).
+- Nested field group: A field list attached to a field name inside a tabular header (e.g., customer{name,country}), declaring a nested-uniform column (§9.3).
+- Leaf field: A field entry without a nested field group. Row cells map one-to-one to leaf fields in depth-first header order (§9.3).
 - List item: A line beginning with "- " (or a bare "-" for an empty-object list item, §10) at a given depth representing an element in an expanded array.
 
 ### 1.5 Delimiter Terms
@@ -187,7 +189,7 @@ All normative text in this specification is contained in Sections 1–16. All ap
     - If the fractional part is zero after normalization, emit as an integer (e.g., 1.0 → 1).
     - -0 MUST be normalized to 0.
   - For finite numbers outside the canonical range above (non-zero |n| < 1e-6, or |n| ≥ 1e21), encoders MAY emit exponent notation conforming to the JSON number grammar [RFC8259] §6 (e.g., 1e-7, 1e+21). Encoders SHOULD use lowercase `e` and an explicit exponent sign for byte-for-byte determinism.
-  - Encoders MUST emit sufficient precision so that, after any §3 host-type normalization, decode(encode(x)) equals x under JSON-model equality: null equals null; booleans compare by value; strings compare by Unicode scalar-value sequence after §7.1 unescaping, with no Unicode normalization; arrays compare by length and pairwise element equality in order; objects compare by the same ordered key sequence and pairwise value equality – except elements of arrays encoded in tabular form (§9.3), whose decoded key order is the header's field order (the first element's encounter order), so their key sequences compare after that reordering; numbers compare by mathematical value after §2 numeric normalization, so -0 equals 0 and integer-valued numbers compare equal to their integer form.
+  - Encoders MUST emit sufficient precision so that, after any §3 host-type normalization, decode(encode(x)) equals x under JSON-model equality: null equals null; booleans compare by value; strings compare by Unicode scalar-value sequence after §7.1 unescaping, with no Unicode normalization; arrays compare by length and pairwise element equality in order; objects compare by the same ordered key sequence and pairwise value equality – except elements of arrays encoded in tabular form (§9.3), whose decoded key order is the header's field order, applied recursively to nested field groups (the first element's encounter order at each level), so their key sequences compare after that reordering; numbers compare by mathematical value after §2 numeric normalization, so -0 equals 0 and integer-valued numbers compare equal to their integer form.
   - If a source value is outside the implementation's documented numeric domain (e.g., arbitrary-precision decimals or integers exceeding that domain), the encoder MAY:
     - Emit a quoted string containing a lossless decimal representation (plain decimal or JSON exponent form); the chosen form MUST be documented.
     - Emit a number that round-trips to the host's numeric approximation (losing precision), provided it conforms to the rules above.
@@ -295,6 +297,7 @@ General forms:
 - Root header (no key): [N<delim?>]:
 - With key: key[N<delim?>]:
 - Tabular fields: key[N<delim?>]{field1<delim>field2<delim>…}:
+- Nested field groups: key[N<delim?>]{field1<delim>field2{sub1<delim>sub2}<delim>…}: – a field entry carrying its own field list (§9.3)
 
 Where:
 - N is the non-negative integer length.
@@ -302,7 +305,7 @@ Where:
   - absent for comma (","),
   - HTAB (U+0009) for tab,
   - "|" for pipe.
-- Field names in braces are separated by the same active delimiter and encoded as keys (§7.3).
+- Field names in braces are separated by the same active delimiter and encoded as keys (§7.3). A field entry MAY be followed by a nested field group; the delimiter inside a nested group is the same active delimiter as the enclosing header.
 
 Spacing and delimiters:
 - Every header MUST include a colon after the bracket segment and optional fields segment.
@@ -322,9 +325,11 @@ Normative header grammar (ABNF):
 bracket-seg   = "[" length [ delimsym ] "]"
 length        = "0" / ( %x31-39 *DIGIT )   ; non-negative integer, no leading zeros
 delimsym      = HTAB / "|"
-; Field names are keys (quoted/unquoted) separated by the active delimiter
-fields-seg    = "{" fieldname *( delim fieldname ) "}"
+; Field entries are keys (quoted/unquoted) separated by the active delimiter,
+; each optionally carrying a nested field group (§9.3)
+fields-seg    = "{" field-entry *( delim field-entry ) "}"
 delim         = delimsym / ","
+field-entry   = fieldname [ fields-seg ]
 fieldname     = key
 
 header        = [ key ] bracket-seg [ fields-seg ] ":"
@@ -344,7 +349,8 @@ Decoding requirements:
 - The bracket segment MUST parse as a non-negative integer length N with no leading zeros (the single digit `0` is the only canonical form for length zero). Tokens like `[03]` or `[-1]` MUST NOT be interpreted as bracket segments.
 - A bracket segment without a length token (`key[]:`) is not a header: strict mode MUST error; non-strict decoders MAY fall through to key-value parsing. This does not affect the empty-array value form `key: []` (§9.1), where `[]` follows the colon.
 - If a trailing tab or pipe appears inside the brackets, it selects the active delimiter; otherwise comma is active.
-- If a fields segment occurs between the bracket and the colon, parse field names using the active delimiter; quoted names MUST be unescaped per §7.1.
+- If a fields segment occurs between the bracket and the colon, parse field entries recursively using the active delimiter at every nesting level; quoted names MUST be unescaped per §7.1. Brace matching MUST ignore `{` and `}` inside quoted names.
+- A fields segment MUST contain at least one field entry at every nesting level: an empty brace group (`{}`, including a nested `field{}`) is a header syntax error in strict mode; non-strict decoders MAY fall through to key-value parsing (§14.2). Unmatched braces in a fields segment are likewise header syntax errors.
 - A colon MUST follow the bracket and optional fields; missing colon MUST error.
 
 Note: Dotted keys are ordinary literal keys in headers. Example: `data.meta.items[2]{id,name}:` is a valid header whose key is the single literal key `data.meta.items`, followed by a standard bracket segment, field list, and colon.
@@ -463,23 +469,29 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
 
 ### 9.3 Arrays of Objects – Tabular Form
 
+Column classification (encoding): a column is the sequence of values at one key across all elements.
+- A column is *uniform-primitive* when every value is a primitive.
+- A column is *nested-uniform* when every value is a non-empty object, all these objects have the same set of keys (order per object MAY vary), and every sub-column is itself uniform-primitive or nested-uniform. Nesting depth is unbounded.
+
 Tabular detection (encoding; MUST hold for all elements):
 - Every element is an object.
 - Each object has at least one key; arrays containing any empty object `{}` MUST NOT use tabular form (encode via §9.4 instead).
 - All objects have the same set of keys (order per object MAY vary).
-- All values across these keys are primitives (no nested arrays/objects).
+- Every column is uniform-primitive or nested-uniform. A column that is neither – e.g., one mixing `null` (a primitive) with objects, or containing any array value or empty object – disqualifies the whole array (encode via §9.4).
 
 When satisfied (encoding):
-- Header: `key[N<delim?>]{f1<delim>f2<delim>…}:` where field order is the first object's key encounter order.
-- Field names encoded per §7.3.
-- Rows: one line per object at depth +1 under the header; values are encoded primitives (§7) and joined by the active delimiter.
+- Header: `key[N<delim?>]{f1<delim>f2<delim>…}:` where field order is the first object's key encounter order. A uniform-primitive column is emitted as a bare fieldname; a nested-uniform column is emitted as a nested field group `fieldname{…}`, its subfields in the first object's sub-object encounter order, applied recursively.
+- Field names at every nesting level encoded per §7.3.
+- Rows: one line per object at depth +1 under the header; cells are encoded primitive leaf values (§7) joined by the active delimiter, ordered by a depth-first, pre-order walk of the field list (nested groups expanded in place). Each row's cell count equals the header's leaf-field count.
 - Root tabular arrays omit the key: `[N<delim?>]{…}:` followed by rows.
 
 Decoding:
-- A tabular header declares the active delimiter and ordered field list.
-- Rows appear at depth +1 as delimiter-separated value lines.
+- A tabular header declares the active delimiter and the ordered field list; nested field groups declare nested-object columns. The leaf-field sequence is the depth-first, pre-order walk of the field list.
+- Rows appear at depth +1 as delimiter-separated value lines and contain only primitive cells.
+- Each row decodes to an object by walking the field list in header order: a leaf field takes the next cell; a nested field group materializes an object from its subfields, applied recursively. Decoded key order at every level is the header's field order at that level.
+- Duplicate field names within the same brace group produce duplicate sibling keys in every decoded element; §14.3 governs (strict error; non-strict LWW).
 - Strict mode MUST enforce:
-  - Each row's value count equals the field count.
+  - Each row's cell count equals the leaf-field count.
   - The number of rows equals N.
 - Disambiguation at row depth (unquoted tokens; authoritative for the row/key–value choice, referenced from §5.2):
   - Compute the first unquoted occurrence of the active delimiter and the first unquoted colon.
@@ -492,7 +504,7 @@ Decoding:
 
 ### 9.4 Mixed / Non-Uniform Arrays – Expanded List
 
-When tabular requirements are not met (encoding):
+When tabular requirements are not met (encoding; including any column that is neither uniform-primitive nor nested-uniform, §9.3):
 - Header: `key[N<delim?>]:`
 - Each element is rendered as a list item at depth +1 under the header:
   - Primitive: `- <primitive>`
@@ -613,7 +625,7 @@ Conforming encoders MUST:
 
 Conforming decoders MUST:
 - [ ] Remove comment lines in a lexical pre-pass before all structural interpretation (§5.1)
-- [ ] Parse array headers per §6 (length, delimiter, optional fields)
+- [ ] Parse array headers per §6 (length, delimiter, optional fields including nested field groups)
 - [ ] Accept empty arrays in both forms: `key: []` / `[]` and legacy `key[0]:` / `[0]:` (§9.1)
 - [ ] Split inline arrays and tabular rows using active delimiter only (§11)
 - [ ] Unescape per §7.1
@@ -639,7 +651,7 @@ When strict mode is enabled (default), decoders MUST error on the following cond
 - Inline primitive arrays: decoded value count ≠ declared N.
 - List arrays: number of list items ≠ declared N.
 - Tabular arrays: number of rows ≠ declared N.
-- Tabular row width mismatches: any row's value count ≠ field count.
+- Tabular row width mismatches: any row's cell count ≠ the header's leaf-field count (§9.3; equal to the field count when no nested field groups are present).
 - The count checks above apply only when an explicit `[N]` length is declared. The `key: []` form has no declared length; the count check is N/A (§9.1).
 - Counts are evaluated on the comment-stripped line sequence (§5.1); comment lines never count as rows or items.
 
@@ -649,6 +661,7 @@ When strict mode is enabled (default), decoders MUST error on the following cond
 - Invalid escape sequences or unterminated strings in quoted tokens.
 - Header delimiter mismatch (§6): MUST error as a header syntax error, independent of row width/count checks.
 - Malformed bracket lengths in headers (e.g., `[03]`, `[-1]`, `[bar]`, or the absent length `[]`); see §6.
+- Malformed fields segments in headers: an empty brace group (`{}`, including a nested `field{}`) or unmatched braces; see §6.
 - Any content between a valid bracket segment and the colon (or fields segment) prevents array-header interpretation; decoders MUST NOT silently discard that content. In strict mode, decoders MUST error (see §6); in non-strict mode, decoders MAY fall through to key-value parsing.
 - Indentation and blank-line invariants per §12, evaluated after comment removal (§5.1): leading-space multiple of indentSize; no tabs in indentation; no blank lines inside arrays/tabular rows. Comment lines are exempt and never count as blank lines, rows, or items.
 - Indentation depth jumps (§8): a line more than one level deeper than its enclosing scope (e.g., a depth d+2 line directly under a depth-d parent).
@@ -736,6 +749,13 @@ Tabular arrays:
 items[2]{sku,qty,price}:
   A1,2,9.99
   B2,1,14.5
+```
+
+Tabular arrays with nested field groups (uniform nested-object columns collapse into the header; rows stay flat):
+```
+orders[2]{id,customer{name,country},total}:
+  1,Alice,DK,99
+  2,Bob,UK,149
 ```
 
 Mixed arrays:
@@ -853,7 +873,7 @@ These sketches illustrate structure and common decoding helpers. They are inform
 - Identify the optional key prefix first (quoted: a `"…"` literal at line start; unquoted: characters up to the first `[`). The bracket segment `[ … ]` begins at the first `[` after the key; parse:
   - Length N as decimal integer.
   - Optional delimiter symbol at the end: HTAB or pipe (comma otherwise).
-- If a "{ … }" fields segment occurs between the "]" and the ":", parse field names using the active delimiter; unescape quoted names.
+- If a "{ … }" fields segment occurs between the "]" and the ":", parse field entries recursively using the active delimiter: track brace depth, ignoring braces inside quoted names; a fieldname followed by "{" opens a nested field group. Unescape quoted names. The leaf-field list is the depth-first, pre-order walk of the resulting tree; rows assign cells to leaf fields in that order (§9.3).
 - Require a colon ":" after the bracket/fields segment.
 - Return the header (key?, length, delimiter, fields?) and any inline values after the colon.
 - Absence of a delimiter symbol in the bracket segment ALWAYS means comma for that header (no inheritance).

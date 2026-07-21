@@ -22,6 +22,12 @@ This is the only v4 change that alters the decoded meaning of conforming v3 enco
 
 To migrate stored v3 documents, scan for lines matching `/^ *#/`. Affected documents should be decoded with a v3 decoder and re-encoded with a v4 encoder; the new §7.2 rule re-emits `#`-leading strings quoted (`"#…"`), which decodes identically under v3 and v4.
 
+## Nested field groups in tabular headers
+
+v4 tabular headers may declare nested field groups (§6, §9.3): `orders[2]{id,customer{name,country},total}:` encodes an array of records whose `customer` values are uniform sub-objects, while rows remain flat delimiter-separated primitive lines. This is a pure addition: every v3 document decodes identically under v4, and v4 encoder output is byte-identical to v3 whenever no column is a uniform nested object.
+
+The new header form does not parse under v3 – strict v3 decoders reject it at the header (fail closed). Pipelines that feed v4 encoder output into v3 decoders must upgrade the decoders first; implementations MAY ship decoder support ahead of encoder support for exactly this rollout.
+
 ## Strict-mode depth jumps
 
 v4 makes indentation depth jumps a strict-mode error (§8, §14.2): the first line of a non-empty nested scope must sit exactly one level deeper than its parent. Conforming encoders have never produced jumps, but v3 had no rule rejecting them, so a hand-authored document such as `a:` followed by `b: 1` indented two levels decoded to `{"a":{"b":1}}` under v3 strict mode and now errors. The rule is strict-only; non-strict decoders may still accept the jump. To migrate hand-authored documents, re-indent the over-indented scope – or decode once in non-strict mode and re-encode.

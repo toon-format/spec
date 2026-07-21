@@ -20,6 +20,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Conformance fixtures for comment stripping (`tests/fixtures/decode/comments.json`) and `#` quoting in every value position.
 - §13: implementations SHOULD declare the specification version they target (e.g., `toon-spec: 4.0`); see [VERSIONING.md](./VERSIONING.md).
 - §4: normative decoder number grammar – an unquoted token decodes as a number iff it matches `/^-?[0-9]+(?:\.[0-9]+)?(?:e[+-]?[0-9]+)?$/i` (ASCII digits only) without forbidden leading zeros; `.5`, `1.`, `+5`, `Infinity`, `NaN`, `0x10`, `1_000` decode as strings, and decoders MUST NOT delegate to wider host parsers. Fixtures include the leading-plus cases from [#52](https://github.com/toon-format/spec/pull/52) (thanks @montanaflynn).
+- §6 / §9.3: nested field groups in tabular headers – a field entry may carry its own brace-enclosed field list (`orders[2]{id,customer{name,country},total}:`), declaring a nested-uniform object column; rows stay flat delimiter-separated primitives laid out by a depth-first walk, strict row-width checks compare against the leaf-field count, and nesting depth is unbounded. Output is byte-identical to v3 whenever no nested group applies; strict v3 decoders fail closed on the new header form. Per RFC [#46](https://github.com/toon-format/spec/issues/46) (thanks @Turtle-dev3). See [MIGRATION.md](./MIGRATION.md).
 
 ### Removed
 
