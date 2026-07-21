@@ -93,6 +93,70 @@
       },
       "specSection": "9.3",
       "note": "The dedent to the header's depth closes the rows (§8); the line is a key-value pair, and the whole post-colon token is the value, non-numeric so a string (§11.2)"
+    },
+    {
+      "name": "parses nested field groups into nested objects",
+      "input": "orders[2]{id,customer{name,country},total}:\n  1,Alice,DK,99\n  2,Bob,UK,149",
+      "expected": {
+        "orders": [
+          { "id": 1, "customer": { "name": "Alice", "country": "DK" }, "total": 99 },
+          { "id": 2, "customer": { "name": "Bob", "country": "UK" }, "total": 149 }
+        ]
+      },
+      "specSection": "9.3"
+    },
+    {
+      "name": "parses sibling nested field groups by depth-first cell assignment",
+      "input": "shipments[1]{id,sender{name,city},receiver{name,city}}:\n  s1,ACME,Berlin,Globex,Oslo",
+      "expected": {
+        "shipments": [
+          { "id": "s1", "sender": { "name": "ACME", "city": "Berlin" }, "receiver": { "name": "Globex", "city": "Oslo" } }
+        ]
+      },
+      "specSection": "9.3"
+    },
+    {
+      "name": "parses nested field groups recursively without a depth cap",
+      "input": "items[2]{id,geo{point{lat,lon}}}:\n  1,1.5,2.5\n  2,3,4",
+      "expected": {
+        "items": [
+          { "id": 1, "geo": { "point": { "lat": 1.5, "lon": 2.5 } } },
+          { "id": 2, "geo": { "point": { "lat": 3, "lon": 4 } } }
+        ]
+      },
+      "specSection": "9.3"
+    },
+    {
+      "name": "parses nested field groups with the pipe delimiter",
+      "input": "orders[2|]{id|customer{name|country}|total}:\n  1|Alice|DK|99\n  2|Bob|UK|149",
+      "expected": {
+        "orders": [
+          { "id": 1, "customer": { "name": "Alice", "country": "DK" }, "total": 99 },
+          { "id": 2, "customer": { "name": "Bob", "country": "UK" }, "total": 149 }
+        ]
+      },
+      "specSection": "9.3"
+    },
+    {
+      "name": "matches braces outside quoted names only when parsing field entries",
+      "input": "items[1]{\"a{b}\",c}:\n  1,2",
+      "expected": {
+        "items": [
+          { "a{b}": 1, "c": 2 }
+        ]
+      },
+      "specSection": "6",
+      "note": "A quoted fieldname may contain braces; brace matching is quote-aware"
+    },
+    {
+      "name": "parses quoted subfield names inside nested field groups",
+      "input": "items[1]{id,customer{\"full name\",country}}:\n  1,Ada,UK",
+      "expected": {
+        "items": [
+          { "id": 1, "customer": { "full name": "Ada", "country": "UK" } }
+        ]
+      },
+      "specSection": "9.3"
     }
   ]
 }

@@ -260,6 +260,47 @@
       "shouldError": true,
       "specSection": "14.2",
       "note": "An absent length is a malformed bracket segment, same class as [03] and [-1]; only key: [] (bracket after the colon) means an empty array"
+    },
+    {
+      "name": "throws on row cell count not matching the leaf-field count",
+      "input": "orders[1]{id,customer{name,country}}:\n  1,Alice",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "14.1",
+      "note": "The header declares three leaf fields (id, customer.name, customer.country); the row has two cells"
+    },
+    {
+      "name": "throws on empty fields segment in strict mode",
+      "input": "items[1]{}:\n  1",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "14.2"
+    },
+    {
+      "name": "throws on empty nested field group in strict mode",
+      "input": "items[1]{id,meta{}}:\n  1",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "14.2",
+      "note": "A fields segment must contain at least one field entry at every nesting level (§6)"
+    },
+    {
+      "name": "throws on unmatched brace in fields segment in strict mode",
+      "input": "items[1]{id,customer{name:\n  1,Ada",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "14.2"
+    },
+    {
+      "name": "throws on duplicate field names at the same brace level in strict mode",
+      "input": "items[1]{a,a{x}}:\n  1,2",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "14.3",
+      "note": "A bare field and a nested field group sharing one name yield duplicate sibling keys in every decoded row"
     }
   ]
 }
