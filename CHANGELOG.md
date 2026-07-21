@@ -17,6 +17,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - §7.2 / §15: string values that equal `#` or start with `#` MUST be quoted (mirrors the leading-hyphen rule); the §15 quoting list gains comment markers.
 - §13.1 / §13.2: conformance checklist items – encoders emit no comment lines; decoders strip comment lines in a pre-pass.
 - Conformance fixtures for comment stripping (`tests/fixtures/decode/comments.json`) and `#` quoting in every value position.
+- §4: normative decoder number grammar – an unquoted token decodes as a number iff it matches `/^-?[0-9]+(?:\.[0-9]+)?(?:e[+-]?[0-9]+)?$/i` (ASCII digits only) without forbidden leading zeros; `.5`, `1.`, `+5`, `Infinity`, `NaN`, `0x10`, `1_000` decode as strings, and decoders MUST NOT delegate to wider host parsers. Fixtures include the leading-plus cases from [#52](https://github.com/toon-format/spec/pull/52) (thanks @montanaflynn).
 
 ### Removed
 

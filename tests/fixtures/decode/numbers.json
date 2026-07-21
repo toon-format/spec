@@ -169,6 +169,61 @@
         "nums": ["-05", "-007"]
       },
       "specSection": "4"
+    },
+    {
+      "name": "treats bare fraction without integer part as string",
+      "input": "value: .5",
+      "expected": {
+        "value": ".5"
+      },
+      "specSection": "4",
+      "note": "Outside the §4 number grammar; a host parser would read 0.5 and corrupt the round-trip"
+    },
+    {
+      "name": "treats integer with trailing dot as string",
+      "input": "value: 1.",
+      "expected": {
+        "value": "1."
+      },
+      "specSection": "4"
+    },
+    {
+      "name": "treats leading-plus integer as string",
+      "input": "value: +1",
+      "expected": {
+        "value": "+1"
+      },
+      "specSection": "4",
+      "note": "The §4 grammar admits only an optional leading minus; +1 stays a string"
+    },
+    {
+      "name": "parses positive exponent sign as number",
+      "input": "value: 1e+2",
+      "expected": {
+        "value": 100
+      },
+      "specSection": "4",
+      "note": "The plus sign is inside the exponent, which the grammar allows"
+    },
+    {
+      "name": "treats Infinity and NaN tokens as strings",
+      "input": "a: Infinity\nb: -Infinity\nc: NaN",
+      "expected": {
+        "a": "Infinity",
+        "b": "-Infinity",
+        "c": "NaN"
+      },
+      "specSection": "4"
+    },
+    {
+      "name": "treats hex and underscore-separated tokens as strings",
+      "input": "a: 0x10\nb: 1_000",
+      "expected": {
+        "a": "0x10",
+        "b": "1_000"
+      },
+      "specSection": "4",
+      "note": "Host parsers that accept these forms have a wider grammar than §4 permits"
     }
   ]
 }

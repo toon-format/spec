@@ -223,6 +223,7 @@ Decoders map text tokens to host values:
 - Unquoted value tokens:
   - true, false, null → booleans/null.
   - Numeric parsing:
+    - Number grammar (normative): an unquoted token decodes as a number if and only if it matches `/^-?[0-9]+(?:\.[0-9]+)?(?:e[+-]?[0-9]+)?$/i` (ASCII digits only) and does not carry forbidden leading zeros (below). Any other token – e.g. `.5`, `1.`, `+5`, `Infinity`, `NaN`, `0x10`, `1_000` – decodes as a string. Decoders MUST NOT delegate this decision to a host-language number parser with a wider grammar.
     - Decoders MUST accept decimal and exponent forms on input (e.g., `42`, `-3.14`, `1e-6`, `-1E+9`).
     - Decoders MUST treat tokens with forbidden leading zeros in the integer part (e.g., `"05"`, `"0001"`, `"-05"`, `"-0001"`) as strings, not numbers. This rule does **not** apply to a single zero integer part followed by a fractional or exponent part (e.g., `0.5`, `0e1`, `-0.5`, `-0e1`), which are valid numbers.
     - Only finite numbers are expected from conforming encoders.
