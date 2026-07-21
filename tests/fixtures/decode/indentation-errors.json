@@ -142,6 +142,21 @@
         "strict": false
       },
       "specSection": "12"
+    },
+    {
+      "name": "throws on depth jump of more than one level",
+      "input": "a:\n    b: 1",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "14.2",
+      "note": "Four leading spaces are a multiple of indentSize 2, but depth 2 directly under depth 0 skips a level"
+    },
+    {
+      "name": "throws on depth jump inside a nested object",
+      "input": "a:\n  b:\n      c: 1",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "14.2"
     }
   ]
 }

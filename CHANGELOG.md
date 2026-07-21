@@ -8,7 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Breaking Changes
 
-- §5.1: full-line comment lines – a line whose first non-space character is `#` is removed by decoders in a lexical pre-pass (strict and non-strict alike), before indentation validation, root-form discovery, line classification, and all `[N]`/row/item counting. Comment lines never terminate scopes, may carry any leading spaces, and MUST NOT be emitted by encoders. This is v4's only wire change for existing v3 documents: unquoted `#`-leading tabular first cells, `#`-leading root scalars, and `#`-leading keys (accepted only by permissive v3 decoders) now read as comments. See [MIGRATION.md](./MIGRATION.md).
+- §5.1: full-line comment lines – a line whose first non-space character is `#` is removed by decoders in a lexical pre-pass (strict and non-strict alike), before indentation validation, root-form discovery, line classification, and all `[N]`/row/item counting. Comment lines never terminate scopes, may carry any leading spaces, and MUST NOT be emitted by encoders. This is the only v4 change to the decoded meaning of conforming v3 encoder output: unquoted `#`-leading tabular first cells, `#`-leading root scalars, and `#`-leading keys (accepted only by permissive v3 decoders) now read as comments. See [MIGRATION.md](./MIGRATION.md).
+- §8 / §14.2: indentation depth jumps (a line more than one level deeper than its enclosing scope) are strict-mode errors. Conforming encoders never produce them, but hand-authored v3 documents that skip a level now error in strict mode. See [MIGRATION.md](./MIGRATION.md).
 
 ### Added
 
