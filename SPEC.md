@@ -387,7 +387,7 @@ A string value MUST be quoted if any of the following is true:
 - It is empty ("").
 - It has leading or trailing whitespace (U+0020 or U+0009).
 - It equals true, false, or null (case-sensitive).
-- It is numeric-like: matches /^-?\d+(?:\.\d+)?(?:e[+-]?\d+)?$/i (e.g., "42", "-3.14", "05", "1e-6").
+- It is numeric-like: matches `/^[+-]?[0-9]+(?:\.[0-9]+)?(?:e[+-]?[0-9]+)?$/i` (ASCII digits only) (e.g., "42", "-3.14", "05", "+1", "1e-6"). The leading-plus forms are quoted for cross-version safety even though the §4 decoder grammar already types them as strings.
 - It contains a colon (:), double quote ("), or backslash (\\).
 - It contains brackets or braces ([, ], {, }).
 - It contains control characters in U+0000 through U+001F.

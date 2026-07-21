@@ -253,6 +253,13 @@
       "specSection": "2"
     },
     {
+      "name": "quotes leading-plus numeric-like string",
+      "input": "+1",
+      "expected": "\"+1\"",
+      "specSection": "7.2",
+      "note": "Unquoted, a v3 host-parser decoder would read the number 1"
+    },
+    {
       "name": "quotes string equal to hash",
       "input": "#",
       "expected": "\"#\"",
