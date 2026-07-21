@@ -217,6 +217,7 @@ See Appendix F for non-normative language-specific examples.
 
 Decoders map text tokens to host values:
 
+- Byte input: decoders that accept bytes MUST decode them as UTF-8. In strict mode, ill-formed UTF-8 (invalid or truncated sequences, or bytes encoding surrogate code points) MUST error; it MUST NOT be silently replaced with U+FFFD. Decoders that accept host strings (already decoded from bytes) are outside this rule.
 - Quoted tokens (strings and keys):
   - MUST be unescaped per §7.1. Any other escape or an unterminated string MUST error.
   - Quoted primitives remain strings even if they look like numbers/booleans/null.
@@ -649,6 +650,7 @@ When strict mode is enabled (default), decoders MUST error on the following cond
 - Any content between a valid bracket segment and the colon (or fields segment) prevents array-header interpretation; decoders MUST NOT silently discard that content. In strict mode, decoders MUST error (see §6); in non-strict mode, decoders MAY fall through to key-value parsing.
 - Indentation and blank-line invariants per §12, evaluated after comment removal (§5.1): leading-space multiple of indentSize; no tabs in indentation; no blank lines inside arrays/tabular rows. Comment lines are exempt and never count as blank lines, rows, or items.
 - Indentation depth jumps (§8): a line more than one level deeper than its enclosing scope (e.g., a depth d+2 line directly under a depth-d parent).
+- Ill-formed UTF-8 in byte input (§4).
 - Two or more non-empty depth-0 lines that are neither headers nor key-value lines (§5).
 
 ### 14.3 Duplicate Object Keys

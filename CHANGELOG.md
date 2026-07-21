@@ -39,6 +39,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - §6 / §14.2: a bracket segment without a length (`key[]:`) is a malformed bracket segment – strict error, non-strict key-value fall-through; the `key: []` empty-array form is unaffected.
 - §9.2 / §9.4: decoders accept `- []` as an empty inner-array list item (encoders still emit `- [0]:`), matching shipped reference-implementation behavior.
 - §4: rejecting out-of-range numeric tokens is now a permitted documented policy alongside higher-precision, string, and approximation.
+- §4 / §14.2: byte-input decoders MUST decode UTF-8 and, in strict mode, MUST error on ill-formed sequences instead of substituting U+FFFD; host-string decoders are out of scope. (Not expressible as a JSON fixture; implementations cover this in language-local suites.)
 
 ## [3.3] - 2026-05-21
 
