@@ -211,6 +211,15 @@
         ]
       },
       "specSection": "9.4"
+    },
+    {
+      "name": "accepts bare bracket pair as empty inner array list item",
+      "input": "items[2]:\n  - []\n  - [1]: x",
+      "expected": {
+        "items": [[], ["x"]]
+      },
+      "specSection": "9.2",
+      "note": "Decode-side acceptance mirrors §9.1's key: [] form; encoders still emit - [0]:"
     }
   ]
 }

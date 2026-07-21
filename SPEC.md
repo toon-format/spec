@@ -453,9 +453,10 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
   - Each inner primitive array is a list item:
     - `- [M<delim?>]: v1<delim>v2<delim>…`
     - Empty inner arrays: `- [0<delim?>]:`
-    - The `key: []` field-level form (§9.1) does NOT apply to list-item inner arrays.
+    - The `key: []` field-level form (§9.1) does NOT apply to list-item inner arrays; encoders MUST NOT emit `- []`.
 - Decoding:
   - Items appear at depth +1, each starting with "- " and an inner array header `[M<delim?>]: …`.
+  - Decoders MUST also accept the bare item `- []` as an empty inner array, mirroring the §9.1 acceptance of both `key: []` and the legacy `key[0<delim?>]:`.
   - Inner arrays are split using their own active delimiter; in strict mode, counts MUST match M.
   - In strict mode, the number of list items MUST equal outer N.
 
@@ -502,7 +503,7 @@ Decoding:
 - Header declares list length N and the active delimiter for any nested inline arrays.
 - Each list item is a list-item line (§5.2) starting with "- " at depth +1 (or the bare marker "-" for an empty object list item, §10) and is parsed as:
   - Primitive (no colon and no array header),
-  - Inline primitive array (`- [M<delim?>]: …`),
+  - Inline primitive array (`- [M<delim?>]: …`) or the empty-array item `- []` (§9.2),
   - Object with first field on the hyphen line (`- key: …` or `- key[N…]{…}: …`),
   - Or nested arrays via nested headers.
 - In strict mode, the number of list items MUST equal N.
@@ -878,6 +879,7 @@ These sketches illustrate structure and common decoding helpers. They are inform
 - List items:
   - Lines start with "- " at one deeper depth than the parent array header (or the bare marker "-" for an empty object list item, §10).
   - After "- ":
+    - If the remainder is exactly `[]` → empty inner array (§9.2).
     - If "[ … ]:" appears → inline array item; decode with its own header and active delimiter.
     - Else if a colon appears → object with first field on hyphen line.
     - Else → primitive token.
