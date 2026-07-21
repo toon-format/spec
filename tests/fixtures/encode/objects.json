@@ -233,6 +233,45 @@
       },
       "expected": "user:",
       "specSection": "8"
+    },
+    {
+      "name": "encodes __proto__ own property as an ordinary key",
+      "input": {
+        "__proto__": "polluted",
+        "safe": true
+      },
+      "expected": "__proto__: polluted\nsafe: true",
+      "specSection": "15",
+      "minSpecVersion": "4.0",
+      "note": "§15: encoders MUST NOT drop or reinterpret prototype-named own entries"
+    },
+    {
+      "name": "encodes constructor and prototype own properties as ordinary keys",
+      "input": {
+        "constructor": 1,
+        "prototype": 2
+      },
+      "expected": "constructor: 1\nprototype: 2",
+      "specSection": "15",
+      "minSpecVersion": "4.0"
+    },
+    {
+      "name": "encodes __proto__ as a tabular field name",
+      "input": {
+        "rows": [
+          {
+            "__proto__": "a",
+            "x": 1
+          },
+          {
+            "__proto__": "b",
+            "x": 2
+          }
+        ]
+      },
+      "expected": "rows[2]{__proto__,x}:\n  a,1\n  b,2",
+      "specSection": "15",
+      "minSpecVersion": "4.0"
     }
   ]
 }

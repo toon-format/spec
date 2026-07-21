@@ -387,6 +387,65 @@
       },
       "specSection": "14.3",
       "minSpecVersion": "3.2"
+    },
+    {
+      "name": "materializes __proto__ as an ordinary own key",
+      "input": "__proto__: polluted",
+      "expected": {
+        "__proto__": "polluted"
+      },
+      "specSection": "15",
+      "minSpecVersion": "4.0",
+      "note": "§15: decoding MUST NOT mutate the host object model; the decoded object carries __proto__ as an own entry"
+    },
+    {
+      "name": "materializes constructor and prototype as ordinary own keys",
+      "input": "constructor: 1\nprototype: 2",
+      "expected": {
+        "constructor": 1,
+        "prototype": 2
+      },
+      "specSection": "15",
+      "minSpecVersion": "4.0"
+    },
+    {
+      "name": "materializes __proto__ opening a nested object as an ordinary own key",
+      "input": "__proto__:\n  admin: true",
+      "expected": {
+        "__proto__": {
+          "admin": true
+        }
+      },
+      "specSection": "15",
+      "minSpecVersion": "4.0",
+      "note": "§15: the classic pollution shape – the nested object becomes an own entry, never the prototype"
+    },
+    {
+      "name": "materializes quoted __proto__ key as an ordinary own key",
+      "input": "\"__proto__\": x",
+      "expected": {
+        "__proto__": "x"
+      },
+      "specSection": "15",
+      "minSpecVersion": "4.0"
+    },
+    {
+      "name": "materializes __proto__ tabular field name as ordinary own keys",
+      "input": "rows[2]{__proto__,x}:\n  a,1\n  b,2",
+      "expected": {
+        "rows": [
+          {
+            "__proto__": "a",
+            "x": 1
+          },
+          {
+            "__proto__": "b",
+            "x": 2
+          }
+        ]
+      },
+      "specSection": "15",
+      "minSpecVersion": "4.0"
     }
   ]
 }

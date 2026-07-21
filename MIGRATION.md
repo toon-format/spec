@@ -8,4 +8,4 @@ v4 removes the optional key-folding and path-expansion machinery: the encoder op
 
 If you have stored documents that were encoded with `keyFolding: "safe"`, re-hydrate them once: decode with a v3 decoder using `expandPaths: "safe"`, then re-encode with a v4 encoder (or any encoder with folding off).
 
-Implementations that keep folding available as a vendor extension MUST guard path expansion against the keys `__proto__`, `constructor`, and `prototype`: expansion MUST NOT use these segments to construct or traverse object graphs. Unguarded expansion is a prototype-pollution vector.
+Implementations that keep folding available as a vendor extension MUST guard path expansion against the keys `__proto__`, `constructor`, and `prototype`: expansion MUST NOT use these segments to construct or traverse object graphs. Unguarded expansion is a prototype-pollution vector; the core prototype-key rules live in §15.

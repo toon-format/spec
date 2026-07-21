@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased] - 4.0
 
+### Added
+
+- §15: prototype-key safety – encoders MUST emit and decoders MUST materialize `__proto__`, `constructor`, and `prototype` as ordinary own entries in every key position; decoding MUST NOT mutate the host object model. Conformance fixtures added for encode and decode.
+
 ### Removed
 
 - §1.9, §13.4, §14.3: key folding and path expansion removed entirely – encoder options `keyFolding`/`flattenDepth`, decoder option `expandPaths`, the IdentifierSegment and path-separator terms, the related conformance checklist items, the Appendix A examples, and the `key-folding`/`path-expansion` fixtures and examples. Dotted keys remain single literal keys unconditionally (§8). See [MIGRATION.md](./MIGRATION.md).
