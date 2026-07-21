@@ -24,6 +24,16 @@
       "specSection": "14.2"
     },
     {
+      "name": "throws on blank line between keyed entry rows",
+      "input": "m[2:]{v}:\n  a: 1\n\n  b: 2",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "14.2"
+    },
+    {
       "name": "throws on multiple blank lines inside array",
       "input": "items[2]:\n  - a\n\n\n  - b",
       "expected": null,

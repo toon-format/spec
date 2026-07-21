@@ -11,6 +11,7 @@ tests/
 │   ├── encode/             # Encoding tests (JSON → TOON)
 │   │   ├── primitives.json
 │   │   ├── objects.json
+│   │   ├── objects-keyed.json
 │   │   ├── arrays-primitive.json
 │   │   ├── arrays-tabular.json
 │   │   ├── arrays-nested.json
@@ -21,6 +22,7 @@ tests/
 │       ├── primitives.json
 │       ├── numbers.json
 │       ├── objects.json
+│       ├── objects-keyed.json
 │       ├── arrays-primitive.json
 │       ├── arrays-tabular.json
 │       ├── arrays-nested.json
@@ -140,6 +142,7 @@ The fixture format is language-agnostic JSON, so you can load and iterate it usi
 |------|-------------|---------------|
 | `primitives.json` | String, number, boolean, null encoding and escaping | §7.1/§7.2, §2 |
 | `objects.json` | Simple objects, nested objects, key encoding | §8 (keys: §7.3/§7.1) |
+| `objects-keyed.json` | Keyed tabular form for objects of uniform objects | §9.5, §10 |
 | `arrays-primitive.json` | Inline primitive arrays, empty arrays | §9.1 |
 | `arrays-tabular.json` | Tabular format with header and rows | §9.3 |
 | `arrays-nested.json` | Arrays of arrays, mixed arrays | §9.2/§9.4 |
@@ -154,6 +157,7 @@ The fixture format is language-agnostic JSON, so you can load and iterate it usi
 | `primitives.json` | Parsing primitives, unescaping, ambiguity | §4, §7.1/§7.4 |
 | `numbers.json` | Number edge cases, exponent forms, leading zeros | §4 |
 | `objects.json` | Parsing objects, keys, nesting | §8 (keys: §7.3/§7.1) |
+| `objects-keyed.json` | Keyed header and entry-row parsing | §9.5, §10 |
 | `arrays-primitive.json` | Inline array parsing | §9.1 |
 | `arrays-tabular.json` | Tabular format parsing | §9.3 |
 | `arrays-nested.json` | Nested and mixed array parsing | §9.2/§9.4 |

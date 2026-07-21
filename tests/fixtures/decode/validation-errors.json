@@ -301,6 +301,123 @@
       },
       "specSection": "14.3",
       "note": "A bare field and a nested field group sharing one name yield duplicate sibling keys in every decoded row"
+    },
+    {
+      "name": "throws on entry row count mismatch with keyed header length",
+      "input": "m[2:]{v}:\n  a: 1",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "14.1"
+    },
+    {
+      "name": "throws on entry row cell count not matching the leaf-field count",
+      "input": "m[1:]{a,b}:\n  k: 1",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "14.1"
+    },
+    {
+      "name": "throws on an entry row with no cells after the entry key",
+      "input": "m[1:]{v}:\n  a:",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "14.1",
+      "note": "A bare entrykey: has zero cells, and a fields segment always declares at least one leaf field (§9.5)"
+    },
+    {
+      "name": "throws on keyed header without a fields segment in strict mode",
+      "input": "m[2:]:\n  a: 1\n  b: 2",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "14.2",
+      "note": "The fields segment is required in keyed headers (§6)"
+    },
+    {
+      "name": "throws on keyed marker after the delimiter symbol in strict mode",
+      "input": "m[2|:]{v}:\n  a: 1\n  b: 2",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "6",
+      "note": "The keyed colon must immediately follow the length and precede the delimiter symbol: [2:|]"
+    },
+    {
+      "name": "throws on keyed marker with leading-zero length in strict mode",
+      "input": "m[03:]{v}:\n  a: 1\n  b: 2",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "6"
+    },
+    {
+      "name": "throws on whitespace before the keyed marker in strict mode",
+      "input": "m[2 :]{v}:\n  a: 1\n  b: 2",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "6"
+    },
+    {
+      "name": "throws on explicit comma delimiter after the keyed marker in strict mode",
+      "input": "m[2:,]{v}:\n  a: 1\n  b: 2",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "6",
+      "note": "Comma is never written as a delimiter symbol; [N:] already declares it"
+    },
+    {
+      "name": "throws on inline content after a keyed header colon in strict mode",
+      "input": "m[1:]{v}: x\n  a: 1",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "14.2",
+      "note": "A keyed header carries no inline entries (§6)"
+    },
+    {
+      "name": "throws on a line without an unquoted colon at entry depth in strict mode",
+      "input": "m[2:]{v}:\n  a: 1\n  5",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "14.2"
+    },
+    {
+      "name": "throws on duplicate entry keys in strict mode",
+      "input": "m[2:]{v}:\n  a: 1\n  a: 2",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "14.3"
+    },
+    {
+      "name": "throws on a keyless keyed header as a list item in strict mode",
+      "input": "items[1]:\n  - [2:]{v}:\n      a: 1\n      b: 2",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "14.2",
+      "note": "The keyless keyed form is valid only as the document's root header (§5, §9.5)"
     }
   ]
 }
