@@ -386,6 +386,23 @@
       "specSection": "14.3"
     },
     {
+      "name": "accepts unquoted key outside the encoder key pattern (hyphen)",
+      "input": "foo-bar: 1",
+      "expected": {
+        "foo-bar": 1
+      },
+      "specSection": "7.4",
+      "note": "§7.3 constrains encoder output; decoders accept any token before the first unquoted colon as a literal key"
+    },
+    {
+      "name": "accepts unquoted key outside the encoder key pattern (leading digit)",
+      "input": "2key: x",
+      "expected": {
+        "2key": "x"
+      },
+      "specSection": "7.4"
+    },
+    {
       "name": "materializes __proto__ as an ordinary own key",
       "input": "__proto__: polluted",
       "expected": {

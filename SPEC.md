@@ -411,6 +411,7 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
 
 - Quoted keys MUST be unescaped per §7.1; any other escape MUST error.
 - Keys (quoted or unquoted) MUST be followed by ":"; missing colon MUST error (see also §14.2).
+- Unquoted key token (normative): on a key–value line (§5.2), the unquoted key token is everything before the line's first unquoted colon, with surrounding spaces trimmed (§12). Decoders MUST accept any such token as a literal key, in strict and non-strict mode alike, even when it does not match §7.3's unquoted-key pattern (e.g., `foo-bar`, `2key`). §7.3 constrains what encoders may emit unquoted, not what decoders accept.
 
 ## 8. Objects
 
