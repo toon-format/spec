@@ -48,6 +48,37 @@
         "strict": true
       },
       "specSection": "5"
+    },
+    {
+      "name": "throws on trailing content after a root array",
+      "input": "[2]: 1,2\njunk: 3",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "5",
+      "note": "The root form spans the whole document; trailing lines must not be silently discarded"
+    },
+    {
+      "name": "throws on trailing content after a keyed tabular root",
+      "input": "[2:]{v}:\n  a: 1\n  b: 2\njunk: 3",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "5"
+    },
+    {
+      "name": "throws on trailing content after a root empty array",
+      "input": "[]\njunk: 3",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "5"
     }
   ]
 }

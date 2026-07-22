@@ -157,6 +157,33 @@
         ]
       },
       "specSection": "9.3"
+    },
+    {
+      "name": "applies LWW for duplicate field names in non-strict mode",
+      "input": "items[1]{a,a}:\n  1,2",
+      "expected": {
+        "items": [
+          { "a": 2 }
+        ]
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "14.3",
+      "note": "Duplicate field names yield duplicate sibling keys per row; non-strict resolves last-write-wins"
+    },
+    {
+      "name": "applies LWW when a bare field and a nested group share a name in non-strict mode",
+      "input": "items[1]{a,a{x}}:\n  1,2",
+      "expected": {
+        "items": [
+          { "a": { "x": 2 } }
+        ]
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "14.3"
     }
   ]
 }

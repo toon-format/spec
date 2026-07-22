@@ -179,6 +179,20 @@
       },
       "specSection": "5.1",
       "note": "Comment removal never ends a keyed scope, and a comment line never counts as an entry"
+    },
+    {
+      "name": "applies LWW for duplicate entry keys in non-strict mode",
+      "input": "m[2:]{v}:\n  a: 1\n  a: 2",
+      "expected": {
+        "m": {
+          "a": { "v": 2 }
+        }
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "14.3",
+      "note": "Entry keys are sibling keys of the decoded object and resolve last-write-wins"
     }
   ]
 }
