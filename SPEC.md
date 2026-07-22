@@ -88,11 +88,11 @@ https://www.iso.org/standard/70907.html
 
 ## Introduction (Informative)
 
-### Purpose and scope
+### Purpose and Scope
 
 TOON is a token-efficient text format for JSON-shaped data, designed primarily for LLM prompts and contexts where every token costs. It saves tokens vs JSON by declaring array shapes once (length and optional field list) and using indentation in place of braces. TOON is typically used as a translation layer: produce data as JSON in code, encode to TOON for downstream consumption, and decode back to JSON if needed.
 
-### Applicability and non-goals
+### Applicability and Non-Goals
 
 Use TOON when:
 - arrays of objects share the same fields (uniform tabular data),
@@ -120,7 +120,7 @@ Out of scope:
 
 ```
 users[2]{id,name,role}:
-  1,Alice,admin
+  1,Ada,admin
   2,Bob,user
 ```
 
@@ -796,7 +796,7 @@ items[2]{sku,qty,price}:
 Tabular arrays with nested field groups (uniform nested-object columns collapse into the header; rows stay flat):
 ```
 orders[2]{id,customer{name,country},total}:
-  1,Alice,DK,99
+  1,Ada,DK,99
   2,Bob,UK,149
 ```
 
@@ -863,7 +863,7 @@ items[1]:
    - value
 
 items[3]{id,name}:
-  1,Alice
+  1,Ada
   2,Bob
 
 tags[5]: a,b,c
