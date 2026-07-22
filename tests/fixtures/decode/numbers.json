@@ -191,6 +191,15 @@
       "note": "The §4 grammar admits only an optional leading minus; +1 stays a string"
     },
     {
+      "name": "treats leading-plus tokens in array as strings",
+      "input": "values[3]: +1,+1.5,+1e2",
+      "expected": {
+        "values": ["+1", "+1.5", "+1e2"]
+      },
+      "specSection": "4",
+      "note": "The §4 grammar admits only an optional leading minus; leading-plus cells stay strings"
+    },
+    {
       "name": "parses positive exponent sign as number",
       "input": "value: 1e+2",
       "expected": {
