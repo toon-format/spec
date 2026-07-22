@@ -1,6 +1,6 @@
 # Migrating to TOON v4
 
-Migration notes for the v3 → v4 transition. This document grows alongside the unreleased v4 draft; entries are final when v4 ships.
+Migration notes for the v3 → v4 transition, final as of the v4.0 release.
 
 ## Key folding and path expansion removed
 
