@@ -119,6 +119,13 @@ Error tests use `shouldError: true` to indicate that the test expects an error t
 
 **Note:** Error tests do not specify expected error messages, as these are implementation-specific and vary across languages.
 
+### Non-Strict Tests
+
+Tests with `options.strict: false` fall into two classes:
+
+- **Required non-strict behavior**: the spec mandates the outcome for every non-strict decoder (e.g., last-write-wins duplicate-key resolution, §14.3). These tests apply to all implementations.
+- **Optional leniency**: the spec permits but does not require accepting the input (e.g., non-multiple indentation via §12's floor depth computation, or key-value fall-through for malformed headers, §6). These tests pin the outcome a decoder MUST produce *if* it implements the leniency; implementations that reject such input instead MAY skip them.
+
 ## Using These Tests
 
 To validate your TOON implementation against these fixtures:
