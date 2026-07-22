@@ -148,10 +148,10 @@
     },
     {
       "name": "ignores blank lines inside tabular array when strict=false",
-      "input": "items[2]{id,name}:\n  1,Alice\n\n  2,Bob",
+      "input": "items[2]{id,name}:\n  1,Ada\n\n  2,Bob",
       "expected": {
         "items": [
-          { "id": 1, "name": "Alice" },
+          { "id": 1, "name": "Ada" },
           { "id": 2, "name": "Bob" }
         ]
       },

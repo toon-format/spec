@@ -39,14 +39,14 @@
       "specSection": "14.2"
     },
     {
-      "name": "rejects truncated unicode escape \\u00b",
+      "name": "throws on truncated unicode escape \\u00b",
       "input": "val: \"a\\u00b\"",
       "expected": null,
       "shouldError": true,
       "specSection": "7.1"
     },
     {
-      "name": "rejects lone surrogate code point \\uD800",
+      "name": "throws on lone surrogate code point \\uD800",
       "input": "val: \"a\\uD800b\"",
       "expected": null,
       "shouldError": true,
@@ -263,7 +263,7 @@
     },
     {
       "name": "throws on row cell count not matching the leaf-field count",
-      "input": "orders[1]{id,customer{name,country}}:\n  1,Alice",
+      "input": "orders[1]{id,customer{name,country}}:\n  1,Ada",
       "expected": null,
       "shouldError": true,
       "specSection": "14.1",
@@ -418,6 +418,13 @@
       },
       "specSection": "14.2",
       "note": "The keyless keyed form is valid only as the document's root header (§5, §9.5)"
+    },
+    {
+      "name": "throws on inner array item count not matching its declared length",
+      "input": "pairs[2]:\n  - [3]: 1,2\n  - [2]: 3,4",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "9.2"
     }
   ]
 }

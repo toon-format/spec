@@ -25,8 +25,7 @@
       "name": "quotes string that looks like true",
       "input": "true",
       "expected": "\"true\"",
-      "specSection": "7.2",
-      "note": "String representation of boolean must be quoted"
+      "specSection": "7.2"
     },
     {
       "name": "quotes string that looks like false",
@@ -99,15 +98,13 @@
       "name": "quotes string with array-like syntax",
       "input": "[3]: x,y",
       "expected": "\"[3]: x,y\"",
-      "specSection": "7.2",
-      "note": "Looks like array header"
+      "specSection": "7.2"
     },
     {
       "name": "quotes string starting with hyphen-space",
       "input": "- item",
       "expected": "\"- item\"",
-      "specSection": "7.2",
-      "note": "Looks like list item marker"
+      "specSection": "7.2"
     },
     {
       "name": "quotes single hyphen as object value",
@@ -201,18 +198,18 @@
       "specSection": "2"
     },
     {
-      "name": "encodes scientific notation as decimal",
+      "name": "encodes large integer without exponent notation",
       "input": 1000000,
       "expected": "1000000",
       "specSection": "2",
-      "note": "1e6 input, but represented as decimal"
+      "note": "Within the \u00a72 canonical decimal range"
     },
     {
-      "name": "encodes small decimal from scientific notation",
+      "name": "encodes small decimal without exponent notation",
       "input": 0.000001,
       "expected": "0.000001",
       "specSection": "2",
-      "note": "1e-6 input"
+      "note": "Lower bound of the \u00a72 canonical decimal range"
     },
     {
       "name": "encodes large number",

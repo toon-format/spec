@@ -71,10 +71,10 @@
     },
     {
       "name": "treats unquoted colon as terminator for tabular rows and start of key-value pair",
-      "input": "items[2]{id,name}:\n  1,Alice\n  2,Bob\ncount: 2",
+      "input": "items[2]{id,name}:\n  1,Ada\n  2,Bob\ncount: 2",
       "expected": {
         "items": [
-          { "id": 1, "name": "Alice" },
+          { "id": 1, "name": "Ada" },
           { "id": 2, "name": "Bob" }
         ],
         "count": 2
@@ -96,10 +96,10 @@
     },
     {
       "name": "parses nested field groups into nested objects",
-      "input": "orders[2]{id,customer{name,country},total}:\n  1,Alice,DK,99\n  2,Bob,UK,149",
+      "input": "orders[2]{id,customer{name,country},total}:\n  1,Ada,DK,99\n  2,Bob,UK,149",
       "expected": {
         "orders": [
-          { "id": 1, "customer": { "name": "Alice", "country": "DK" }, "total": 99 },
+          { "id": 1, "customer": { "name": "Ada", "country": "DK" }, "total": 99 },
           { "id": 2, "customer": { "name": "Bob", "country": "UK" }, "total": 149 }
         ]
       },
@@ -128,10 +128,10 @@
     },
     {
       "name": "parses nested field groups with the pipe delimiter",
-      "input": "orders[2|]{id|customer{name|country}|total}:\n  1|Alice|DK|99\n  2|Bob|UK|149",
+      "input": "orders[2|]{id|customer{name|country}|total}:\n  1|Ada|DK|99\n  2|Bob|UK|149",
       "expected": {
         "orders": [
-          { "id": 1, "customer": { "name": "Alice", "country": "DK" }, "total": 99 },
+          { "id": 1, "customer": { "name": "Ada", "country": "DK" }, "total": 99 },
           { "id": 2, "customer": { "name": "Bob", "country": "UK" }, "total": 149 }
         ]
       },

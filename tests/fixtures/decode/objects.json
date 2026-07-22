@@ -71,7 +71,7 @@
       "expected": {
         "text": "line1\nline2"
       },
-      "specSection": "8"
+      "specSection": "7.1"
     },
     {
       "name": "parses quoted object value with escaped quotes",
@@ -79,7 +79,7 @@
       "expected": {
         "text": "say \"hello\""
       },
-      "specSection": "8"
+      "specSection": "7.1"
     },
     {
       "name": "parses quoted object value with leading/trailing spaces",
@@ -331,7 +331,7 @@
       "expected": {
         "line\nbreak": 1
       },
-      "specSection": "8"
+      "specSection": "7.1"
     },
     {
       "name": "unescapes tab in key",
@@ -339,7 +339,7 @@
       "expected": {
         "tab\there": 2
       },
-      "specSection": "8"
+      "specSection": "7.1"
     },
     {
       "name": "unescapes tab in key immediately followed by a colon",
@@ -347,7 +347,7 @@
       "expected": {
         "\t:x": "v"
       },
-      "specSection": "8"
+      "specSection": "7.1"
     },
     {
       "name": "unescapes quotes in key",
@@ -355,7 +355,7 @@
       "expected": {
         "he said \"hi\"": 1
       },
-      "specSection": "8"
+      "specSection": "7.1"
     },
     {
       "name": "parses deeply nested objects with indentation",
