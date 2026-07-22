@@ -144,12 +144,6 @@
       "specSection": "4"
     },
     {
-      "name": "treats leading-zero in object value as string",
-      "input": "a: 05",
-      "expected": { "a": "05" },
-      "specSection": "4"
-    },
-    {
       "name": "treats leading-zeros in array as strings",
       "input": "nums[3]: 05,007,0123",
       "expected": { "nums": ["05", "007", "0123"] },

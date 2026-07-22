@@ -425,6 +425,43 @@
       "expected": null,
       "shouldError": true,
       "specSection": "9.2"
+    },
+    {
+      "name": "throws on keyless array header in object field position",
+      "input": "a:\n  [2]: 1,2",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "6"
+    },
+    {
+      "name": "throws on keyless array header after a depth-0 field",
+      "input": "a: 1\n[2]: x,y",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "6",
+      "note": "Keyless headers are valid only as the document's root header or as list items (\u00a76)"
+    },
+    {
+      "name": "throws on keyless fields-bearing header as list item",
+      "input": "items[1]:\n  - [2]{x}:\n    1\n    2",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "6"
+    },
+    {
+      "name": "throws on inline content after tabular header",
+      "input": "items[2]{a,b}: 1,2",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "6",
+      "note": "A fields-bearing header carries no inline content (\u00a76); decoding the values as an inline array would silently drop the fields segment"
+    },
+    {
+      "name": "throws on inline content after root tabular header",
+      "input": "[2]{a,b}: 1,2",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "6"
     }
   ]
 }
