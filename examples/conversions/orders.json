@@ -1,0 +1,28 @@
+{
+  "orders": [
+    {
+      "id": 1,
+      "customer": {
+        "name": "Ada",
+        "country": "DK"
+      },
+      "total": 99
+    },
+    {
+      "id": 2,
+      "customer": {
+        "name": "Bob",
+        "country": "UK"
+      },
+      "total": 149
+    },
+    {
+      "id": 3,
+      "customer": {
+        "name": "Cleo",
+        "country": "FR"
+      },
+      "total": 249
+    }
+  ]
+}

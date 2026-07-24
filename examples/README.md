@@ -78,6 +78,16 @@ Side-by-side JSON ↔ TOON examples showing equivalent representations:
   - Shows the tabular form for uniform arrays of objects; see the [benchmarks](https://github.com/toon-format/toon/tree/main/benchmarks) for measured token reductions
   - Demonstrates the primary use case: uniform arrays of objects
 
+- [`conversions/orders.json`](conversions/orders.json) + [`conversions/orders.toon`](conversions/orders.toon)
+  - Uniform array whose objects carry a uniform nested `customer` object
+  - Demonstrates nested field groups: the nested column collapses into the header (`{id,customer{name,country},total}`) while rows stay flat
+  - Spec: §9.3
+
+- [`conversions/environments.json`](conversions/environments.json) + [`conversions/environments.toon`](conversions/environments.toon)
+  - Object whose values are uniform objects (a keyed map)
+  - Demonstrates the keyed tabular form: the colon after the length (`[3:]`) marks the keyed header and each entry row carries its own key
+  - Spec: §9.5
+
 - [`conversions/config.json`](conversions/config.json) + [`conversions/config.toon`](conversions/config.toon)
   - Deeply nested configuration data (server, database, logging settings)
   - Demonstrates standard indentation-based nesting for multi-key objects

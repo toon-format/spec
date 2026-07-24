@@ -1,0 +1,19 @@
+{
+  "environments": {
+    "production": {
+      "region": "eu-central-1",
+      "replicas": 6,
+      "debug": false
+    },
+    "staging": {
+      "region": "eu-central-1",
+      "replicas": 2,
+      "debug": true
+    },
+    "development": {
+      "region": "local",
+      "replicas": 1,
+      "debug": true
+    }
+  }
+}

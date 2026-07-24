@@ -1,0 +1,4 @@
+orders[3]{id,customer{name,country},total}:
+  1,Ada,DK,99
+  2,Bob,UK,149
+  3,Cleo,FR,249

@@ -1,0 +1,4 @@
+environments[3:]{region,replicas,debug}:
+  production: eu-central-1,6,false
+  staging: eu-central-1,2,true
+  development: local,1,true
