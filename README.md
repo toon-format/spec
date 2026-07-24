@@ -15,7 +15,9 @@ This repository contains the official specification for **Token-Oriented Object 
 
 The specification includes ABNF snippets, encoding rules, validation requirements, and conformance criteria.
 
-## Serialization Example
+## Serialization Examples
+
+Uniform arrays of objects collapse into a tabular form that declares the fields once ([§9.3](./SPEC.md#93-arrays-of-objects--tabular-form)):
 
 <table>
 <tr><th>JSON</th><th>TOON</th></tr>
@@ -36,6 +38,58 @@ The specification includes ABNF snippets, encoding rules, validation requirement
 users[2]{id,name}:
   1,Ada
   2,Linus
+```
+
+</td></tr>
+</table>
+
+Uniform nested-object columns fold into the header as nested field groups; rows stay flat ([§9.3](./SPEC.md#93-arrays-of-objects--tabular-form)):
+
+<table>
+<tr><th>JSON</th><th>TOON</th></tr>
+<tr><td>
+
+```json
+{
+  "orders": [
+    { "id": 1, "customer": { "name": "Ada", "country": "DK" }, "total": 99 },
+    { "id": 2, "customer": { "name": "Bob", "country": "UK" }, "total": 149 }
+  ]
+}
+```
+
+</td><td>
+
+```toon
+orders[2]{id,customer{name,country},total}:
+  1,Ada,DK,99
+  2,Bob,UK,149
+```
+
+</td></tr>
+</table>
+
+Objects whose values are uniform objects collapse into the keyed tabular form – the colon after the length marks the keyed header, and each entry row carries its own key ([§9.5](./SPEC.md#95-keyed-objects--tabular-form)):
+
+<table>
+<tr><th>JSON</th><th>TOON</th></tr>
+<tr><td>
+
+```json
+{
+  "environments": {
+    "production": { "region": "eu-central-1", "replicas": 6, "debug": false },
+    "staging": { "region": "eu-central-1", "replicas": 2, "debug": true }
+  }
+}
+```
+
+</td><td>
+
+```toon
+environments[2:]{region,replicas,debug}:
+  production: eu-central-1,6,false
+  staging: eu-central-1,2,true
 ```
 
 </td></tr>
