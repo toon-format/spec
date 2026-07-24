@@ -2,7 +2,7 @@
   "users": [
     {
       "id": 1,
-      "name": "Alice",
+      "name": "Ada",
       "role": "admin",
       "active": true
     },
@@ -14,7 +14,7 @@
     },
     {
       "id": 3,
-      "name": "Charlie",
+      "name": "Cleo",
       "role": "designer",
       "active": false
     }

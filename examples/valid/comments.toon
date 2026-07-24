@@ -1,0 +1,5 @@
+# Weekly export, generated 2025-01-15
+users[2]{id,name,role}:
+  # comment lines are stripped before row counting
+  1,Ada,admin
+  2,Bob,user
