@@ -2,9 +2,9 @@
 
 ## Token-Oriented Object Notation
 
-**Version:** 4.0 (unreleased draft)
+**Version:** 4.0
 
-**Date:** Unreleased
+**Date:** 2026-07-22
 
 **Status:** Working Draft
 

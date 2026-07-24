@@ -1,6 +1,6 @@
 # TOON Format Specification
 
-[![SPEC v4.0 draft](https://img.shields.io/badge/spec-v4.0%20draft-lightgrey)](./SPEC.md)
+[![SPEC v4.0](https://img.shields.io/badge/spec-v4.0-lightgrey)](./SPEC.md)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
 This repository contains the official specification for **Token-Oriented Object Notation (TOON)**, a line-oriented, indentation-based encoding of the JSON data model. See [github.com/toon-format/toon](https://github.com/toon-format/toon) for an overview, rationale, and benchmarks.
@@ -9,7 +9,7 @@ This repository contains the official specification for **Token-Oriented Object 
 
 [→ Read the full specification (SPEC.md)](./SPEC.md)
 
-- **Version:** 4.0 (unreleased draft)
+- **Version:** 4.0 (2026-07-22)
 - **Status:** Working Draft
 - **License:** MIT
 
