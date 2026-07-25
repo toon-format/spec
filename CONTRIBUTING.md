@@ -26,7 +26,7 @@ Changing quoting or escape rules
   Example: Changing when colons require quotes
 
 Modifying tabular detection logic
-  Example: Allowing non-uniform objects in tabular format
+  Example: Allowing non-uniform objects in tabular form
 
 New data type normalization rules
   Example: Handling Map or Set differently
