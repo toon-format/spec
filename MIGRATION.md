@@ -8,7 +8,7 @@ v4 removes the optional key-folding and path-expansion machinery: the encoder op
 
 If you have stored documents that were encoded with `keyFolding: "safe"`, re-hydrate them once: decode with a v3 decoder using `expandPaths: "safe"`, then re-encode with a v4 encoder (or any encoder with folding off).
 
-Implementations that keep folding available as a vendor extension MUST guard path expansion against the keys `__proto__`, `constructor`, and `prototype`: expansion MUST NOT use these segments to construct or traverse object graphs. Unguarded expansion is a prototype-pollution vector; the core prototype-key rules live in §15.
+Implementations that keep folding available as a vendor extension should guard path expansion against the keys `__proto__`, `constructor`, and `prototype`: expansion must not use these segments to construct or traverse object graphs. Unguarded expansion is a prototype-pollution vector; SPEC.md §15 states the general prototype-safety requirement.
 
 ## Full-line comment lines (decode-side)
 
@@ -30,7 +30,7 @@ The new header form does not parse under v3 – strict v3 decoders reject it at 
 
 ## Keyed objects in tabular form
 
-v4 objects whose values are uniform non-empty objects collapse into a keyed tabular form (§6, §9.5): `users[2:]{age,city}:` followed by one `alice: 30,Berlin` entry row per entry. The colon after the bracket length marks the keyed header; at the root the key is omitted (`[2:]{age,city}:`). Decode-side this is a pure addition – every v3 document decodes identically under v4 – but unlike nested field groups, the encoder change is visible wherever an eligible object occurs: any object with at least two entries whose values share one uniform shape now encodes in keyed form. Objects with heterogeneous values (mixed shapes, primitives, arrays, or differing key sets) keep the nested form, which in practice leaves most configuration-style maps unchanged.
+v4 objects whose values are uniform non-empty objects collapse into a keyed tabular form (§6, §9.5): `users[2:]{age,city}:` followed by one `alice: 30,Berlin` entry row per entry. The colon after the bracket length marks the keyed header; at the root the key is omitted (`[2:]{age,city}:`). Decode-side this is a pure addition – every v3 document decodes identically under v4 – but unlike nested field groups, the encoder change is visible wherever an eligible object occurs: any object with at least two entries whose values share one uniform shape now encodes in keyed tabular form. Objects with heterogeneous values (mixed shapes, primitives, arrays, or differing key sets) keep the nested form, which in practice leaves most configuration-style maps unchanged.
 
 Keyed headers do not parse under v3, and legacy decoders diverge by mode. Strict v3 decoders reject the document (fail closed). Non-strict v3 decoders silently mis-decode it: `users[2:]{age,city}:` falls through to a key-value line with key `users[2` and value `]{age,city}:`, and the entry rows corrupt from there. Pipelines that feed v4 encoder output into legacy decoders – strict or not – must upgrade the decoders first; implementations MAY ship decoder support ahead of encoder support for this rollout.
 

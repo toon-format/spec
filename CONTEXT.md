@@ -4,14 +4,14 @@ Token-Oriented Object Notation – a line-oriented, indentation-based encoding o
 
 ## Forms
 
-A **form** is one rendering of a value. The same data can be expressible in more than one form; the encoder picks the most compact one that applies. Four forms exist, and every one of them is named `<qualifier> form` – never `format`, which is reserved for the TOON format as a whole.
+A **form** is one rendering of a value. The same data can be expressible in more than one form; which one an encoder emits follows from the value's shape and its position under SPEC §9, not from encoder preference. Four forms exist, and every one of them is named `<qualifier> form` – never `format`, which is reserved for the TOON format as a whole.
 
 **Inline form**:
 A primitive array rendered on its header line, values separated by the active delimiter.
 _Avoid_: inline format, inline array format
 
 **List form**:
-An array rendered as one `- ` item per line, used when no tabular form applies.
+An array rendered as one list item per line (`- value`, or a bare `-` for an empty-object item), used wherever neither inline nor tabular form is available.
 _Avoid_: expanded list, expanded form, list format, hyphen form
 
 **Tabular form**:
@@ -25,7 +25,7 @@ _Avoid_: keyed form, keyed object format, map form
 ## Headers
 
 **Header**:
-The bracketed declaration that opens an array or keyed tabular object, ending in a colon. The supertype of the three below.
+The bracketed declaration that opens an array or keyed tabular object, ending in a colon. Its two kinds are the array header and the keyed header; a tabular header is an array header carrying a field list.
 
 **Array header**:
 A header introducing an array – `key[N]:`, with or without a field list.
@@ -35,14 +35,14 @@ An array header carrying a field list, so its scope holds rows rather than list 
 _Avoid_: field header, fields header, `{fields}` header, column header
 
 **Keyed header**:
-A header whose bracket segment carries a colon after the length (`key[N:]{…}:`), marking keyed tabular form. Its field list is required.
+A header whose bracket segment carries a colon after the length (`key[N:]{…}:`), marking keyed tabular form.
 
 **Bracket segment**:
 The `[N]` / `[N:]` part of a header, declaring the length (or entry count) and optionally the active delimiter.
 
 **Field list**:
 The brace-enclosed, delimiter-separated list of field entries in a header: `{id,name}`.
-_Avoid_: field header, column list, schema
+_Avoid_: brace group, column list, schema
 _Note_: `fields segment` is the ABNF production name (`fields-seg`, §6). Use it only when referring to the grammar; prose and error messages say **field list**.
 
 **Field entry**:
@@ -53,7 +53,22 @@ A field list attached to a field name inside a header (`customer{name,country}`)
 _Avoid_: nested fields, subfield group, folded object
 
 **Leaf field**:
-A field entry with no nested field group. Row cells map one-to-one to leaf fields in depth-first header order.
+A field entry with no nested field group. Row and entry-row cells map one-to-one to leaf fields in depth-first header order.
+
+## Depth
+
+**Content depth**:
+The depth at which a scope's immediate content appears – one level deeper than the line that opens the scope, except for first fields carried on a list-item hyphen line (SPEC §10).
+
+**Row depth**:
+The content depth of a tabular array's scope, at which its rows appear.
+
+**Entry depth**:
+The content depth of a keyed tabular object's scope, at which its entry rows appear.
+
+**Header span**:
+The lines from the first row, entry row, or list item in a header's scope through the last line of that scope's content. Blank lines inside a header span are a strict-mode error.
+_Avoid_: array span
 
 ## Rows, entries, and items
 
@@ -77,7 +92,7 @@ A line beginning with `- ` (or a bare `-` for an empty-object item) representing
 ## Shape classification
 
 **Column**:
-The sequence of values at one key across all elements of an array (or all entry values of an object). Tabular eligibility is decided per column.
+The sequence of values at one key across all elements of an array (or all entry values of an object). Tabular detection (SPEC §9.3) is decided per column.
 
 **Uniform-primitive**:
 A column whose every value is a primitive.
@@ -86,7 +101,7 @@ A column whose every value is a primitive.
 A column whose every value is a non-empty object, all sharing one key set, with every sub-column itself uniform-primitive or nested-uniform.
 
 **Non-uniform**:
-Any array or column that fails tabular detection and therefore falls back to list form.
+Any array or column that fails tabular detection. A non-uniform array falls back to list form; an object that fails keyed tabular detection stays in ordinary nested object form (SPEC §9.5).
 _Avoid_: mixed (except in the compound "mixed and non-uniform arrays", which names §9.4's data shape)
 
 ## Delimiters
@@ -107,8 +122,8 @@ Decoder mode enforcing declared counts, row widths, indentation, and delimiter c
 
 ## Standing rules
 
-- **`format` means TOON itself.** A rendering within TOON is a *form*. "Tabular format" wrongly implies a sibling of JSON or YAML rather than a shape inside TOON.
+- **Prefer *form* over *format* for the four renderings.** "Tabular format" wrongly implies a sibling of JSON or YAML rather than a shape inside TOON. `format` stays correct for TOON itself ("text format", "number formatting"). This is a preference for new prose, not a retroactive sweep: heading anchors, test-fixture `name`/`description`/`note` strings, and CHANGELOG entries are out of scope.
 - **`field` is overloaded on purpose.** §8 uses it for object properties ("sibling fields"); §9.3 uses it for field-list members ("leaf field"). Disambiguate with a compound – *object field*, *leaf field*, *field entry* – never by inventing a new word.
 - **`entry` likewise.** *Field entry* is a field-list member; *entry row* and *entry key* belong to keyed tabular form.
 - **Prose beats grammar names.** Reader-facing text and error messages use the concept names above; ABNF production names appear only when discussing the grammar.
-- **`root form` is a second, compatible sense of "form"** – which of object, array, or primitive the document's root value is (SPEC §5). It sits on a different axis from the four forms above and is deliberately left as-is; §5's heading anchor is widely referenced.
+- **"form" also carries its ordinary English sense throughout SPEC.md** – root form (§5), canonical decimal and exponent form (§2), the empty-array value form `key: []` (§9.1), the legacy header form (§9.1), quoted and unquoted forms (§7.4). None of these are the four renderings above and none should be renamed; §5's heading anchor in particular is widely referenced.

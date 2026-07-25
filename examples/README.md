@@ -17,11 +17,11 @@ Example TOON files, one per format feature – each filename names the feature i
 ### Arrays
 
 - [`valid/primitive-arrays.toon`](valid/primitive-arrays.toon) - Inline primitive arrays
-  - Compact inline format `[N]: item1,item2,item3` and the empty array `[]`
+  - Compact inline form `[N]: item1,item2,item3` and the empty array `[]`
   - Spec: §9.1
 
 - [`valid/mixed-arrays.toon`](valid/mixed-arrays.toon) - Mixed-type array (list form)
-  - One `-` item per element, used whenever no tabular form applies
+  - One `-` item per element, used wherever neither inline nor tabular form applies
   - Spec: §9.4
 
 ### Comments

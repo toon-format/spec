@@ -61,7 +61,7 @@ Non-breaking changes (MINOR version bump) include:
 - Expanding the specification to cover previously undefined behavior (if done in a backward-compatible way).
 - Adding new test cases that existing conformant implementations already pass.
 - Adding a normative decoder requirement that broadens accepted input, compatible with existing encoder output.
-- Tightening strict-mode validation (adding new strict-mode errors that formalize previously-undefined behavior). Strict mode is the default, but non-strict mode (`strict=false`) remains a conformant option; documents previously accepted by a non-strict decoder remain accepted.
+- Tightening strict-mode validation (adding new strict-mode errors that formalize previously-undefined behavior). Behavior is "previously undefined" when no normative rule of the previous MAJOR version assigned the affected document a decoded value; where the previous version did assign one, changing it is a MAJOR change even if the new outcome is an error. Strict mode is the default, but non-strict mode (`strict=false`) remains a conformant option; documents previously accepted by a non-strict decoder remain accepted.
 
 ### Documentation Improvements
 
@@ -75,7 +75,7 @@ Non-breaking changes (MINOR version bump) include:
 ### Working Draft
 
 - Current development version.
-- May receive updates without version changes.
+- Receives updates through MINOR version increments. Working Draft status means the specification is stable for implementation but not yet finalized; it does not mean the normative text may change silently under a fixed version number.
 - Indicated by "Status: Working Draft" in the specification.
 
 ### Stable Release
@@ -97,7 +97,7 @@ If we need to make a breaking change (MAJOR version bump):
 
 When in doubt, we err on the side of caution and treat potentially breaking changes as MAJOR version bumps.
 
-Implementations should document the supported spec version (e.g. `"toon-spec": "3.2"`) and may support multiple versions concurrently: default to the latest, let users target a specific version, and document version-specific behavior. A new MINOR version keeps existing conformant implementations conformant. A new MAJOR version may require updates; previous-version implementations remain valid, and migration guidance is provided in [MIGRATION.md](./MIGRATION.md) (summarized in CHANGELOG.md).
+Implementations should document the supported spec version (e.g. `"toon-spec": "3.2"`) and may support multiple versions concurrently: default to the latest, let users target a specific version, and document version-specific behavior. A new MINOR version keeps existing conformant implementations conformant. A new MAJOR version may require updates; previous-version implementations remain valid, and migration guidance is provided in [MIGRATION.md](./MIGRATION.md) (summarized in CHANGELOG.md). A MINOR version that renames or retires a public concept handle (for example an option name) carries a migration note in CHANGELOG.md naming the old and new spelling.
 
 ## Version History
 
