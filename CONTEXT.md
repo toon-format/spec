@@ -8,19 +8,19 @@ A **form** is one rendering of a value. The same data can be expressible in more
 
 **Inline form**:
 A primitive array rendered on its header line, values separated by the active delimiter.
-_Avoid_: inline format, inline array format
+_Avoid_: inline format
 
 **List form**:
 An array rendered as one list item per line (`- value`, or a bare `-` for an empty-object item), used wherever neither inline nor tabular form is available.
-_Avoid_: expanded list, expanded form, list format, hyphen form
+_Avoid_: expanded list, list format, hyphen form
 
 **Tabular form**:
 An array of uniform objects rendered as a header that declares the field list once, followed by one row per element.
-_Avoid_: tabular format, tabular layout, tabular structure, table form
+_Avoid_: tabular format, tabular structure
 
 **Keyed tabular form**:
 An object whose values are uniform objects rendered as a keyed header followed by one entry row per entry, each row carrying its own key.
-_Avoid_: keyed form, keyed object format, map form
+_Avoid_: keyed form
 
 ## Headers
 
@@ -32,7 +32,7 @@ A header introducing an array – `key[N]:`, with or without a field list.
 
 **Tabular header**:
 An array header carrying a field list, so its scope holds rows rather than list items.
-_Avoid_: field header, fields header, `{fields}` header, column header
+_Avoid_: field header, `{fields}` header
 
 **Keyed header**:
 A header whose bracket segment carries a colon after the length (`key[N:]{…}:`), marking keyed tabular form.
@@ -42,7 +42,7 @@ The `[N]` / `[N:]` part of a header, declaring the length (or entry count) and o
 
 **Field list**:
 The brace-enclosed, delimiter-separated list of field entries in a header: `{id,name}`.
-_Avoid_: brace group, column list, schema
+_Avoid_: brace group, schema
 _Note_: `fields segment` is the ABNF production name (`fields-seg`, §6). Use it only when referring to the grammar; prose and error messages say **field list**.
 
 **Field entry**:
@@ -50,12 +50,19 @@ One member of a field list – a field name, optionally carrying its own nested 
 
 **Nested field group**:
 A field list attached to a field name inside a header (`customer{name,country}`), declaring a nested-uniform column while rows stay flat.
-_Avoid_: nested fields, subfield group, folded object
 
 **Leaf field**:
 A field entry with no nested field group. Row and entry-row cells map one-to-one to leaf fields in depth-first header order.
 
-## Depth
+## Lexical
+
+**Token**:
+The text extracted for one key or one value – before a key-value or entry-key colon, before a header's bracket segment, a field name in a field list, or one delimiter-separated value – after surrounding spaces are trimmed. A token is quoted or unquoted, and the two are decoded by different rules (SPEC §7.4).
+
+## Scope and depth
+
+**Scope**:
+The region an opening line governs – a header, or a `key:` line with nothing after the colon – running from its content depth until the depth falls back to the opening line's or shallower (SPEC §8, §9.4, §9.5).
 
 **Content depth**:
 The depth at which a scope's immediate content appears – one level deeper than the line that opens the scope, except for first fields carried on a list-item hyphen line (SPEC §10).
@@ -67,21 +74,20 @@ The content depth of a tabular array's scope, at which its rows appear.
 The content depth of a keyed tabular object's scope, at which its entry rows appear.
 
 **Header span**:
-The lines from the first row, entry row, or list item in a header's scope through the last line of that scope's content. Blank lines inside a header span are a strict-mode error.
+The lines from the first row, entry row, or list item in a header's scope through the last line of that scope's content.
 _Avoid_: array span
 
 ## Rows, entries, and items
 
 **Row**:
 One line of cells under a tabular header. Qualify as **tabular row** where ambiguity with entry rows is possible.
-_Avoid_: record, data line
+_Avoid_: record
 
 **Cell**:
 One primitive value within a row or entry row.
 
 **Entry row**:
 A line `entrykey: cell,cell…` under a keyed header, carrying one entry's key and its leaf values.
-_Avoid_: keyed row, keyed entry
 
 **Entry key**:
 The key token of an entry row, preceding the row's first unquoted colon. It becomes a key of the decoded object.
@@ -110,7 +116,7 @@ _Avoid_: mixed (except in the compound "mixed and non-uniform arrays", which nam
 The delimiter declared by the closest header in scope. Governs splitting and quoting for inline values, tabular row cells, and entry row cells.
 
 **Document delimiter**:
-The encoder-selected delimiter governing quoting for object field values, everywhere in the document.
+The encoder-selected delimiter used for delimiter-aware quoting wherever no active delimiter governs – object field values and root primitives.
 
 ## Beyond the format
 
@@ -119,6 +125,10 @@ Benchmark-only measure – the percentage of a dataset's arrays that qualify for
 
 **Strict mode**:
 Decoder mode enforcing declared counts, row widths, indentation, and delimiter consistency. Default on.
+
+**indentSize**:
+The spaces-per-level option, encoder and decoder alike (default 2), that converts leading spaces to depth.
+_Avoid_: indent (the former name, kept only as a deprecated alias in the reference implementation)
 
 ## Standing rules
 
