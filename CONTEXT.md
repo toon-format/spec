@@ -126,10 +126,6 @@ Benchmark-only measure – the percentage of a dataset's arrays that qualify for
 **Strict mode**:
 Decoder mode enforcing declared counts, row widths, indentation, and delimiter consistency. Default on.
 
-**indentSize**:
-The spaces-per-level option, encoder and decoder alike (default 2), that converts leading spaces to depth.
-_Avoid_: indent (the former name, kept only as a deprecated alias in the reference implementation)
-
 ## Standing rules
 
 - **Prefer *form* over *format* for the four renderings.** "Tabular format" wrongly implies a sibling of JSON or YAML rather than a shape inside TOON. `format` stays correct for TOON itself ("text format", "number formatting"). This is a preference for new prose, not a retroactive sweep: heading anchors, test-fixture `name`/`description`/`note` strings, and CHANGELOG entries are out of scope.
