@@ -34,7 +34,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - §18: the number sign at line start is recorded as a reserved structural character, as of v4.0.
 - §9.5 heading renamed to "Objects of Uniform Objects – Keyed Tabular Form"; anchor `#95-keyed-objects--tabular-form` moves to `#95-objects-of-uniform-objects--keyed-tabular-form`.
 - Terminology: `keyed form` retired in favour of `keyed tabular form`; `brace group` in favour of `field list`; `array span` in favour of `header span`.
-- VERSIONING.md: "previously undefined" is now defined; Working Drafts receive updates through MINOR increments rather than silently; MINOR versions that rename a public concept handle carry a migration note.
+- §5.2: a scalar line outside root primitive position is an error in both modes; the non-strict skip is gone.
+- Duplicated normative text removed from §13.2, §14.1, §14.2, §15 and Appendices A and B, so each rule is stated once.
+- Appendix D (Document Changelog) retired; the former Appendices E and F are now D and E.
+- VERSIONING.md: "previously undefined" is now defined; Working Drafts receive updates through MINOR increments rather than silently; MINOR versions that rename a public concept handle carry a migration note; encoder-side tightening and changes to encoder-unreachable documents are classified MINOR.
+
+### Compatibility
+
+Two changes alter decoder behavior: §6 rejects whitespace between a key and its bracket segment in strict mode, and §12 removes a leading U+FEFF. No conforming v4.0 encoder could emit either input – §7.3 quotes any key containing a space or bracket, and encoders never emit a byte-order mark – so no round-trip is affected. Both are MINOR under the encoder-unreachability rule in [VERSIONING.md](./VERSIONING.md).
 
 ### Migration
 
