@@ -54,8 +54,6 @@ Test fixtures validate TOON implementations across languages. Add your test to `
 
 See [tests/README.md](./tests/README.md) for fixture structure and guidelines.
 
-`name` states the rule under test, not the input – *quotes non-ASCII key*, not *handles café*. `note` is optional and explains why the expectation holds; leave it out when it would restate the name. Both use the terminology in [CONTEXT.md](./CONTEXT.md), never name the format, and cite a section only when it differs from `specSection`.
-
 ## Pull Request Guidelines
 
 1. Fork the repository and create a feature branch
