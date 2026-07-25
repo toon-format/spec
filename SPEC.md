@@ -312,7 +312,7 @@ Decoders classify each line of the comment-stripped sequence (§5.1) by its cont
 3. Array-header line – the content matches the header or keyed-header grammar of §6. A line whose first unquoted colon precedes its first unquoted "[" is never a header; it is a key-value line. Only unquoted occurrences count: a quoted key containing a colon can still open a header (e.g., `"a:b"[2]: 1,2` is a header), while `a:b[2]: x` is a key-value line with key `a`.
 4. Key-value line – the content contains an unquoted colon and no earlier class applies. The key token precedes the first unquoted colon and is decoded per §7.4; the remainder after the colon is the value (§8). A line that contains an unquoted colon but fails the §6 header grammar falls through to this class (e.g., `foo [2]: bar`); the strict-mode header errors enumerated in §6 and §14.2 are unaffected by this fall-through.
 5. Row line – within a tabular array's scope, a delimiter-separated value line at row depth (§9.3); within a keyed tabular object's scope, an entry row at entry depth (§9.5).
-6. Scalar line – none of the above; the content is a single primitive token (§4). A scalar line is valid only as a root primitive (root-form rules above); anywhere else strict decoders MUST error (§14.2) and non-strict decoders MAY skip it.
+6. Scalar line – none of the above; the content is a single primitive token (§4). A scalar line is valid only as a root primitive (root-form rules above); anywhere else it is a structural error (§14.2).
 
 ## 6. Header Syntax (Normative)
 
@@ -700,7 +700,7 @@ Conforming decoders MUST:
 - [ ] Apply deterministic last-write-wins for duplicate sibling keys when `strict=false` (§14.3)
 - [ ] Preserve array order and object key order, except where tabular and keyed tabular forms reorder to the header's field order (§2, §9.3, §9.5)
 - [ ] Decode byte input as UTF-8 and, in strict mode, error on ill-formed sequences rather than substituting U+FFFD (§4)
-- [ ] Document the numeric out-of-range policy (§4) and the object representation used for key-order and prototype-key preservation (§2, §15)
+- [ ] Document the numeric out-of-range policy (§4) and any key-order or prototype-key deviation of the host object model (§2, §15)
 
 ### 13.3 Validator Conformance Checklist
 
@@ -782,7 +782,7 @@ Formal registration will be requested following the procedures defined in [RFC68
 
 ## 18. Versioning and Extensibility
 
-For versioning policy and version history, see [CHANGELOG.md](./CHANGELOG.md).
+For the versioning policy, see [VERSIONING.md](./VERSIONING.md); for version history, see [CHANGELOG.md](./CHANGELOG.md).
 
 ### Extensibility
 
