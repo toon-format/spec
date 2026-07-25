@@ -4,6 +4,42 @@ All notable changes to the TOON specification will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). The project follows the MAJOR.MINOR versioning policy described in [VERSIONING.md](./VERSIONING.md).
 
+## [4.1] - 2026-07-25
+
+### Added
+
+- §1.3: `row depth` and `entry depth` defined as the content depth of a tabular and a keyed tabular scope; both were already the trigger conditions of MUSTs at §5.2, §9.3, §9.5 and §14.2.
+- §7.4: the quoted-token boundary rule – a token beginning with `"` MUST end at its closing quote, in strict and non-strict mode alike – promoted from Appendix B.4, where it was informative.
+- §9.4: scope termination for arrays in list form, matching the rules §9.3 and §9.5 already carry.
+- §12: a leading U+FEFF is a byte-order mark and MUST be removed before processing; trailing spaces are stripped before line classification.
+- §14.1: the non-strict counterpart to the count and width checks – a declared `[N]` never terminates or truncates a scope.
+- §15, §16: decoder resource guidance, and the statement that canonically equivalent keys differing in normalization form are distinct.
+- §2, §3: a documentation duty for host object types that reorder keys, and an encoder duty to reject host strings containing unpaired surrogates.
+- Conformance fixtures for every rule above.
+
+### Changed
+
+- §7.4 / §6: the decoder key-token rule now covers keyed entry rows, unquoted header keys, and unquoted field names in a field list; §6's `unquoted-key` production is marked as describing conforming encoder output only. Completes the v4.0 change recorded at §7.4.
+- §9.5: the keyed-tabular encoder mandate is scoped to object-field and root positions. In a column position a keyed-eligible object encodes as a nested field group (§9.3), matching shipped reference-implementation behavior.
+- §9.3: encoders MUST use tabular form when detection is satisfied and the position permits a fields-bearing header; §9.4 already required list form in the excepted position.
+- §9.1: encoders MUST emit `key: []` and `[]` for empty arrays; the legacy `key[0]:` and `[0]:` forms remain accepted on input but MUST NOT be emitted.
+- §10: encoders MUST place a list-item object's first field on the hyphen line. The bare-hyphen alternative has produced undecodable output since v3.0.
+- §11.1: encoders MUST declare the document delimiter as the active delimiter of every header they emit.
+- §6 / §14.2: whitespace between a key and its bracket segment is a header syntax error – strict error, non-strict key-value fall-through – matching the existing rule for `[2] :`.
+- §9.3 / §14.2: a field name repeated within a field list is diagnosed from the header line alone, independent of the declared count and of any following rows.
+- §5, §5.2, §6, §9.5: strict-mode errors that lacked one now state their non-strict counterpart – root `[]` trailing content, scalar lines outside root position, header delimiter mismatch, and entry-depth lines without a colon.
+- §14: four conditions are marked "(any mode)" – they were already unqualified MUSTs at §4, §7.1 and §7.4 and are errors regardless of the `strict` option.
+- §12: token trimming covers key tokens as well as value tokens, closing the cross-reference from §7.4; non-strict decoders that accept tab indentation MUST consume the tabs.
+- §1.4, §1.5: form selection follows shape and position, not encoder preference; the delimiter definitions match §11.1; the field-list terms cover keyed headers.
+- §18: the number sign at line start is recorded as a reserved structural character, as of v4.0.
+- §9.5 heading renamed to "Objects of Uniform Objects – Keyed Tabular Form"; anchor `#95-keyed-objects--tabular-form` moves to `#95-objects-of-uniform-objects--keyed-tabular-form`.
+- Terminology: `keyed form` retired in favour of `keyed tabular form`; `brace group` in favour of `field list`; `array span` in favour of `header span`.
+- VERSIONING.md: "previously undefined" is now defined; Working Drafts receive updates through MINOR increments rather than silently; MINOR versions that rename a public concept handle carry a migration note.
+
+### Migration
+
+- The encoder and decoder option renamed from `indent` to `indentSize` in spec 3.3 is now named `indentSize` throughout. Implementations that still read `indent` SHOULD accept `indentSize` and MAY keep `indent` as a deprecated alias.
+
 ## [4.0] - 2026-07-22
 
 ### Breaking Changes

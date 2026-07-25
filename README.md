@@ -1,6 +1,6 @@
 # TOON Format Specification
 
-[![SPEC v4.0](https://img.shields.io/badge/spec-v4.0-lightgrey)](./SPEC.md)
+[![SPEC v4.1](https://img.shields.io/badge/spec-v4.1-lightgrey)](./SPEC.md)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
 This repository contains the official specification for **Token-Oriented Object Notation (TOON)**, a line-oriented, indentation-based encoding of the JSON data model. See [github.com/toon-format/toon](https://github.com/toon-format/toon) for an overview, rationale, and benchmarks.
@@ -9,7 +9,7 @@ This repository contains the official specification for **Token-Oriented Object 
 
 [→ Read the full specification (SPEC.md)](./SPEC.md)
 
-- **Version:** 4.0 (2026-07-22)
+- **Version:** 4.1 (2026-07-25)
 - **Status:** Working Draft
 - **License:** MIT
 
@@ -43,14 +43,14 @@ users[2]{id,name}:
 </td></tr>
 </table>
 
-That is one of TOON's four forms. Side-by-side JSON for the rest lives in [`examples/`](./examples/):
+That is one of TOON's four forms. The other three, with worked examples in [`examples/`](./examples/):
 
 | Form | What it renders | Example |
 | ---- | --------------- | ------- |
 | Inline ([§9.1](./SPEC.md#91-primitive-arrays--inline-form)) | Primitive arrays, on the header line itself | [`primitive-arrays.toon`](./examples/valid/primitive-arrays.toon) |
-| List ([§9.2](./SPEC.md#92-arrays-of-primitive-arrays--list-form), [§9.4](./SPEC.md#94-mixed-and-non-uniform-arrays--list-form)) | Anything no tabular form fits, one `-` item per element | [`mixed-arrays.toon`](./examples/valid/mixed-arrays.toon) |
+| List ([§9.2](./SPEC.md#92-arrays-of-primitive-arrays--list-form), [§9.4](./SPEC.md#94-mixed-and-non-uniform-arrays--list-form)) | Arrays that fit neither inline nor tabular form, one `-` item per element | [`mixed-arrays.toon`](./examples/valid/mixed-arrays.toon) |
 | Tabular ([§9.3](./SPEC.md#93-arrays-of-objects--tabular-form)) | Arrays of uniform objects, as shown above | [`tabular-arrays.toon`](./examples/conversions/tabular-arrays.toon) |
-| Keyed tabular ([§9.5](./SPEC.md#95-keyed-objects--tabular-form)) | Objects whose values are uniform objects, as rows that carry their own key | [`keyed-tabular-objects.toon`](./examples/conversions/keyed-tabular-objects.toon) |
+| Keyed tabular ([§9.5](./SPEC.md#95-objects-of-uniform-objects--keyed-tabular-form)) | Objects whose values are uniform objects, as rows that carry their own key | [`keyed-tabular-objects.toon`](./examples/conversions/keyed-tabular-objects.toon) |
 
 Within tabular form, a uniform nested-object column folds into the header as a **nested field group** (`customer{name,country}`) while rows stay flat – see [`nested-field-groups.toon`](./examples/conversions/nested-field-groups.toon).
 
