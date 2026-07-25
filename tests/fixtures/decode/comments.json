@@ -101,11 +101,11 @@
       "specSection": "5.1"
     },
     {
-      "name": "decodes former root scalar starting with hash to empty object",
+      "name": "decodes a hash-leading root line as a comment, yielding an empty object",
       "input": "#hello",
       "expected": {},
       "specSection": "5.1",
-      "note": "Wire break vs v3: the line is a comment, leaving an empty document"
+      "note": "The only line is a comment, so the document is empty after the pre-pass"
     },
     {
       "name": "throws when a stripped hash-leading row breaks the declared count",
@@ -129,7 +129,7 @@
         "strict": false
       },
       "specSection": "5.1",
-      "note": "Corruption path for v3 documents with unquoted hash-leading first cells; see MIGRATION.md"
+      "note": "A hash-leading first cell makes the whole line a comment; non-strict mode drops the row silently"
     },
     {
       "name": "throws on tab-indented hash line, which is not a comment",

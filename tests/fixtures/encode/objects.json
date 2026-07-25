@@ -257,7 +257,7 @@
       },
       "expected": "__proto__: polluted\nsafe: true",
       "specSection": "15",
-      "note": "§15: encoders MUST NOT drop or reinterpret prototype-named own entries"
+      "note": "No key has special meaning in TOON; the encoder emits prototype-named own entries like any other (§8)"
     },
     {
       "name": "encodes constructor and prototype own properties as ordinary keys",

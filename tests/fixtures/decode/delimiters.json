@@ -162,13 +162,13 @@
       "note": "Object field values are parsed as the whole post-colon token, never split on a delimiter (§11.2)"
     },
     {
-      "name": "object values in list items follow document delimiter",
+      "name": "does not split object values on commas inside a tab-delimited scope",
       "input": "items[2\t]:\n  - status: a,b\n  - status: c,d",
       "expected": {
         "items": [{ "status": "a,b" }, { "status": "c,d" }]
       },
-      "specSection": "11",
-      "note": "Active delimiter is tab, but object values use document delimiter for quoting"
+      "specSection": "11.2",
+      "note": "The active delimiter splits row and inline cells, never object field values"
     },
     {
       "name": "parses quoted comma in object values",

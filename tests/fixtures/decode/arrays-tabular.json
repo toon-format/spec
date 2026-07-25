@@ -70,7 +70,7 @@
       "specSection": "9.3"
     },
     {
-      "name": "treats unquoted colon as terminator for tabular rows and start of key-value pair",
+      "name": "terminates a tabular scope at a dedented key-value line",
       "input": "items[2]{id,name}:\n  1,Ada\n  2,Bob\ncount: 2",
       "expected": {
         "items": [
