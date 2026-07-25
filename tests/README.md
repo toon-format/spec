@@ -139,7 +139,16 @@ To validate your TOON implementation against these fixtures:
 
 The fixture format is language-agnostic JSON, so you can load and iterate it using your language's standard JSON parser and test framework.
 
-**Note:** Fixture `name`, `description`, and `note` strings are stable test identifiers – downstream implementations use them as test names and skip-list keys. They are exempt from terminology sweeps and are not renamed for wording consistency.
+**Note:** `name`, `description`, and `note` are prose, not identifiers. Key your runner on file path and array index, never on these strings – they follow the spec's terminology and are rewritten whenever it changes.
+
+### Writing `name` and `note`
+
+- `name` states the rule under test, not the input: *quotes non-ASCII key*, not *handles café*. Start with a verb in the third person.
+- `note` explains why the expectation holds. If it restates the name or the input, leave it out – the field is optional.
+- Use the spec's terminology: the four renderings are *inline*, *list*, *tabular*, and *keyed tabular form*, never *format*.
+- Do not name the format. Every fixture here is TOON.
+- Cite a section only when it is not the one already in `specSection`, as a trailing `(§9.3)`.
+- Sentence case, no trailing period.
 
 **Note (spec v3.3+):** Encoder fixtures for numbers inside the canonical range (`n = 0` or `1e-6 ≤ |n| < 1e21`, per §2) are byte-equal across conformant implementations. For values outside that range, §2 permits multiple valid forms; such fixtures verify via decode-and-compare round-trip.
 
