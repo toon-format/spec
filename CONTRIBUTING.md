@@ -54,6 +54,8 @@ Test fixtures validate TOON implementations across languages. Add your test to `
 
 See [tests/README.md](./tests/README.md) for fixture structure and guidelines.
 
+`name` states the rule under test, not the input – *quotes non-ASCII key*, not *handles café*. `note` is optional and explains why the expectation holds; leave it out when it would restate the name. Both use the terminology in [CONTEXT.md](./CONTEXT.md), never name the format, and cite a section only when it differs from `specSection`.
+
 ## Pull Request Guidelines
 
 1. Fork the repository and create a feature branch
@@ -75,7 +77,7 @@ See the Introduction in [SPEC.md](./SPEC.md) for TOON's purpose, applicability, 
 Follow [SPEC.md](./SPEC.md) conventions:
 
 - **RFC 2119 keywords**: Use MUST/SHOULD/MAY correctly (see SPEC.md §1.1)
-- **Terminology**: Prefer the canonical names in [CONTEXT.md](./CONTEXT.md) for new prose. Existing heading anchors, test-fixture `name`/`description`/`note` strings, and CHANGELOG entries are deliberately exempt
+- **Terminology**: Use the canonical names in [CONTEXT.md](./CONTEXT.md). Published heading anchors are the one exception – they keep their existing spelling
 - **Examples over prose**: Show concrete input/output for complex rules
 - **Precision**: Zero ambiguity – multiple implementations must agree
 - **Structure**: Number sections, cross-reference related rules
