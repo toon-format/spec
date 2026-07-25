@@ -1,7 +1,7 @@
 {
   "version": "4.0",
   "category": "encode",
-  "description": "Object encoding - simple objects, nested objects, key encoding",
+  "description": "Object encoding – simple objects, nested objects, key encoding",
   "tests": [
     {
       "name": "preserves key order in objects",
@@ -257,7 +257,7 @@
       },
       "expected": "__proto__: polluted\nsafe: true",
       "specSection": "15",
-      "note": "No key has special meaning in TOON; the encoder emits prototype-named own entries like any other (§8)"
+      "note": "No key has special meaning, so the encoder emits prototype-named own entries like any other (§8)"
     },
     {
       "name": "encodes constructor and prototype own properties as ordinary keys",

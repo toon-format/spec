@@ -1,7 +1,7 @@
 {
   "version": "4.0",
   "category": "decode",
-  "description": "Primitive value decoding - strings, numbers, booleans, null, unescaping",
+  "description": "Primitive value decoding – strings, numbers, booleans, null, unescaping",
   "tests": [
     {
       "name": "parses safe unquoted string",
@@ -127,8 +127,7 @@
       "name": "respects ambiguity quoting for true",
       "input": "\"true\"",
       "expected": "true",
-      "specSection": "7.4",
-      "note": "Quoted primitive remains string"
+      "specSection": "7.4"
     },
     {
       "name": "respects ambiguity quoting for false",

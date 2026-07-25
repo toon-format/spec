@@ -1,7 +1,7 @@
 {
   "version": "4.0",
   "category": "decode",
-  "description": "Blank line handling - strict mode errors on blank lines inside arrays, accepts blank lines outside arrays",
+  "description": "Blank line handling – strict mode errors on blank lines inside arrays, accepts blank lines outside arrays",
   "tests": [
     {
       "name": "throws on blank line inside list array",
@@ -192,7 +192,7 @@
       "expected": null,
       "shouldError": true,
       "specSection": "14.2",
-      "note": "The array span ends at the last line of the scope's content, not at the last item line (\u00a712)"
+      "note": "The header span ends at the last line of the scope's content, not at the last item line (\u00a712)"
     },
     {
       "name": "accepts blank line between header and first list item",

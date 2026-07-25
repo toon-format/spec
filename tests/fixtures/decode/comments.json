@@ -1,7 +1,7 @@
 {
   "version": "4.0",
   "category": "decode",
-  "description": "Comment lines - full-line decode-side comments stripped before structural interpretation",
+  "description": "Comment lines – full-line decode-side comments stripped before structural interpretation",
   "tests": [
     {
       "name": "strips comment line between tabular rows without terminating rows",

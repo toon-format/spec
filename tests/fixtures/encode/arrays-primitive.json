@@ -1,7 +1,7 @@
 {
   "version": "4.0",
   "category": "encode",
-  "description": "Primitive array encoding - inline arrays of strings, numbers, booleans",
+  "description": "Primitive array encoding – inline arrays of strings, numbers, booleans",
   "tests": [
     {
       "name": "encodes string arrays inline",

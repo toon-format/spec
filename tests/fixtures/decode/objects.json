@@ -1,7 +1,7 @@
 {
   "version": "4.0",
   "category": "decode",
-  "description": "Object decoding - fields, nested objects, key parsing, §6 fall-through (non-strict), and §14.3 duplicate-key LWW",
+  "description": "Object decoding – fields, nested objects, key parsing, §6 fall-through (non-strict), and §14.3 duplicate-key LWW",
   "tests": [
     {
       "name": "parses objects with primitive values",
@@ -439,7 +439,7 @@
         "__proto__": "polluted"
       },
       "specSection": "15",
-      "note": "§15: decoding MUST NOT mutate the host object model; the decoded object carries __proto__ as an own entry"
+      "note": "Decoding MUST NOT mutate the host object model, so the decoded object carries __proto__ as an own entry"
     },
     {
       "name": "materializes constructor and prototype as ordinary own keys",
@@ -459,7 +459,7 @@
         }
       },
       "specSection": "15",
-      "note": "§15: the classic pollution shape – the nested object becomes an own entry, never the prototype"
+      "note": "The classic pollution shape – the nested object becomes an own entry, never the prototype"
     },
     {
       "name": "materializes quoted __proto__ key as an ordinary own key",

@@ -1,10 +1,10 @@
 {
   "version": "4.0",
   "category": "decode",
-  "description": "Strict mode indentation validation - non-multiple indentation, tab characters, custom indent sizes",
+  "description": "Strict mode indentation validation – non-multiple indentation, tab characters, custom indentSizes",
   "tests": [
     {
-      "name": "throws on object field with non-multiple indentation (3 spaces with indent=2)",
+      "name": "throws on object field with non-multiple indentation (3 spaces with indentSize 2)",
       "input": "a:\n   b: 1",
       "expected": null,
       "shouldError": true,
@@ -15,7 +15,7 @@
       "specSection": "14.2"
     },
     {
-      "name": "throws on list item with non-multiple indentation (3 spaces with indent=2)",
+      "name": "throws on list item with non-multiple indentation (3 spaces with indentSize 2)",
       "input": "items[2]:\n   - id: 1\n   - id: 2",
       "expected": null,
       "shouldError": true,
@@ -26,7 +26,7 @@
       "specSection": "14.2"
     },
     {
-      "name": "throws on non-multiple indentation with custom indent=4 (3 spaces)",
+      "name": "throws on non-multiple indentation with custom indentSize 4 (3 spaces)",
       "input": "a:\n   b: 1",
       "expected": null,
       "shouldError": true,
@@ -37,7 +37,7 @@
       "specSection": "14.2"
     },
     {
-      "name": "accepts correct indentation with custom indent size (4 spaces with indent=4)",
+      "name": "accepts correct indentation with custom indentSize (4 spaces with indentSize 4)",
       "input": "a:\n    b: 1",
       "expected": {
         "a": {
@@ -164,7 +164,7 @@
       "expected": null,
       "shouldError": true,
       "specSection": "14.2",
-      "note": "a: 1 opens no scope, so the depth-2 line belongs to no scope and must not be silently discarded"
+      "note": "A primitive field opens no scope, so the depth-2 line belongs to none and must not be silently discarded"
     },
     {
       "name": "throws on a line indented one level under a primitive field",

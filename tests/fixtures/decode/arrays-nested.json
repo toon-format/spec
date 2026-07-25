@@ -1,7 +1,7 @@
 {
   "version": "4.0",
   "category": "decode",
-  "description": "Nested and mixed array decoding - list format, arrays of arrays, root arrays, mixed types",
+  "description": "Nested and mixed array decoding – list form, arrays of arrays, root arrays, mixed types",
   "tests": [
     {
       "name": "parses list arrays for non-uniform objects",
@@ -84,7 +84,7 @@
       "specSection": "10"
     },
     {
-      "name": "parses objects containing arrays (including empty arrays) in list format",
+      "name": "parses objects containing arrays (including empty arrays) in list form",
       "input": "items[1]:\n  - name: Ada\n    data[0]:",
       "expected": {
         "items": [
@@ -142,19 +142,19 @@
       "specSection": "9.1"
     },
     {
-      "name": "parses root-level array of uniform objects in tabular format",
+      "name": "parses root-level array of uniform objects in tabular form",
       "input": "[2]{id}:\n  1\n  2",
       "expected": [{ "id": 1 }, { "id": 2 }],
       "specSection": "9.3"
     },
     {
-      "name": "parses root-level array of non-uniform objects in list format",
+      "name": "parses root-level array of non-uniform objects in list form",
       "input": "[2]:\n  - id: 1\n  - id: 2\n    name: Ada",
       "expected": [{ "id": 1 }, { "id": 2, "name": "Ada" }],
       "specSection": "9.4"
     },
     {
-      "name": "parses root-level array mixing primitive, object, and array of objects in list format",
+      "name": "parses root-level array mixing primitive, object, and array of objects in list form",
       "input": "[3]:\n  - summary\n  - id: 1\n    name: Ada\n  - [2]:\n    - id: 2\n    - status: draft",
       "expected": ["summary", { "id": 1, "name": "Ada" }, [{ "id": 2 }, { "status": "draft" }]],
       "specSection": "9.4"
@@ -186,7 +186,7 @@
       "specSection": "8"
     },
     {
-      "name": "parses arrays mixing primitives, objects, and strings in list format",
+      "name": "parses arrays mixing primitives, objects, and strings in list form",
       "input": "items[3]:\n  - 1\n  - a: 1\n  - text",
       "expected": {
         "items": [1, { "a": 1 }, "text"]
@@ -202,7 +202,7 @@
       "specSection": "9.4"
     },
     {
-      "name": "parses quoted key with list array format",
+      "name": "parses quoted key with list-form array",
       "input": "\"x-items\"[2]:\n  - id: 1\n  - id: 2",
       "expected": {
         "x-items": [

@@ -1,7 +1,7 @@
 {
   "version": "4.0",
   "category": "decode",
-  "description": "Delimiter decoding - tab and pipe delimiter parsing, delimiter-aware value splitting",
+  "description": "Delimiter decoding – tab and pipe delimiter parsing, delimiter-aware value splitting",
   "tests": [
     {
       "name": "parses primitive arrays with tab delimiter",
@@ -63,8 +63,7 @@
       "expected": {
         "items": [{ "tags": ["a", "b", "c"] }]
       },
-      "specSection": "11",
-      "note": "Parent uses tab, nested defaults to comma"
+      "specSection": "11"
     },
     {
       "name": "parses nested arrays inside list items with default comma delimiter when parent uses pipe",
@@ -159,7 +158,7 @@
         "note": "a,b"
       },
       "specSection": "11",
-      "note": "Object field values are parsed as the whole post-colon token, never split on a delimiter (§11.2)"
+      "note": "Object field values are parsed as the whole post-colon token, never split on a delimiter"
     },
     {
       "name": "does not split object values on commas inside a tab-delimited scope",

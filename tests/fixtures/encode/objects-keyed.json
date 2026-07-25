@@ -1,7 +1,7 @@
 {
   "version": "4.0",
   "category": "encode",
-  "description": "Keyed tabular encoding - objects whose values are uniform objects collapse into keyed headers with entry rows",
+  "description": "Keyed tabular encoding – objects whose values are uniform objects collapse into keyed headers with entry rows",
   "tests": [
     {
       "name": "encodes objects of uniform objects in keyed tabular form",
@@ -15,14 +15,14 @@
       "specSection": "9.5"
     },
     {
-      "name": "encodes an eligible root object in keyless keyed form",
+      "name": "encodes an eligible root object with a keyless keyed header",
       "input": {
         "alice": { "age": 30, "city": "Berlin" },
         "bob": { "age": 25, "city": "Oslo" }
       },
       "expected": "[2:]{age,city}:\n  alice: 30,Berlin\n  bob: 25,Oslo",
       "specSection": "9.5",
-      "note": "The keyless keyed form is valid only at the root (§5)"
+      "note": "The keyless keyed header is valid only at the root (§5)"
     },
     {
       "name": "collapses uniform nested object columns inside keyed headers",
@@ -140,7 +140,7 @@
       "note": "Entry rows at depth +2, sibling fields at depth +1, mirroring tabular arrays on hyphen lines"
     },
     {
-      "name": "never encodes an anonymous array element in keyed form",
+      "name": "never encodes an anonymous array element in keyed tabular form",
       "input": {
         "items": [
           { "a": { "x": 1 }, "b": { "x": 2 } },

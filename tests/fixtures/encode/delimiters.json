@@ -1,7 +1,7 @@
 {
   "version": "4.0",
   "category": "encode",
-  "description": "Delimiter options - tab and pipe delimiters, delimiter-aware quoting",
+  "description": "Delimiter options – tab and pipe delimiters, delimiter-aware quoting",
   "tests": [
     {
       "name": "encodes primitive arrays with tab delimiter",

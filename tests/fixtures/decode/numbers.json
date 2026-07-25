@@ -1,7 +1,7 @@
 {
   "version": "4.0",
   "category": "decode",
-  "description": "Number decoding edge cases - trailing zeros, exponent forms, negative zero",
+  "description": "Number decoding edge cases – trailing zeros, exponent forms, negative zero",
   "tests": [
     {
       "name": "parses number with trailing zeros in fractional part",
@@ -9,8 +9,7 @@
       "expected": {
         "value": 1.5
       },
-      "specSection": "4",
-      "note": "Decoders accept trailing zeros; numeric value is 1.5"
+      "specSection": "4"
     },
     {
       "name": "parses negative number with positive exponent",
@@ -18,8 +17,7 @@
       "expected": {
         "value": -1000
       },
-      "specSection": "4",
-      "note": "Exponent forms are accepted by decoders"
+      "specSection": "4"
     },
     {
       "name": "parses lowercase exponent",
@@ -69,8 +67,7 @@
       "expected": {
         "value": "05"
       },
-      "specSection": "4",
-      "note": "Forbidden leading zeros cause tokens to be treated as strings"
+      "specSection": "4"
     },
     {
       "name": "parses very small exponent",
@@ -94,8 +91,7 @@
       "expected": {
         "value": 0
       },
-      "specSection": "4",
-      "note": "Exponent forms with a zero integer part (0e1) are valid numbers"
+      "specSection": "4"
     },
     {
       "name": "parses negative zero with exponent as number",
@@ -103,8 +99,7 @@
       "expected": {
         "value": 0
       },
-      "specSection": "4",
-      "note": "Negative zero with exponent (-0e1) decodes to numeric 0"
+      "specSection": "4"
     },
     {
       "name": "parses exponent notation",
@@ -128,8 +123,7 @@
       "name": "treats unquoted leading-zero number as string",
       "input": "05",
       "expected": "05",
-      "specSection": "4",
-      "note": "Leading zeros make it a string"
+      "specSection": "4"
     },
     {
       "name": "treats unquoted multi-leading-zero as string",
@@ -153,8 +147,7 @@
       "name": "treats unquoted negative leading-zero number as string",
       "input": "-05",
       "expected": "-05",
-      "specSection": "4",
-      "note": "Negative numbers with leading zeros in the integer part are treated as strings"
+      "specSection": "4"
     },
     {
       "name": "treats negative leading-zeros in array as strings",
@@ -171,7 +164,7 @@
         "value": ".5"
       },
       "specSection": "4",
-      "note": "Outside the §4 number grammar; a host parser would read 0.5 and corrupt the round-trip"
+      "note": "Outside the number grammar, so a host parser would read 0.5 and corrupt the round-trip"
     },
     {
       "name": "treats integer with trailing dot as string",
@@ -188,7 +181,7 @@
         "value": "+1"
       },
       "specSection": "4",
-      "note": "The §4 grammar admits only an optional leading minus; +1 stays a string"
+      "note": "The grammar admits only an optional leading minus, so +1 stays a string"
     },
     {
       "name": "treats leading-plus tokens in array as strings",
@@ -197,7 +190,7 @@
         "values": ["+1", "+1.5", "+1e2"]
       },
       "specSection": "4",
-      "note": "The §4 grammar admits only an optional leading minus; leading-plus cells stay strings"
+      "note": "The grammar admits only an optional leading minus, so leading-plus cells stay strings"
     },
     {
       "name": "parses positive exponent sign as number",
@@ -226,7 +219,7 @@
         "b": "1_000"
       },
       "specSection": "4",
-      "note": "Host parsers that accept these forms have a wider grammar than §4 permits"
+      "note": "Host parsers that accept these forms have a wider grammar than the spec permits"
     }
   ]
 }

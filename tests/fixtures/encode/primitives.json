@@ -1,7 +1,7 @@
 {
   "version": "4.0",
   "category": "encode",
-  "description": "Primitive value encoding - strings, numbers, booleans, null",
+  "description": "Primitive value encoding – strings, numbers, booleans, null",
   "tests": [
     {
       "name": "encodes safe strings without quotes",
@@ -62,7 +62,7 @@
       "input": "05",
       "expected": "\"05\"",
       "specSection": "7.2",
-      "note": "Matches the numeric-like pattern (05 is a listed §7.2 example), so it MUST be quoted"
+      "note": "Matches the numeric-like pattern, so it MUST be quoted"
     },
     {
       "name": "escapes newline in string",
@@ -209,21 +209,20 @@
       "input": 1000000,
       "expected": "1000000",
       "specSection": "2",
-      "note": "Within the \u00a72 canonical decimal range"
+      "note": "Within the canonical decimal range"
     },
     {
       "name": "encodes small decimal without exponent notation",
       "input": 0.000001,
       "expected": "0.000001",
       "specSection": "2",
-      "note": "Lower bound of the \u00a72 canonical decimal range"
+      "note": "Lower bound of the canonical decimal range"
     },
     {
       "name": "encodes large number",
       "input": 100000000000000000000,
       "expected": "100000000000000000000",
-      "specSection": "2",
-      "note": "1e20"
+      "specSection": "2"
     },
     {
       "name": "encodes MAX_SAFE_INTEGER",
@@ -235,8 +234,7 @@
       "name": "encodes repeating decimal with full precision",
       "input": 0.3333333333333333,
       "expected": "0.3333333333333333",
-      "specSection": "2",
-      "note": "Result of 1/3 in JavaScript"
+      "specSection": "2"
     },
     {
       "name": "encodes true",

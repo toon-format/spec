@@ -1,10 +1,10 @@
 {
   "version": "4.0",
   "category": "encode",
-  "description": "Arrays of objects encoding - list format for non-uniform objects and complex structures",
+  "description": "Arrays of objects encoding – list form for non-uniform objects and complex structures",
   "tests": [
     {
-      "name": "uses list format for objects with different fields",
+      "name": "uses list form for objects with different fields",
       "input": {
         "items": [
           { "id": 1, "name": "First" },
@@ -15,7 +15,7 @@
       "specSection": "9.4"
     },
     {
-      "name": "uses list format for objects with nested values",
+      "name": "uses list form for objects with nested values",
       "input": {
         "items": [
           { "id": 1, "nested": { "x": 1 } },
@@ -24,7 +24,7 @@
       },
       "expected": "items[2]:\n  - id: 1\n    nested:\n      x: 1\n  - id: 2\n    nested:\n      y: 2",
       "specSection": "9.4",
-      "note": "The nested column mixes key sets {x} and {y}, so it is not nested-uniform (§9.3) and the array uses the expanded list form"
+      "note": "The nested column mixes key sets {x} and {y}, so it is not nested-uniform (§9.3), so the array uses list form"
     },
     {
       "name": "preserves field order in list items - array first",
@@ -43,7 +43,7 @@
       "specSection": "10"
     },
     {
-      "name": "uses list format for objects containing arrays of arrays",
+      "name": "uses list form for objects containing arrays of arrays",
       "input": {
         "items": [
           { "matrix": [[1, 2], [3, 4]], "name": "grid" }
@@ -53,7 +53,7 @@
       "specSection": "10"
     },
     {
-      "name": "uses tabular format for nested uniform object arrays",
+      "name": "uses tabular form for nested uniform object arrays",
       "input": {
         "items": [
           { "users": [{ "id": 1, "name": "Ada" }, { "id": 2, "name": "Bob" }], "status": "active" }
@@ -61,10 +61,10 @@
       },
       "expected": "items[1]:\n  - users[2]{id,name}:\n      1,Ada\n      2,Bob\n    status: active",
       "specSection": "10",
-      "note": "Tabular header on hyphen line with rows at depth +2 and sibling fields at depth +1 (§10)"
+      "note": "Tabular header on hyphen line with rows at depth +2 and sibling fields at depth +1"
     },
     {
-      "name": "uses list format for nested object arrays with mismatched keys",
+      "name": "uses list form for nested object arrays with mismatched keys",
       "input": {
         "items": [
           { "users": [{ "id": 1, "name": "Ada" }, { "id": 2 }], "status": "active" }
@@ -74,7 +74,7 @@
       "specSection": "10"
     },
     {
-      "name": "uses list format for objects with multiple array fields",
+      "name": "uses list form for objects with multiple array fields",
       "input": {
         "items": [{ "nums": [1, 2], "tags": ["a", "b"], "name": "test" }]
       },
@@ -82,7 +82,7 @@
       "specSection": "10"
     },
     {
-      "name": "uses list format for objects with only array fields",
+      "name": "uses list form for objects with only array fields",
       "input": {
         "items": [{ "nums": [1, 2, 3], "tags": ["a", "b"] }]
       },
@@ -90,7 +90,7 @@
       "specSection": "10"
     },
     {
-      "name": "encodes objects with empty arrays in list format",
+      "name": "encodes objects with empty arrays in list form",
       "input": {
         "items": [
           { "name": "Ada", "data": [] }
@@ -146,7 +146,7 @@
       "specSection": "9.3"
     },
     {
-      "name": "uses list format when one object has nested field",
+      "name": "uses list form when one object has nested field",
       "input": {
         "items": [
           { "id": 1, "data": "string" },
@@ -157,13 +157,13 @@
       "specSection": "9.4"
     },
     {
-      "name": "uses expanded list for arrays containing empty objects",
+      "name": "uses list form for arrays containing empty objects",
       "input": {
         "items": [{}, {}]
       },
       "expected": "items[2]:\n  -\n  -",
       "specSection": "9.4",
-      "note": "Empty objects {} MUST NOT use tabular form per §9.3; encoded via §9.4 expanded list with bare hyphen markers per §10"
+      "note": "Empty objects are excluded from tabular detection (§9.3), so the array uses list form with bare hyphen markers (§10)"
     },
     {
       "name": "encodes a keyed-eligible object in a tabular column as a nested field group",

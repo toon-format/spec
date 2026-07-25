@@ -1,7 +1,7 @@
 {
   "version": "4.0",
   "category": "decode",
-  "description": "Whitespace tolerance in decoding - surrounding spaces around delimiters and values",
+  "description": "Whitespace tolerance in decoding – surrounding spaces around delimiters and values",
   "tests": [
     {
       "name": "tolerates spaces around commas in inline arrays",
@@ -10,7 +10,7 @@
         "tags": ["a", "b", "c"]
       },
       "specSection": "12",
-      "note": "Tokens are trimmed of surrounding U+0020 spaces per §12"
+      "note": "Trimming removes U+0020 only, never other Unicode whitespace"
     },
     {
       "name": "tolerates spaces around pipes in inline arrays",
@@ -53,8 +53,7 @@
       "expected": {
         "items": ["a", "", "c"]
       },
-      "specSection": "9.1",
-      "note": "Empty token (nothing between delimiters) decodes to empty string"
+      "specSection": "9.1"
     },
     {
       "name": "preserves NBSP-leading unquoted value",

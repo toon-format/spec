@@ -1,17 +1,17 @@
 {
   "version": "4.0",
   "category": "decode",
-  "description": "Validation errors - length mismatches, invalid escapes, syntax errors, delimiter mismatches",
+  "description": "Validation errors – length mismatches, invalid escapes, syntax errors, delimiter mismatches",
   "tests": [
     {
-      "name": "throws on array length mismatch (inline primitives - too many)",
+      "name": "throws when inline values outnumber the declared length",
       "input": "tags[2]: a,b,c",
       "expected": null,
       "shouldError": true,
       "specSection": "14.1"
     },
     {
-      "name": "throws on array length mismatch (list format - too many)",
+      "name": "throws when list items outnumber the declared length",
       "input": "items[1]:\n  - 1\n  - 2",
       "expected": null,
       "shouldError": true,
@@ -103,7 +103,7 @@
         "strict": true
       },
       "specSection": "6",
-      "note": "Non-whitespace content between ] and : must error in strict mode (§6 fall-through is non-strict only)"
+      "note": "Non-whitespace content between ] and : must error in strict mode; the fall-through is non-strict only"
     },
     {
       "name": "throws on text between bracket segment and colon in strict mode",
@@ -143,14 +143,14 @@
       "specSection": "6"
     },
     {
-      "name": "throws on inline primitive array length mismatch (too few)",
+      "name": "throws when inline values fall short of the declared length",
       "input": "tags[3]: a,b",
       "expected": null,
       "shouldError": true,
       "specSection": "14.1"
     },
     {
-      "name": "throws on list items length mismatch (too few)",
+      "name": "throws when list items fall short of the declared length",
       "input": "items[2]:\n  - a",
       "expected": null,
       "shouldError": true,
@@ -187,7 +187,7 @@
         "strict": true
       },
       "specSection": "6",
-      "note": "[3.7] is not an integer length (§6 length is DIGIT-only); decoders MUST NOT interpret it as a bracket segment"
+      "note": "[3.7] is not an integer length – lengths are DIGIT-only – so decoders MUST NOT interpret it as a bracket segment"
     },
     {
       "name": "throws on bracket length with plus sign in strict mode",
@@ -220,10 +220,10 @@
         "strict": true
       },
       "specSection": "6",
-      "note": "No whitespace is permitted between ] and the colon/fields segment; any content there prevents header interpretation"
+      "note": "No whitespace is permitted between ] and the colon/field list; any content there prevents header interpretation"
     },
     {
-      "name": "throws on whitespace between bracket segment and fields segment in strict mode",
+      "name": "throws on whitespace between bracket segment and field list in strict mode",
       "input": "items[2] {a,b}:\n  1,2\n  3,4",
       "expected": null,
       "shouldError": true,
@@ -231,7 +231,7 @@
         "strict": true
       },
       "specSection": "6",
-      "note": "No whitespace is permitted between ] and the fields segment; mirrors the ]-to-colon rule"
+      "note": "No whitespace is permitted between ] and the field list; mirrors the ]-to-colon rule"
     },
     {
       "name": "throws on nested duplicate sibling keys in strict mode",
@@ -270,7 +270,7 @@
       "note": "The header declares three leaf fields (id, customer.name, customer.country); the row has two cells"
     },
     {
-      "name": "throws on empty fields segment in strict mode",
+      "name": "throws on empty field list in strict mode",
       "input": "items[1]{}:\n  1",
       "expected": null,
       "shouldError": true,
@@ -282,17 +282,17 @@
       "expected": null,
       "shouldError": true,
       "specSection": "14.2",
-      "note": "A fields segment must contain at least one field entry at every nesting level (§6)"
+      "note": "A field list must contain at least one field entry at every nesting level"
     },
     {
-      "name": "throws on unmatched brace in fields segment in strict mode",
+      "name": "throws on unmatched brace in field list in strict mode",
       "input": "items[1]{id,customer{name:\n  1,Ada",
       "expected": null,
       "shouldError": true,
       "specSection": "14.2"
     },
     {
-      "name": "throws on duplicate field names at the same brace level in strict mode",
+      "name": "throws on duplicate field names at the same field-list level in strict mode",
       "input": "items[1]{a,a{x}}:\n  1,2",
       "expected": null,
       "shouldError": true,
@@ -322,10 +322,10 @@
       "expected": null,
       "shouldError": true,
       "specSection": "14.1",
-      "note": "A bare entrykey: has zero cells, and a fields segment always declares at least one leaf field (§9.5)"
+      "note": "A bare entrykey: has zero cells, and a field list always declares at least one leaf field (§9.5)"
     },
     {
-      "name": "throws on keyed header without a fields segment in strict mode",
+      "name": "throws on keyed header without a field list in strict mode",
       "input": "m[2:]:\n  a: 1\n  b: 2",
       "expected": null,
       "shouldError": true,
@@ -333,7 +333,7 @@
         "strict": true
       },
       "specSection": "14.2",
-      "note": "The fields segment is required in keyed headers (§6)"
+      "note": "A keyed header without a field list declares no cells at all"
     },
     {
       "name": "throws on keyed marker after the delimiter symbol in strict mode",
@@ -386,7 +386,7 @@
         "strict": true
       },
       "specSection": "14.2",
-      "note": "A keyed header carries no inline entries (§6)"
+      "note": "A keyed header carries no inline entries"
     },
     {
       "name": "throws on a line without an unquoted colon at entry depth in strict mode",
@@ -417,7 +417,7 @@
         "strict": true
       },
       "specSection": "14.2",
-      "note": "The keyless keyed form is valid only as the document's root header (§5, §9.5)"
+      "note": "The keyless keyed header is valid only as the document's root header (§5, §9.5)"
     },
     {
       "name": "throws on inner array item count not matching its declared length",
@@ -439,7 +439,7 @@
       "expected": null,
       "shouldError": true,
       "specSection": "6",
-      "note": "Keyless headers are valid only as the document's root header or as list items (\u00a76)"
+      "note": "Keyless headers are valid only as the document's root header or as list items"
     },
     {
       "name": "throws on keyless fields-bearing header as list item",
@@ -454,7 +454,7 @@
       "expected": null,
       "shouldError": true,
       "specSection": "6",
-      "note": "A fields-bearing header carries no inline content (\u00a76); decoding the values as an inline array would silently drop the fields segment"
+      "note": "A fields-bearing header carries no inline content; decoding the values as an inline array would silently drop the field list"
     },
     {
       "name": "throws on inline content after root tabular header",

@@ -1,7 +1,7 @@
 {
   "version": "4.0",
   "category": "decode",
-  "description": "Tabular array decoding - parsing arrays of uniform objects with headers",
+  "description": "Tabular array decoding – parsing arrays of uniform objects with headers",
   "tests": [
     {
       "name": "parses tabular arrays of uniform objects",
@@ -48,7 +48,7 @@
       "specSection": "9.3"
     },
     {
-      "name": "parses quoted key with tabular array format",
+      "name": "parses quoted key with tabular array",
       "input": "\"x-items\"[2]{id,name}:\n  1,Ada\n  2,Bob",
       "expected": {
         "x-items": [
@@ -59,7 +59,7 @@
       "specSection": "9.3"
     },
     {
-      "name": "parses quoted empty string key with tabular array format",
+      "name": "parses quoted empty string key with tabular array",
       "input": "\"\"[2]{id,name}:\n  1,Ada\n  2,Bob",
       "expected": {
         "": [
@@ -146,7 +146,7 @@
         ]
       },
       "specSection": "6",
-      "note": "A quoted fieldname may contain braces; brace matching is quote-aware"
+      "note": "A quoted field name may contain braces; brace matching is quote-aware"
     },
     {
       "name": "parses quoted subfield names inside nested field groups",
