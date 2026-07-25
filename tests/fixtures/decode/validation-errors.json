@@ -491,6 +491,18 @@
       "specSection": "7.4",
       "note": "The quoted-token boundary rule applies in strict and non-strict mode alike",
       "minSpecVersion": "4.1"
+    },
+    {
+      "name": "throws on a bare token line inside an array scope in non-strict mode",
+      "input": "k[1]:\n  - x: 1\n  bare",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": false
+      },
+      "specSection": "5.2",
+      "note": "A scalar line outside root primitive position is an error in strict and non-strict mode alike",
+      "minSpecVersion": "4.1"
     }
   ]
 }

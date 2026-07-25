@@ -173,6 +173,23 @@
       "specSection": "7.3"
     },
     {
+      "name": "quotes non-ASCII key",
+      "input": {
+        "café": 1
+      },
+      "expected": "\"café\": 1",
+      "specSection": "7.3",
+      "note": "The unquoted-key pattern is ASCII-only, so every non-ASCII key is quoted"
+    },
+    {
+      "name": "quotes CJK key",
+      "input": {
+        "名前": "x"
+      },
+      "expected": "\"名前\": x",
+      "specSection": "7.3"
+    },
+    {
       "name": "escapes newline in key",
       "input": {
         "line\nbreak": 1

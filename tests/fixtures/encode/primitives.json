@@ -168,6 +168,13 @@
       "specSection": "7.2"
     },
     {
+      "name": "encodes emoji inside a quoted string",
+      "input": "a,🚀",
+      "expected": "\"a,🚀\"",
+      "specSection": "7.1",
+      "note": "Quoting is triggered by the delimiter; the supplementary scalar stays literal UTF-8, never a surrogate escape"
+    },
+    {
       "name": "encodes positive integer",
       "input": 42,
       "expected": "42",
