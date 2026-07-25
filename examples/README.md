@@ -20,8 +20,8 @@ Example TOON files, one per format feature – each filename names the feature i
   - Compact inline format `[N]: item1,item2,item3` and the empty array `[]`
   - Spec: §9.1
 
-- [`valid/mixed-arrays.toon`](valid/mixed-arrays.toon) - Mixed-type array (expanded list)
-  - List format with `-` items for arrays without uniform structure
+- [`valid/mixed-arrays.toon`](valid/mixed-arrays.toon) - Mixed-type array (list form)
+  - One `-` item per element, used whenever no tabular form applies
   - Spec: §9.4
 
 ### Comments
@@ -56,7 +56,7 @@ Side-by-side JSON ↔ TOON pairs, one per tabular form:
   - A uniform nested-object column folds into the header (`{id,customer{name,country},total}`) while rows stay flat
   - Spec: §9.3
 
-- [`conversions/keyed-objects.json`](conversions/keyed-objects.json) + [`conversions/keyed-objects.toon`](conversions/keyed-objects.toon)
+- [`conversions/keyed-tabular-objects.json`](conversions/keyed-tabular-objects.json) + [`conversions/keyed-tabular-objects.toon`](conversions/keyed-tabular-objects.toon)
   - Objects whose values are uniform objects become tables whose entry rows carry their own keys; the colon after the length (`[3:]`) marks the keyed header
   - Spec: §9.5
 

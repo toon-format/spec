@@ -151,7 +151,7 @@ The fixture format is language-agnostic JSON, so you can load and iterate it usi
 | `objects.json` | Simple objects, nested objects, key encoding | §8 (keys: §7.3/§7.1) |
 | `objects-keyed.json` | Keyed tabular form for objects of uniform objects | §9.5, §10 |
 | `arrays-primitive.json` | Inline primitive arrays, empty arrays | §9.1 |
-| `arrays-tabular.json` | Tabular format with header and rows | §9.3 |
+| `arrays-tabular.json` | Tabular form with header and rows | §9.3 |
 | `arrays-nested.json` | Arrays of arrays, mixed arrays | §9.2/§9.4 |
 | `arrays-objects.json` | Objects as list items, complex nesting | §9, §10 |
 | `delimiters.json` | Tab and pipe delimiter options | §11 |
@@ -166,7 +166,7 @@ The fixture format is language-agnostic JSON, so you can load and iterate it usi
 | `objects.json` | Parsing objects, keys, nesting | §8 (keys: §7.3/§7.1) |
 | `objects-keyed.json` | Keyed header and entry-row parsing | §9.5, §10 |
 | `arrays-primitive.json` | Inline array parsing | §9.1 |
-| `arrays-tabular.json` | Tabular format parsing | §9.3 |
+| `arrays-tabular.json` | Tabular form parsing | §9.3 |
 | `arrays-nested.json` | Nested and mixed array parsing | §9.2/§9.4 |
 | `delimiters.json` | Delimiter detection and parsing | §11 |
 | `whitespace.json` | Whitespace tolerance and token trimming | §12 |

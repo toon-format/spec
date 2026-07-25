@@ -15,9 +15,9 @@ This repository contains the official specification for **Token-Oriented Object 
 
 The specification includes ABNF snippets, encoding rules, validation requirements, and conformance criteria.
 
-## Serialization Examples
+## Serialization Example
 
-Uniform arrays of objects collapse into a tabular form that declares the fields once ([§9.3](./SPEC.md#93-arrays-of-objects--tabular-form)):
+Uniform arrays of objects collapse into a tabular form that declares the field list once ([§9.3](./SPEC.md#93-arrays-of-objects--tabular-form)):
 
 <table>
 <tr><th>JSON</th><th>TOON</th></tr>
@@ -27,7 +27,7 @@ Uniform arrays of objects collapse into a tabular form that declares the fields 
 {
   "users": [
     { "id": 1, "name": "Ada" },
-    { "id": 2, "name": "Linus" }
+    { "id": 2, "name": "Bob" }
   ]
 }
 ```
@@ -37,65 +37,24 @@ Uniform arrays of objects collapse into a tabular form that declares the fields 
 ```toon
 users[2]{id,name}:
   1,Ada
-  2,Linus
+  2,Bob
 ```
 
 </td></tr>
 </table>
 
-Uniform nested-object columns fold into the header as nested field groups; rows stay flat ([§9.3](./SPEC.md#93-arrays-of-objects--tabular-form)):
+That is one of TOON's four forms. Side-by-side JSON for the rest lives in [`examples/`](./examples/):
 
-<table>
-<tr><th>JSON</th><th>TOON</th></tr>
-<tr><td>
+| Form | What it renders | Example |
+| ---- | --------------- | ------- |
+| Inline ([§9.1](./SPEC.md#91-primitive-arrays--inline-form)) | Primitive arrays, on the header line itself | [`primitive-arrays.toon`](./examples/valid/primitive-arrays.toon) |
+| List ([§9.2](./SPEC.md#92-arrays-of-primitive-arrays--list-form), [§9.4](./SPEC.md#94-mixed-and-non-uniform-arrays--list-form)) | Anything no tabular form fits, one `-` item per element | [`mixed-arrays.toon`](./examples/valid/mixed-arrays.toon) |
+| Tabular ([§9.3](./SPEC.md#93-arrays-of-objects--tabular-form)) | Arrays of uniform objects, as shown above | [`tabular-arrays.toon`](./examples/conversions/tabular-arrays.toon) |
+| Keyed tabular ([§9.5](./SPEC.md#95-keyed-objects--tabular-form)) | Objects whose values are uniform objects, as rows that carry their own key | [`keyed-tabular-objects.toon`](./examples/conversions/keyed-tabular-objects.toon) |
 
-```json
-{
-  "orders": [
-    { "id": 1, "customer": { "name": "Ada", "country": "DK" }, "total": 99 },
-    { "id": 2, "customer": { "name": "Bob", "country": "UK" }, "total": 149 }
-  ]
-}
-```
+Within tabular form, a uniform nested-object column folds into the header as a **nested field group** (`customer{name,country}`) while rows stay flat – see [`nested-field-groups.toon`](./examples/conversions/nested-field-groups.toon).
 
-</td><td>
-
-```toon
-orders[2]{id,customer{name,country},total}:
-  1,Ada,DK,99
-  2,Bob,UK,149
-```
-
-</td></tr>
-</table>
-
-Objects whose values are uniform objects collapse into the keyed tabular form – the colon after the length marks the keyed header, and each entry row carries its own key ([§9.5](./SPEC.md#95-keyed-objects--tabular-form)):
-
-<table>
-<tr><th>JSON</th><th>TOON</th></tr>
-<tr><td>
-
-```json
-{
-  "environments": {
-    "production": { "region": "eu-central-1", "replicas": 6, "debug": false },
-    "staging": { "region": "eu-central-1", "replicas": 2, "debug": true }
-  }
-}
-```
-
-</td><td>
-
-```toon
-environments[2:]{region,replicas,debug}:
-  production: eu-central-1,6,false
-  staging: eu-central-1,2,true
-```
-
-</td></tr>
-</table>
-
-See [examples/](./examples/) and [SPEC.md Appendix A](./SPEC.md#appendix-a-examples-informative) for more shapes.
+See [examples/README.md](./examples/README.md) for the annotated index and [SPEC.md Appendix A](./SPEC.md#appendix-a-examples-informative) for more shapes.
 
 ## Media Type & File Extension
 
@@ -118,6 +77,7 @@ The TOON specification uses MAJOR.MINOR versioning. See [VERSIONING.md](./VERSIO
 ## Resources
 
 - **Specification:** [SPEC.md](./SPEC.md) - Formal specification with ABNF grammar snippets
+- **Glossary:** [CONTEXT.md](./CONTEXT.md) - Canonical name for every concept, and the wordings to avoid
 - **Examples:** [examples/](./examples/) - Working examples organized by feature
 - **Test Fixtures:** [tests/fixtures/](./tests/fixtures/) - Reference test fixtures
 - **Changelog:** [CHANGELOG.md](./CHANGELOG.md) - Version history and changes
