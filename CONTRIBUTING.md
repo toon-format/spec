@@ -75,6 +75,7 @@ See the Introduction in [SPEC.md](./SPEC.md) for TOON's purpose, applicability, 
 Follow [SPEC.md](./SPEC.md) conventions:
 
 - **RFC 2119 keywords**: Use MUST/SHOULD/MAY correctly (see SPEC.md §1.1)
+- **Terminology**: Use the canonical names in [CONTEXT.md](./CONTEXT.md) – it lists the preferred term for every concept and the wordings to avoid
 - **Examples over prose**: Show concrete input/output for complex rules
 - **Precision**: Zero ambiguity – multiple implementations must agree
 - **Structure**: Number sections, cross-reference related rules
