@@ -233,6 +233,18 @@
         "items": [{ "a|b": 1 }, { "a|b": 2 }]
       },
       "specSection": "11"
+    },
+    {
+      "name": "falls through to a key-value line on a header delimiter mismatch",
+      "input": "a[2|]{x,y}: 1|2",
+      "expected": {
+        "a[2|]{x,y}": "1|2"
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "6",
+      "minSpecVersion": "4.1"
     }
   ]
 }

@@ -220,6 +220,30 @@
       },
       "specSection": "9.2",
       "note": "Decode-side acceptance mirrors §9.1's key: [] form; encoders still emit - [0]:"
+    },
+    {
+      "name": "keeps every list item when the count mismatches in non-strict mode",
+      "input": "a[1]:\n  - 1\n  - 2",
+      "expected": {
+        "a": [
+          1,
+          2
+        ]
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "14.1",
+      "note": "A declared [N] never truncates a scope",
+      "minSpecVersion": "4.1"
+    },
+    {
+      "name": "throws on a non-list-item line at item depth",
+      "input": "items[2]:\n  - a\n  x: 1",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "9.4",
+      "minSpecVersion": "4.1"
     }
   ]
 }

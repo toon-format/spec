@@ -108,6 +108,25 @@
       },
       "expected": "items[2]:\n  - \"#x\"\n  - a: 1",
       "specSection": "7.2"
+    },
+    {
+      "name": "uses list form for a tabular-eligible array in list-item position",
+      "input": {
+        "a": [
+          [
+            {
+              "x": 1
+            },
+            {
+              "x": 2
+            }
+          ]
+        ]
+      },
+      "expected": "a[1]:\n  - [2]:\n    - x: 1\n    - x: 2",
+      "specSection": "9.3",
+      "note": "A keyless fields-bearing header is valid only at the document root",
+      "minSpecVersion": "4.1"
     }
   ]
 }

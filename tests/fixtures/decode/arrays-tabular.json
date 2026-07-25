@@ -184,6 +184,39 @@
         "strict": false
       },
       "specSection": "14.3"
+    },
+    {
+      "name": "accepts a field name outside the encoder unquoted-key pattern",
+      "input": "items[1]{2key}:\n  1",
+      "expected": {
+        "items": [
+          {
+            "2key": 1
+          }
+        ]
+      },
+      "specSection": "7.4",
+      "minSpecVersion": "4.1"
+    },
+    {
+      "name": "keeps every row when the count mismatches in non-strict mode",
+      "input": "a[1]{x}:\n  1\n  2",
+      "expected": {
+        "a": [
+          {
+            "x": 1
+          },
+          {
+            "x": 2
+          }
+        ]
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "14.1",
+      "note": "A declared [N] never truncates a scope",
+      "minSpecVersion": "4.1"
     }
   ]
 }

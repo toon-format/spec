@@ -104,6 +104,27 @@
       "input": "a: 1\r",
       "expected": { "a": 1 },
       "specSection": "12"
+    },
+    {
+      "name": "strips a leading byte-order mark",
+      "input": "\ufeffa: 1",
+      "expected": {
+        "a": 1
+      },
+      "specSection": "12",
+      "minSpecVersion": "4.1"
+    },
+    {
+      "name": "treats a hyphen followed by trailing spaces as the bare marker",
+      "input": "a[1]:\n  - ",
+      "expected": {
+        "a": [
+          {}
+        ]
+      },
+      "specSection": "12",
+      "note": "Trailing spaces are stripped before line classification",
+      "minSpecVersion": "4.1"
     }
   ]
 }

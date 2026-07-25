@@ -485,6 +485,30 @@
         ]
       },
       "specSection": "15"
+    },
+    {
+      "name": "falls through to a key-value line when whitespace precedes the bracket segment",
+      "input": "foo [2]: bar,baz",
+      "expected": {
+        "foo [2]": "bar,baz"
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "5.2",
+      "minSpecVersion": "4.1"
+    },
+    {
+      "name": "accepts a header key outside the encoder unquoted-key pattern",
+      "input": "foo-bar[2]: 1,2",
+      "expected": {
+        "foo-bar": [
+          1,
+          2
+        ]
+      },
+      "specSection": "7.4",
+      "minSpecVersion": "4.1"
     }
   ]
 }

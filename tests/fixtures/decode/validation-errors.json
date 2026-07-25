@@ -462,6 +462,35 @@
       "expected": null,
       "shouldError": true,
       "specSection": "6"
+    },
+    {
+      "name": "throws on whitespace between a key and its bracket segment",
+      "input": "foo [2]: bar,baz",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "6",
+      "minSpecVersion": "4.1"
+    },
+    {
+      "name": "throws on duplicate field names in a zero-row tabular header",
+      "input": "items[0]{a,a}:",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "9.3",
+      "note": "A duplicate field name is a header defect, diagnosed from the header line alone",
+      "minSpecVersion": "4.1"
+    },
+    {
+      "name": "throws on characters after a closing quote in non-strict mode",
+      "input": "k: \"abc\" def",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": false
+      },
+      "specSection": "7.4",
+      "note": "The quoted-token boundary rule applies in strict and non-strict mode alike",
+      "minSpecVersion": "4.1"
     }
   ]
 }

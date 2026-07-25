@@ -193,6 +193,38 @@
       },
       "specSection": "14.3",
       "note": "Entry keys are sibling keys of the decoded object and resolve last-write-wins"
+    },
+    {
+      "name": "accepts entry keys outside the encoder unquoted-key pattern",
+      "input": "u[2:]{a}:\n  2key: 1\n  foo-bar: 2",
+      "expected": {
+        "u": {
+          "2key": {
+            "a": 1
+          },
+          "foo-bar": {
+            "a": 2
+          }
+        }
+      },
+      "specSection": "7.4",
+      "minSpecVersion": "4.1"
+    },
+    {
+      "name": "skips an entry-depth line without a colon in non-strict mode",
+      "input": "u[2:]{x}:\n  a: 1\n  boom",
+      "expected": {
+        "u": {
+          "a": {
+            "x": 1
+          }
+        }
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "9.5",
+      "minSpecVersion": "4.1"
     }
   ]
 }

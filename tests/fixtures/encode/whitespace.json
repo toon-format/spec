@@ -37,6 +37,16 @@
       "options": {
         "indentSize": 4
       }
+    },
+    {
+      "name": "leaves non-ASCII whitespace unquoted",
+      "input": {
+        "k": "\u00a0x\u00a0"
+      },
+      "expected": "k: \u00a0x\u00a0",
+      "specSection": "7.2",
+      "note": "The §7.2 whitespace trigger is U+0020 and U+0009 only",
+      "minSpecVersion": "4.1"
     }
   ]
 }
