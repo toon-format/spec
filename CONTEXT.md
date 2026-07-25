@@ -128,8 +128,8 @@ Decoder mode enforcing declared counts, row widths, indentation, and delimiter c
 
 ## Standing rules
 
-- **Prefer *form* over *format* for the four renderings.** "Tabular format" wrongly implies a sibling of JSON or YAML rather than a shape inside TOON. `format` stays correct for TOON itself ("text format", "number formatting"). Heading anchors are the one exception – they are linked from outside this repository and keep their published spelling.
+- **Prefer *form* over *format* for the four renderings.** "Tabular format" wrongly implies a sibling of JSON or YAML rather than a shape inside TOON. `format` stays correct for TOON itself ("text format", "number formatting").
 - **`field` is overloaded on purpose.** §8 uses it for object properties ("sibling fields"); §9.3 uses it for field-list members ("leaf field"). Disambiguate with a compound – *object field*, *leaf field*, *field entry* – never by inventing a new word.
 - **`entry` likewise.** *Field entry* is a field-list member; *entry row* and *entry key* belong to keyed tabular form.
 - **Prose beats grammar names.** Reader-facing text and error messages use the concept names above; ABNF production names appear only when discussing the grammar.
-- **"form" also carries its ordinary English sense throughout SPEC.md** – root form (§5), canonical decimal and exponent form (§2), the empty-array value form `key: []` (§9.1), the legacy header form (§9.1), quoted and unquoted forms (§7.4). None of these are the four renderings above and none should be renamed; §5's heading anchor in particular is widely referenced.
+- **"form" also carries its ordinary English sense throughout SPEC.md** – root form (§5), canonical decimal and exponent form (§2), the empty-array value form `key: []` (§9.1), the legacy header form (§9.1), quoted and unquoted forms (§7.4). None of these are the four renderings above and none should be renamed.
