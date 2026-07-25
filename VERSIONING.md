@@ -32,15 +32,15 @@ Breaking changes (requiring a MAJOR version bump) include:
 
 ### Semantic Changes
 
-- Changing how valid TOON should be interpreted.
+- Changing how valid TOON should be interpreted, except for encoder-unreachable documents (see Non-Breaking Changes).
 - Modifying type conversion rules in incompatible ways.
 - Changing quoting rules in ways that break existing documents.
 - Altering delimiter behavior.
 
 ### Conformance Changes
 
-- Making previously valid TOON invalid.
-- Adding new MUST requirements that existing implementations don't meet, except strict-mode-only tightening (see Non-Breaking Changes).
+- Making previously valid TOON invalid, except for encoder-unreachable documents (see Non-Breaking Changes).
+- Adding new MUST requirements that existing implementations don't meet, except strict-mode-only tightening and encoder-side tightening (see Non-Breaking Changes).
 - Changing error handling in ways that break round-trip compatibility.
 
 ## What Constitutes a Non-Breaking Change
@@ -62,6 +62,8 @@ Non-breaking changes (MINOR version bump) include:
 - Adding new test cases that existing conformant implementations already pass.
 - Adding a normative decoder requirement that broadens accepted input, compatible with existing encoder output.
 - Tightening strict-mode validation (adding new strict-mode errors that formalize previously-undefined behavior). Behavior is "previously undefined" when no normative rule of the previous MAJOR version assigned the affected document a decoded value; where the previous version did assign one, changing it is a MAJOR change even if the new outcome is an error. Strict mode is the default, but non-strict mode (`strict=false`) remains a conformant option; documents previously accepted by a non-strict decoder remain accepted.
+- Encoder-side tightening: raising a SHOULD or MAY to MUST or MUST NOT for encoder output, or adding a new constraint on what encoders emit. This is MINOR only while every decoder rule of the previous MAJOR version survives unchanged, so output from older encoders keeps decoding as before. Retiring a form the previous version let encoders emit therefore requires keeping the decoder's obligation to accept it.
+- Changing the treatment of encoder-unreachable documents. A document is encoder-unreachable when no conforming encoder of the previous MAJOR version could emit it, so it can only have been hand-authored or produced by other means and no round-trip yields it. Reinterpreting such a document, or rejecting it outright, is MINOR.
 
 ### Documentation Improvements
 
