@@ -9,32 +9,11 @@ tests/
 ├── fixtures.schema.json    # JSON Schema for fixture validation
 ├── fixtures/
 │   ├── encode/             # Encoding tests (JSON → TOON)
-│   │   ├── primitives.json
-│   │   ├── objects.json
-│   │   ├── objects-keyed.json
-│   │   ├── arrays-primitive.json
-│   │   ├── arrays-tabular.json
-│   │   ├── arrays-nested.json
-│   │   ├── arrays-objects.json
-│   │   ├── delimiters.json
-│   │   └── whitespace.json
 │   └── decode/             # Decoding tests (TOON → JSON)
-│       ├── primitives.json
-│       ├── numbers.json
-│       ├── objects.json
-│       ├── objects-keyed.json
-│       ├── arrays-primitive.json
-│       ├── arrays-tabular.json
-│       ├── arrays-nested.json
-│       ├── delimiters.json
-│       ├── whitespace.json
-│       ├── root-form.json
-│       ├── validation-errors.json
-│       ├── indentation-errors.json
-│       ├── blank-lines.json
-│       └── comments.json
 └── README.md               # This file
 ```
+
+The [Test Coverage](#test-coverage) tables below index every fixture file.
 
 ## Fixture Format
 
@@ -57,8 +36,6 @@ All test fixtures follow a standard JSON structure defined in [`fixtures.schema.
   ]
 }
 ```
-
-`<spec-version>` is the baseline spec version for the file (currently `"4.0"` across all files); individual tests MAY override with `minSpecVersion` when they exercise a newer feature. See the field-descriptions table below.
 
 ### Field Descriptions
 
@@ -128,16 +105,7 @@ Tests with `options.strict: false` fall into two classes:
 
 ## Using These Tests
 
-To validate your TOON implementation against these fixtures:
-
-1. **Load a fixture file** from `fixtures/encode/` or `fixtures/decode/`.
-2. **Iterate through the `tests` array** in the fixture.
-3. **For each test case:**
-   - If `shouldError` is `true`: verify your implementation throws an error.
-   - Otherwise: assert that your encoder/decoder produces the `expected` output when given the `input`.
-4. **Pass options** from `test.options` to your encoder/decoder (if present).
-
-The fixture format is language-agnostic JSON, so you can load and iterate it using your language's standard JSON parser and test framework.
+Load each fixture file, run every entry in its `tests` array through your encoder or decoder with `test.options` applied, and assert the `expected` output – or that an error is thrown when `shouldError` is `true`.
 
 **Note:** `name`, `description`, and `note` are prose, not identifiers. Key your runner on file path and array index, never on these strings – they follow the spec's terminology and are rewritten whenever it changes.
 
@@ -193,27 +161,4 @@ check-jsonschema --schemafile tests/fixtures.schema.json tests/fixtures/**/*.jso
 
 ## Contributing Test Cases
 
-To contribute new test cases:
-
-1. **Identify the category:** Which fixture file should contain the test?
-2. **Follow the format:** Use the structure defined in `fixtures.schema.json`
-3. **Add spec references:** Link to relevant specification sections
-4. **Validate:** Verify the expected output against SPEC.md and that the fixture validates against the schema
-5. **Submit PR:** Include clear description of what the test validates
-
-See [CONTRIBUTING.md](../CONTRIBUTING.md) for detailed guidelines.
-
-## Questions or Issues?
-
-If you find:
-
-- Test cases that contradict the specification
-- Missing coverage for edge cases
-- Ambiguous expected outputs
-- Schema validation issues
-
-Please [open an issue](https://github.com/toon-format/spec/issues) with:
-
-- Fixture file and test case name
-- Description of the issue
-- Proposed fix (if applicable)
+Add your test to the matching fixture file, reference the spec section it exercises, verify the expected output against SPEC.md, and validate the file against the schema before submitting a PR. See [CONTRIBUTING.md](../CONTRIBUTING.md) for guidelines.

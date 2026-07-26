@@ -1,7 +1,5 @@
 # TOON Specification Versioning Policy
 
-This document outlines the versioning policy for the TOON specification.
-
 ## Semantic Versioning
 
 The TOON specification follows [Semantic Versioning](https://semver.org/) with a `MAJOR.MINOR` format.

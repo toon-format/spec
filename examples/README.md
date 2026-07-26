@@ -6,41 +6,41 @@ Example TOON files, one per format feature – each filename names the feature i
 
 ### Objects
 
-- [`valid/objects.toon`](valid/objects.toon) - Flat object with primitive values
+- [`valid/objects.toon`](valid/objects.toon) – Flat object with primitive values
   - Key-value pairs across all data types: string, number, boolean, null
   - Spec: §8
 
-- [`valid/nested-objects.toon`](valid/nested-objects.toon) - Multi-level nested objects
+- [`valid/nested-objects.toon`](valid/nested-objects.toon) – Multi-level nested objects
   - Indentation-based nesting (2 spaces per level) instead of braces
   - Spec: §8, §12
 
 ### Arrays
 
-- [`valid/primitive-arrays.toon`](valid/primitive-arrays.toon) - Inline primitive arrays
+- [`valid/primitive-arrays.toon`](valid/primitive-arrays.toon) – Inline primitive arrays
   - Compact inline form `[N]: item1,item2,item3` and the empty array `[]`
   - Spec: §9.1
 
-- [`valid/mixed-arrays.toon`](valid/mixed-arrays.toon) - Mixed-type array (list form)
+- [`valid/mixed-arrays.toon`](valid/mixed-arrays.toon) – Mixed-type array (list form)
   - One `-` item per element, used wherever neither inline nor tabular form applies
   - Spec: §9.4
 
 ### Comments
 
-- [`valid/comments.toon`](valid/comments.toon) - Full-line `#` comments
+- [`valid/comments.toon`](valid/comments.toon) – Full-line `#` comments
   - Stripped by decoders in a lexical pre-pass, before row counting – decode-only; encoders never emit them
   - Spec: §5.1
 
 ### Delimiters
 
-- [`valid/pipe-delimiter.toon`](valid/pipe-delimiter.toon) - Pipe delimiter (`|`)
+- [`valid/pipe-delimiter.toon`](valid/pipe-delimiter.toon) – Pipe delimiter (`|`)
   - Delimiter marker appears in both header `[N|]` and field list `{field|...}`
   - Spec: §11
 
-- [`valid/tab-delimiter.toon`](valid/tab-delimiter.toon) - Tab delimiter (`\t`)
+- [`valid/tab-delimiter.toon`](valid/tab-delimiter.toon) – Tab delimiter (`\t`)
   - Tab character appears in both header and between fields
   - Spec: §11
 
-- [`valid/delimiter-scoping.toon`](valid/delimiter-scoping.toon) - Document vs active delimiter
+- [`valid/delimiter-scoping.toon`](valid/delimiter-scoping.toon) – Document vs active delimiter
   - Tabular row cells split only on the active delimiter; object field values follow document delimiter quoting
   - Spec: §11
 
@@ -64,15 +64,15 @@ Side-by-side JSON ↔ TOON pairs, one per tabular form:
 
 Files that intentionally violate TOON syntax rules and MUST error in strict mode:
 
-- [`invalid/length-mismatch.toon`](invalid/length-mismatch.toon) - Array length mismatch
+- [`invalid/length-mismatch.toon`](invalid/length-mismatch.toon) – Array length mismatch
   - Declares `[3]` but provides only 2 rows
   - Spec: §14.1
 
-- [`invalid/multiple-root-primitives.toon`](invalid/multiple-root-primitives.toon) - Multiple depth-0 primitives
+- [`invalid/multiple-root-primitives.toon`](invalid/multiple-root-primitives.toon) – Multiple depth-0 primitives
   - Two non-key-value lines at root depth
   - Spec: §5, §14.2
 
-- [`invalid/delimiter-mismatch.toon`](invalid/delimiter-mismatch.toon) - Header delimiter mismatch
+- [`invalid/delimiter-mismatch.toon`](invalid/delimiter-mismatch.toon) – Header delimiter mismatch
   - Declares pipe delimiter in brackets (`[N|]`) but uses comma-separated fields (`{a,b}`)
   - Spec: §6
 

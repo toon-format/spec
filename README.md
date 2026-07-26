@@ -20,8 +20,16 @@ The specification includes ABNF snippets, encoding rules, validation requirement
 Uniform arrays of objects collapse into a tabular form that declares the field list once ([§9.3](./SPEC.md#93-arrays-of-objects--tabular-form)):
 
 <table>
-<tr><th>JSON</th><th>TOON</th></tr>
+<tr><th>TOON</th><th>JSON</th></tr>
 <tr><td>
+
+```toon
+users[2]{id,name}:
+  1,Ada
+  2,Bob
+```
+
+</td><td>
 
 ```json
 {
@@ -30,14 +38,6 @@ Uniform arrays of objects collapse into a tabular form that declares the field l
     { "id": 2, "name": "Bob" }
   ]
 }
-```
-
-</td><td>
-
-```toon
-users[2]{id,name}:
-  1,Ada
-  2,Bob
 ```
 
 </td></tr>
@@ -62,13 +62,7 @@ Media type `text/toon` (provisional, UTF-8), file extension `.toon`. See [§17 o
 
 ## Contributing
 
-We welcome contributions to improve the specification! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for:
-
-- How to propose spec changes
-- The RFC process for major changes
-- Guidelines for submitting issues and pull requests
-
-For implementation-specific questions or bugs, please refer to the respective implementation repository.
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for how to propose changes and when an RFC is required. For implementation-specific questions or bugs, use the respective implementation repository.
 
 ## Versioning
 
@@ -76,13 +70,12 @@ The TOON specification uses MAJOR.MINOR versioning. See [VERSIONING.md](./VERSIO
 
 ## Resources
 
-- **Specification:** [SPEC.md](./SPEC.md) - Formal specification with ABNF grammar snippets
-- **Glossary:** [CONTEXT.md](./CONTEXT.md) - Canonical name for every concept, and the wordings to avoid
-- **Examples:** [examples/](./examples/) - Working examples organized by feature
-- **Test Fixtures:** [tests/fixtures/](./tests/fixtures/) - Reference test fixtures
-- **Changelog:** [CHANGELOG.md](./CHANGELOG.md) - Version history and changes
-- **Reference Implementation:** [github.com/toon-format/toon](https://github.com/toon-format/toon) - TypeScript/JavaScript implementation
-- **Benchmarks:** [Reference repo benchmarks/](https://github.com/toon-format/toon/tree/main/benchmarks) - Token efficiency measurements and accuracy retrieval tests
+- **Glossary:** [CONTEXT.md](./CONTEXT.md) – Canonical name for every concept, and the wordings to avoid
+- **Examples:** [examples/](./examples/) – Working examples organized by feature
+- **Test Fixtures:** [tests/fixtures/](./tests/fixtures/) – Reference test fixtures
+- **Changelog:** [CHANGELOG.md](./CHANGELOG.md) – Version history and changes
+- **Reference Implementation:** [github.com/toon-format/toon](https://github.com/toon-format/toon) – TypeScript/JavaScript implementation
+- **Benchmarks:** [Reference repo benchmarks/](https://github.com/toon-format/toon/tree/main/benchmarks) – Token efficiency measurements and accuracy retrieval tests
 
 ## License
 

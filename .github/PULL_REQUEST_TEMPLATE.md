@@ -50,7 +50,7 @@
 
 ## Examples
 
-<!-- Provide concrete examples demonstrating the change. Replace placeholders with valid TOON (no `#` comments – TOON has none). -->
+<!-- Provide concrete examples demonstrating the change. Replace placeholders with valid TOON – full-line `#` comments are stripped on decode, so don't use them to carry meaning. -->
 
 ### Before
 
