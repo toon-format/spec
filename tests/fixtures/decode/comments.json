@@ -140,6 +140,28 @@
       "note": "Only spaces (U+0020) may precede the #; the tab makes this a regular line, and tabs in indentation error in strict mode (§12)"
     },
     {
+      "name": "decodes tab-indented hash row as data in non-strict mode",
+      "input": "items[3]{id}:\n  1\n\t#x\n  2",
+      "expected": {
+        "items": [
+          {
+            "id": 1
+          },
+          {
+            "id": "#x"
+          },
+          {
+            "id": 2
+          }
+        ]
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "5.1",
+      "note": "Comment removal precedes the §12 tab leniency, so the tab keeps the line out of the pre-pass"
+    },
+    {
       "name": "parses quoted hash-leading first cell as data, not comment",
       "input": "items[1]{tag}:\n  \"#a\"",
       "expected": {
