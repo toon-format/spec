@@ -109,7 +109,7 @@ Out of scope:
 
 ### Relationship to JSON, CSV, and YAML (Informative)
 
-- **JSON**: TOON preserves the JSON data model. It is more compact for uniform arrays of objects by declaring length and fields once. For non-uniform or deeply nested data, JSON may be more efficient.
+- **JSON**: TOON preserves the JSON data model. It is more compact for arrays of uniform objects by declaring length and fields once. For non-uniform or deeply nested data, JSON may be more efficient.
 - **CSV/TSV**: CSV is typically more compact for flat tables but lacks nesting and type awareness. TOON adds explicit lengths, per-array delimiter scoping, inline field lists (no separate header row), and deterministic quoting, while remaining lightweight.
 - **YAML**: TOON uses indentation and hyphen markers but is more constrained and deterministic: full-line comments only (stripped by decoders, never emitted by encoders; §5.1), explicit array headers with lengths, fixed quoting rules, and a narrow escape set.
 
