@@ -1,0 +1,9 @@
+{
+  "metrics": [
+    {"date": "2025-01-01", "views": 5715, "clicks": 211, "conversions": 28, "revenue": 7976.46, "bounceRate": 0.47},
+    {"date": "2025-01-02", "views": 7103, "clicks": 393, "conversions": 28, "revenue": 8360.53, "bounceRate": 0.32},
+    {"date": "2025-01-03", "views": 7248, "clicks": 378, "conversions": 24, "revenue": 3212.57, "bounceRate": 0.50},
+    {"date": "2025-01-04", "views": 2927, "clicks": 77, "conversions": 11, "revenue": 1211.69, "bounceRate": 0.62},
+    {"date": "2025-01-05", "views": 3530, "clicks": 82, "conversions": 8, "revenue": 462.77, "bounceRate": 0.56}
+  ]
+}
