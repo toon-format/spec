@@ -27,7 +27,6 @@ body:
       description: Which section(s) are you asking about?
       placeholder: |
         E.g., Section 9.3, "Arrays of Objects – Tabular Form"
-        Or: SPEC.md:383-408
     validations:
       required: true
 
