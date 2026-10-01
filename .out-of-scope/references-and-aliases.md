@@ -4,32 +4,18 @@ TOON has no references between values: no `$ID` aliases defined once and reused,
 
 ## Why this is out of scope
 
-Every one of these turns a cell into a pointer, so the document stops being the JSON value it encodes. JSON has no references, and TOON encodes the JSON data model (§2):
+Each of these turns a cell into a pointer, and the JSON data model TOON encodes (§2) has none:
 
 > JSON has no concept of references, foreign keys, or inter-document linking. Introducing `@tables` would make TOON a different kind of format: a relational data language with its own resolution semantics, hydration modes, and cycle-detection requirements.
 > – [spec#27](https://github.com/toon-format/spec/issues/27#issuecomment-3941522699)
 
-The concrete costs:
+Resolving references means buffering the whole document, which breaks streaming decode; literal values that look like references (`$100`) would suddenly need quoting ([spec#36](https://github.com/toon-format/spec/issues/36#issuecomment-4163086597)); and one JSON value could encode with different aliases, where §1.4 lets only its shape and position pick the rendering. The gain is small, too: values like `admin` are already single tokens, and a model has to map `0` back to `admin` ([toon discussion #216](https://github.com/toon-format/toon/discussions/216#discussioncomment-15053977)).
 
-- **Two-pass decoding.** A reference can only be resolved once its target is known, so decoders buffer the whole document – which breaks streaming decode.
-- **New escaping.** Literal values that look like references (`$100`) would suddenly need quoting, which changes the meaning of documents that are valid today ([spec#36](https://github.com/toon-format/spec/issues/36#issuecomment-4163086597)).
-- **No canonical form.** The same JSON could be encoded with different alias names, thresholds, and orderings, while §13.1 requires encoders to pick the form from the value's shape, not by preference.
-- **Little gain for LLMs.** Short values like `admin` are already single tokens, and a model has to map `0` back to `admin` in its head ([toon discussion #216](https://github.com/toon-format/toon/discussions/216#discussioncomment-15053977)).
-
-Repetition is a data-modeling problem: normalize before encoding. Encode the foreign key instead of the embedded object, or put the dictionary into the data itself, and TOON's tabular form compresses the result:
-
-```toon
-roles[2]: admin,user
-
-users[3]{id,name,roleIndex}:
-  1,Alice,0
-  2,Bob,1
-  3,Carol,1
-```
+Repetition is a data-modeling problem: normalize before encoding – encode the foreign key instead of the embedded object, or put the dictionary into the data as an ordinary array.
 
 ## Prior requests
 
 - spec#27 – relational references (`@tables`)
 - spec#36 – value aliasing with `$ID` references
-- spec discussion #14 – `_map` key compression and schema IDs
+- spec discussion #14 – `_map` key compression
 - toon discussion #216 – per-column enumerations and base-62 indices
