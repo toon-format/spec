@@ -8,7 +8,7 @@ Inline comments intersect every quoting rule in the spec at once: §7.2 (string 
 
 The underlying need is real but is served without grammar changes:
 
-- **Hand-authored documents** (config files, prompt schemas): v4 adopts *full-line* `#` comments – a line whose first non-whitespace character is `#` is stripped before parsing. In a hand-authored prompt the model reads those lines, so field-adjacent guidance works by placing a comment line above the field.
+- **Hand-authored documents** (config files, prompt schemas): v4 adopts *full-line* `#` comments – a line whose first character after leading spaces is `#` is stripped before parsing. In a hand-authored prompt the model reads those lines, so field-adjacent guidance works by placing a comment line above the field.
 - **Programmatic per-field annotations that must survive encode**: use a `_note:` key convention – annotations as data – or the `rawString` replacer primitive (toon#308/toon#321) for controlled raw output.
 
 The distinction matters: decode-side comments are never *emitted* by encoders (JSON has no comments to encode), so anything that must flow through `encode()` has to be data, not comment syntax.
