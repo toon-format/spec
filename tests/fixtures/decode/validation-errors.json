@@ -503,6 +503,79 @@
       "specSection": "5.2",
       "note": "A scalar line outside root primitive position is an error in strict and non-strict mode alike",
       "minSpecVersion": "4.1"
+    },
+    {
+      "name": "throws on the removed [#N] length marker in a root header in strict mode",
+      "input": "[#2]: a,b",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "6"
+    },
+    {
+      "name": "throws on the removed [#N] length marker in a field header in strict mode",
+      "input": "xs[#2]: a,b",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "6"
+    },
+    {
+      "name": "throws on the removed [#N] length marker in a nested field header in strict mode",
+      "input": "o:\n  xs[#2]: a,b",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "6"
+    },
+    {
+      "name": "throws on the removed [#N] length marker in a keyless list-item header in strict mode",
+      "input": "items[1]:\n  - [#2]: a,b",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "6"
+    },
+    {
+      "name": "throws on the removed [#N] length marker in a list-item first-field header in strict mode",
+      "input": "items[1]:\n  - xs[#2]: a,b",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "6"
+    },
+    {
+      "name": "throws on tabular row count mismatch inside a later list item",
+      "input": "groups[2]:\n  - a: foo\n    b[1]{w,x}:\n      wince,0\n  - a: bar\n    b[0]{w,x}:\n      wise,1",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "14.1"
+    },
+    {
+      "name": "throws on a tab after a quoted value's closing quote",
+      "input": "k: \"a\"\t",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "7.4",
+      "minSpecVersion": "4.1"
+    },
+    {
+      "name": "throws on a tab after a quoted key's closing quote",
+      "input": "\"a\"\t: 1",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "7.4",
+      "minSpecVersion": "4.1"
     }
   ]
 }
