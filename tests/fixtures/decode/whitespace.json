@@ -124,6 +124,33 @@
       "specSection": "12",
       "note": "Trailing spaces are stripped before line classification",
       "minSpecVersion": "4.1"
+    },
+    {
+      "name": "keeps a trailing tab in an unquoted value",
+      "input": "k: v\t",
+      "expected": {
+        "k": "v\t"
+      },
+      "specSection": "12"
+    },
+    {
+      "name": "keeps a tab after a comma delimiter as part of the token",
+      "input": "items[2]: a,\tb",
+      "expected": {
+        "items": [
+          "a",
+          "\tb"
+        ]
+      },
+      "specSection": "12"
+    },
+    {
+      "name": "keeps a carriage return inside a line as content",
+      "input": "a: x\ry",
+      "expected": {
+        "a": "x\ry"
+      },
+      "specSection": "12"
     }
   ]
 }
