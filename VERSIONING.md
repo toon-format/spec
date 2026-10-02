@@ -45,15 +45,9 @@ Breaking changes (requiring a MAJOR version bump) include:
 
 Non-breaking changes (MINOR version bump) include:
 
-### Clarifications
-
-- Clarifying ambiguous language without changing behavior.
-- Adding examples to illustrate existing rules.
-- Improving specification wording for clarity.
-- Adding informative (non-normative) sections.
-
 ### Backward-Compatible Additions
 
+- Adding informative (non-normative) sections.
 - Adding optional features that don't affect existing documents.
 - Adding new SHOULD or MAY recommendations.
 - Expanding the specification to cover previously undefined behavior (if done in a backward-compatible way).
@@ -62,13 +56,6 @@ Non-breaking changes (MINOR version bump) include:
 - Tightening strict-mode validation (adding new strict-mode errors that formalize previously-undefined behavior). Behavior is "previously undefined" when no normative rule of the previous MAJOR version assigned the affected document a decoded value; where the previous version did assign one, changing it is a MAJOR change even if the new outcome is an error. Strict mode is the default, but non-strict mode (`strict=false`) remains a conformant option; documents previously accepted by a non-strict decoder remain accepted.
 - Encoder-side tightening: raising a SHOULD or MAY to MUST or MUST NOT for encoder output, or adding a new constraint on what encoders emit. This is MINOR only while every decoder rule of the previous MAJOR version survives unchanged, so output from older encoders keeps decoding as before. Retiring a form the previous version let encoders emit therefore requires keeping the decoder's obligation to accept it.
 - Changing the treatment of encoder-unreachable documents. A document is encoder-unreachable when no conforming encoder of the previous MAJOR version could emit it, so it can only have been hand-authored or produced by other means and no round-trip yields it. Reinterpreting such a document, or rejecting it outright, is MINOR.
-
-### Documentation Improvements
-
-- Grammar and typo fixes.
-- Reorganizing content for better readability.
-- Adding cross-references.
-- Improving examples.
 
 ## Version Lifecycle
 
@@ -84,20 +71,11 @@ Non-breaking changes (MINOR version bump) include:
 - Version number is assigned when changes are merged.
 - Previous versions remain available for reference.
 
-### Deprecation
-
-If we need to make a breaking change (MAJOR version bump):
-
-1. **Announcement:** We add a deprecation notice to the current spec
-2. **Migration Period:** The next MINOR version includes migration guidance
-3. **New Major Version:** Breaking changes are released in the next MAJOR version
-4. **Support:** Previous MAJOR versions remain available – we don't break old links
-
 ## Implementation Compatibility
 
 When in doubt, we err on the side of caution and treat potentially breaking changes as MAJOR version bumps.
 
-Implementations should document the supported spec version (e.g., `toon-spec: 4.1`, as in SPEC.md §13) and may support multiple versions concurrently: default to the latest, let users target a specific version, and document version-specific behavior. A new MINOR version keeps existing conformant implementations conformant. A new MAJOR version may require updates; previous-version implementations remain valid, and its CHANGELOG.md entry carries the migration guidance. A MINOR version that renames or retires a public concept handle (for example an option name) carries a migration note in CHANGELOG.md naming the old and new spelling.
+A new MINOR version keeps existing conformant implementations conformant. A new MAJOR version may require updates; previous-version implementations remain valid, and its CHANGELOG.md entry carries the migration guidance. A MINOR version that renames or retires a public concept handle (for example an option name) carries a migration note in CHANGELOG.md naming the old and new spelling.
 
 ## Version History
 
