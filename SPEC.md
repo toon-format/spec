@@ -424,6 +424,7 @@ Encoders MUST quote a string value if any of the following is true:
 - It contains the relevant delimiter – the active delimiter for inline array values, tabular row cells, and keyed entry-row cells; the document delimiter for object field values (§11.1, which is authoritative for delimiter-aware quoting).
 - It equals "-" or starts with "-" (any hyphen at position 0).
 - It equals "#" or starts with "#" (any number sign at position 0).
+- It is a root primitive (§5) and starts with U+FEFF (§12).
 
 Otherwise, the string MAY be emitted without quotes. Unicode, emoji, and strings with internal (non-leading/trailing) spaces are safe unquoted provided they do not violate the conditions.
 
