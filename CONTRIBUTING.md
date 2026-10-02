@@ -50,7 +50,7 @@ For major changes requiring RFC:
 
 ## Contributing Test Fixtures
 
-Test fixtures validate TOON implementations across languages. Add your test to `tests/fixtures/encode/` or `tests/fixtures/decode/`, validate against `tests/fixtures.schema.json`, and submit a PR.
+Test fixtures validate TOON implementations across languages. Add your test to `tests/fixtures/encode/` or `tests/fixtures/decode/`, run `pnpm test` to validate it against `tests/fixtures.schema.json`, and submit a PR.
 
 See [tests/README.md](./tests/README.md) for fixture structure and guidelines.
 

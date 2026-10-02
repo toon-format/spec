@@ -148,17 +148,8 @@ Load each fixture file, run every entry in its `tests` array through your encode
 
 ## Validating Fixtures
 
-All fixture files should validate against [`fixtures.schema.json`](./fixtures.schema.json). Run the commands below from the repository root:
-
-```bash
-# Using ajv-cli
-npx ajv-cli validate -s tests/fixtures.schema.json -d "tests/fixtures/**/*.json"
-
-# Using check-jsonschema (Python)
-pip install check-jsonschema
-check-jsonschema --schemafile tests/fixtures.schema.json tests/fixtures/**/*.json
-```
+`pnpm test` validates every fixture against [`fixtures.schema.json`](./fixtures.schema.json) and checks that its `category` matches its directory.
 
 ## Contributing Test Cases
 
-Add your test to the matching fixture file, reference the spec section it exercises, verify the expected output against SPEC.md, and validate the file against the schema before submitting a PR. See [CONTRIBUTING.md](../CONTRIBUTING.md) for guidelines.
+Add your test to the matching fixture file, reference the spec section it exercises, verify the expected output against SPEC.md, and run `pnpm test` before submitting a PR. See [CONTRIBUTING.md](../CONTRIBUTING.md) for guidelines.

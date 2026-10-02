@@ -32,10 +32,12 @@
   ],
   "scripts": {
     "lint": "eslint .",
+    "test": "node scripts/validate-fixtures.ts",
     "release": "bumpp"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^9.5.1",
+    "ajv": "^8.20.0",
     "bumpp": "^12.3.0",
     "eslint": "^10.11.0"
   }
