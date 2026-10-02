@@ -127,6 +127,32 @@
       "specSection": "9.3",
       "note": "A keyless fields-bearing header is valid only at the document root",
       "minSpecVersion": "4.1"
+    },
+    {
+      "name": "encodes three levels of nested arrays",
+      "input": [
+        [
+          [
+            1
+          ]
+        ]
+      ],
+      "expected": "[1]:\n  - [1]:\n    - [1]: 1",
+      "specSection": "9.4"
+    },
+    {
+      "name": "quotes structural strings as list items",
+      "input": {
+        "xs": [
+          "[2]: x",
+          "a: b",
+          {
+            "k": 1
+          }
+        ]
+      },
+      "expected": "xs[3]:\n  - \"[2]: x\"\n  - \"a: b\"\n  - k: 1",
+      "specSection": "7.2"
     }
   ]
 }
