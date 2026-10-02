@@ -60,16 +60,13 @@ Media type `text/toon` (provisional, UTF-8), file extension `.toon`. See [§17 o
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for how to propose changes and when an RFC is required. For implementation-specific questions or bugs, use the respective implementation repository.
 
-## Versioning
-
-The TOON specification uses MAJOR.MINOR versioning. See [VERSIONING.md](./VERSIONING.md) for the policy and compatibility guarantees.
-
 ## Resources
 
 - **Glossary:** [CONTEXT.md](./CONTEXT.md) – Canonical name for every concept, and the wordings to avoid
 - **Examples:** [examples/](./examples/) – Working examples organized by feature
 - **Test Fixtures:** [tests/fixtures/](./tests/fixtures/) – Reference test fixtures
 - **Changelog:** [CHANGELOG.md](./CHANGELOG.md) – Version history and changes
+- **Versioning:** [VERSIONING.md](./VERSIONING.md) – MAJOR.MINOR policy and compatibility guarantees
 - **Reference Implementation:** [github.com/toon-format/toon](https://github.com/toon-format/toon) – TypeScript/JavaScript implementation
 - **Implementations:** [toonformat.dev/ecosystem/implementations](https://toonformat.dev/ecosystem/implementations) – Official and community ports
 - **Benchmarks:** [Reference repo benchmarks/](https://github.com/toon-format/toon/tree/main/benchmarks) – Token efficiency measurements and accuracy retrieval tests
