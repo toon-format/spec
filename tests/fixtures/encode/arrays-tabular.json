@@ -177,6 +177,23 @@
       "expected": "items[1]:\n  - id: 1\n    meta:",
       "specSection": "9.3",
       "note": "Nested-uniform requires non-empty objects, mirroring the empty-object exclusion for elements"
+    },
+    {
+      "name": "quotes structural strings in tabular cells",
+      "input": {
+        "rows": [
+          {
+            "id": 1,
+            "note": "[2]: x"
+          },
+          {
+            "id": 2,
+            "note": "a: b, c"
+          }
+        ]
+      },
+      "expected": "rows[2]{id,note}:\n  1,\"[2]: x\"\n  2,\"a: b, c\"",
+      "specSection": "9.3"
     }
   ]
 }
