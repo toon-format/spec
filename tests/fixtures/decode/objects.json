@@ -509,6 +509,43 @@
       },
       "specSection": "7.4",
       "minSpecVersion": "4.1"
+    },
+    {
+      "name": "parses quoted dotted key as a single literal key",
+      "input": "\"a.b\": 1",
+      "expected": {
+        "a.b": 1
+      },
+      "specSection": "8"
+    },
+    {
+      "name": "parses quoted empty string key opening a nested object",
+      "input": "\"\":\n  a: 1",
+      "expected": {
+        "": {
+          "a": 1
+        }
+      },
+      "specSection": "8"
+    },
+    {
+      "name": "parses quoted key containing a bracket segment and colon",
+      "input": "\"k [2]: y\": 1",
+      "expected": {
+        "k [2]: y": 1
+      },
+      "specSection": "5.2"
+    },
+    {
+      "name": "materializes __proto__ as an array header key",
+      "input": "__proto__[2]: 1,2",
+      "expected": {
+        "__proto__": [
+          1,
+          2
+        ]
+      },
+      "specSection": "15"
     }
   ]
 }
