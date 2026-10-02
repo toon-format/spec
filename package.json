@@ -32,7 +32,7 @@
   ],
   "scripts": {
     "lint": "eslint .",
-    "test": "node scripts/validate-fixtures.mjs",
+    "test": "node scripts/validate-fixtures.ts",
     "release": "bumpp"
   },
   "devDependencies": {
