@@ -244,6 +244,66 @@
       "shouldError": true,
       "specSection": "9.4",
       "minSpecVersion": "4.1"
+    },
+    {
+      "name": "parses three levels of nested arrays",
+      "input": "[1]:\n  - [1]:\n    - [1]: 1",
+      "expected": [
+        [
+          [
+            1
+          ]
+        ]
+      ],
+      "specSection": "9.4"
+    },
+    {
+      "name": "parses an empty object as the first field of a list-item object",
+      "input": "items[1]:\n  - a:",
+      "expected": {
+        "items": [
+          {
+            "a": {}
+          }
+        ]
+      },
+      "specSection": "10"
+    },
+    {
+      "name": "parses a tabular array as a later field of a list-item object",
+      "input": "items[1]:\n  - id: 1\n    users[2]{id,name}:\n      1,Ada\n      2,Bob",
+      "expected": {
+        "items": [
+          {
+            "id": 1,
+            "users": [
+              {
+                "id": 1,
+                "name": "Ada"
+              },
+              {
+                "id": 2,
+                "name": "Bob"
+              }
+            ]
+          }
+        ]
+      },
+      "specSection": "10"
+    },
+    {
+      "name": "parses quoted structural strings as list items",
+      "input": "xs[3]:\n  - \"[2]: x\"\n  - \"a: b\"\n  - k: 1",
+      "expected": {
+        "xs": [
+          "[2]: x",
+          "a: b",
+          {
+            "k": 1
+          }
+        ]
+      },
+      "specSection": "9.4"
     }
   ]
 }
