@@ -7,22 +7,22 @@ const testsDir = join(import.meta.dirname, '../tests')
 const schema = JSON.parse(await readFile(join(testsDir, 'fixtures.schema.json'), 'utf8'))
 const validate = new Ajv({ allErrors: true }).compile(schema)
 
-const problems: string[] = []
+const fixtureErrors: string[] = []
 for (const category of ['encode', 'decode']) {
-  const dir = join(testsDir, 'fixtures', category)
-  const files = (await readdir(dir)).filter(name => name.endsWith('.json'))
-  for (const file of files) {
-    const fixture = JSON.parse(await readFile(join(dir, file), 'utf8'))
-    const path = `${category}/${file}`
+  const categoryDir = join(testsDir, 'fixtures', category)
+  const fileNames = (await readdir(categoryDir)).filter(fileName => fileName.endsWith('.json'))
+  for (const fileName of fileNames) {
+    const fixture = JSON.parse(await readFile(join(categoryDir, fileName), 'utf8'))
+    const fixturePath = `${category}/${fileName}`
     if (!validate(fixture))
-      problems.push(...validate.errors!.map(error => `${path}: ${error.instancePath || '/'} ${error.message}`))
+      fixtureErrors.push(...validate.errors!.map(error => `${fixturePath}: ${error.instancePath || '/'} ${error.message}`))
     if (fixture.category !== category)
-      problems.push(`${path}: /category is "${fixture.category}", expected "${category}"`)
+      fixtureErrors.push(`${fixturePath}: /category is "${fixture.category}", expected "${category}"`)
   }
 }
 
-if (problems.length > 0) {
-  console.error(problems.join('\n'))
+if (fixtureErrors.length > 0) {
+  console.error(fixtureErrors.join('\n'))
   process.exit(1)
 }
 
