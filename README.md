@@ -5,15 +5,11 @@
 
 This repository contains the official specification for **Token-Oriented Object Notation (TOON)**, a line-oriented, indentation-based encoding of the JSON data model. See [github.com/toon-format/toon](https://github.com/toon-format/toon) for an overview, rationale, and benchmarks.
 
-## 📋 Specification
+## Specification
 
 [→ Read the full specification (SPEC.md)](./SPEC.md)
 
-- **Version:** 4.1 (2026-07-26)
-- **Status:** Working Draft
-- **License:** MIT
-
-The specification includes ABNF snippets, encoding rules, validation requirements, and conformance criteria.
+Version 4.1, Working Draft.
 
 ## Serialization Example
 
