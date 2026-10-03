@@ -167,6 +167,21 @@
       },
       "specSection": "9.1",
       "note": "An escaped quote does not close a quoted key, so the [2] inside it is not a bracket segment"
+    },
+    {
+      "name": "keeps inline values under a legacy [0] header in non-strict mode",
+      "input": "a[0]: 1,2",
+      "expected": {
+        "a": [
+          1,
+          2
+        ]
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "14.1",
+      "minSpecVersion": "4.1"
     }
   ]
 }
