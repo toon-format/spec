@@ -538,6 +538,15 @@
         ]
       },
       "specSection": "15"
+    },
+    {
+      "name": "parses a quoted key followed by spaces before the colon",
+      "input": "\"a\" : 1",
+      "expected": {
+        "a": 1
+      },
+      "specSection": "7.4",
+      "minSpecVersion": "4.1"
     }
   ]
 }
