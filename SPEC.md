@@ -307,7 +307,7 @@ Decoders classify each line of the comment-stripped sequence (§5.1) by its cont
 3. Array-header line – the content matches the header or keyed-header grammar of §6. A line whose first unquoted colon precedes its first unquoted "[" is never a header; it is a key-value line. Only unquoted occurrences count: a quoted key containing a colon can still open a header (e.g., `"a:b"[2]: 1,2` is a header), while `a:b[2]: x` is a key-value line with key `a`.
 4. Key-value line – the content contains an unquoted colon and no earlier class applies. The key token precedes the first unquoted colon and is decoded per §7.4; the remainder after the colon is the value (§8). A line that contains an unquoted colon but fails the §6 header grammar falls through to this class (e.g., `foo [2]: bar`); the strict-mode header errors enumerated in §6 and §14.2 are unaffected by this fall-through.
 5. Row line – within a tabular array's scope, a delimiter-separated value line at row depth (§9.3); within a keyed tabular object's scope, an entry row at entry depth (§9.5).
-6. Scalar line – none of the above; the content is a single primitive token (§4). A scalar line is valid only as a root primitive (root-form rules above); anywhere else it is a structural error (§14.2).
+6. Scalar line – none of the above; the content is a single primitive token (§4). A scalar line is valid only as a root primitive (root-form rules above); anywhere else it is a structural error (§14.2), except as trailing content after a completed root form, which the root-form rules govern.
 
 ## 6. Header Syntax (Normative)
 
@@ -737,7 +737,7 @@ When strict mode is enabled (default), decoders MUST error on the conditions lis
 - Over-indented lines (§8): a line deeper than the content depth of its enclosing scope when the preceding line did not open a scope (e.g., a depth d+1 line directly under a depth-d primitive field). Decoders MUST NOT silently discard such lines.
 - Trailing content after a completed root form (§5): any non-comment, non-blank line following the inline values, rows, items, or entries of a root array or keyed tabular root object, or following a root `[]`.
 - Ill-formed UTF-8 in byte input (§4).
-- A scalar line (§5.2) anywhere other than root primitive position – e.g., a bare token line inside an array or object scope (any mode; §5.2).
+- A scalar line (§5.2) anywhere other than root primitive position or trailing content after a completed root form – e.g., a bare token line inside an array or object scope (any mode; §5.2).
 - Two or more non-blank depth-0 lines that are neither headers nor key-value lines (§5) (any mode).
 
 ### 14.3 Duplicate Object Keys
