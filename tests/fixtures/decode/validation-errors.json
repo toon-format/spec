@@ -546,7 +546,7 @@
     },
     {
       "name": "throws on tabular row count mismatch inside a later list item",
-      "input": "groups[2]:\n  - a: foo\n    b[1]{w,x}:\n      wince,0\n  - a: bar\n    b[0]{w,x}:\n      wise,1",
+      "input": "groups[2]:\n  - a: foo\n    b[1]{w,x}:\n      wince,0\n  - a: bar\n    b[2]{w,x}:\n      wise,1",
       "expected": null,
       "shouldError": true,
       "specSection": "14.1"
