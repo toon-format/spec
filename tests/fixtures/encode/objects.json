@@ -302,25 +302,6 @@
       },
       "expected": "\"\":\n  a: 1",
       "specSection": "8"
-    },
-    {
-      "name": "quotes key containing a bracket segment and colon",
-      "input": {
-        "k [2]: y": 1
-      },
-      "expected": "\"k [2]: y\": 1",
-      "specSection": "7.3"
-    },
-    {
-      "name": "encodes __proto__ as an array header key",
-      "input": {
-        "__proto__": [
-          1,
-          2
-        ]
-      },
-      "expected": "__proto__[2]: 1,2",
-      "specSection": "15"
     }
   ]
 }

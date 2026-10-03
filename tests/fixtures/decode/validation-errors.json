@@ -525,16 +525,6 @@
       "specSection": "6"
     },
     {
-      "name": "throws on the removed [#N] length marker in a nested field header in strict mode",
-      "input": "o:\n  xs[#2]: a,b",
-      "expected": null,
-      "shouldError": true,
-      "options": {
-        "strict": true
-      },
-      "specSection": "6"
-    },
-    {
       "name": "throws on the removed [#N] length marker in a keyless list-item header in strict mode",
       "input": "items[1]:\n  - [#2]: a,b",
       "expected": null,

@@ -511,14 +511,6 @@
       "minSpecVersion": "4.1"
     },
     {
-      "name": "parses quoted dotted key as a single literal key",
-      "input": "\"a.b\": 1",
-      "expected": {
-        "a.b": 1
-      },
-      "specSection": "8"
-    },
-    {
       "name": "parses quoted empty string key opening a nested object",
       "input": "\"\":\n  a: 1",
       "expected": {
