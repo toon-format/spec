@@ -588,6 +588,13 @@
       },
       "specSection": "8",
       "minSpecVersion": "4.1"
+    },
+    {
+      "name": "throws on a surrogate pair escape",
+      "input": "val: \"\\ud83d\\ude00\"",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "7.1"
     }
   ]
 }
