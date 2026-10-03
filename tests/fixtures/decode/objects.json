@@ -529,7 +529,7 @@
       "specSection": "5.2"
     },
     {
-      "name": "materializes __proto__ as an array header key",
+      "name": "materializes __proto__ array header key as an ordinary own key",
       "input": "__proto__[2]: 1,2",
       "expected": {
         "__proto__": [
