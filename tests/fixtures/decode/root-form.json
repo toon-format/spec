@@ -97,6 +97,12 @@
         "strict": true
       },
       "specSection": "5"
+    },
+    {
+      "name": "parses a root primitive whose only colon is quoted",
+      "input": "hello \"a:b\"",
+      "expected": "hello \"a:b\"",
+      "specSection": "5.2"
     }
   ]
 }
