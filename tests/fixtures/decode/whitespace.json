@@ -151,6 +151,15 @@
         "a": "x\ry"
       },
       "specSection": "12"
+    },
+    {
+      "name": "keeps a second carriage return before CRLF as content",
+      "input": "a: x\r\r\nb: 1",
+      "expected": {
+        "a": "x\r",
+        "b": 1
+      },
+      "specSection": "12"
     }
   ]
 }
