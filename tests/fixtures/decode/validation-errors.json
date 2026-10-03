@@ -566,6 +566,17 @@
       "shouldError": true,
       "specSection": "7.4",
       "minSpecVersion": "4.1"
+    },
+    {
+      "name": "throws on two primitives at root depth in non-strict mode",
+      "input": "hello\nworld",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": false
+      },
+      "specSection": "5",
+      "minSpecVersion": "4.1"
     }
   ]
 }

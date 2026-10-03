@@ -281,7 +281,7 @@ TOON is a deterministic, line-oriented, indentation-based notation.
   - Otherwise, decode an object.
   - An empty document (no non-blank lines after comment removal, §5.1) decodes to an empty object `{}`. A document consisting only of comment and blank lines is therefore `{}`.
   - The root form spans the whole document: once a root array, an empty root array (`[]`), or a keyed tabular root object is complete, no further non-comment, non-blank line may follow. In strict mode, decoders MUST error on such trailing content (§14.2) – it MUST NOT be silently discarded. In non-strict mode, decoders MAY ignore it. (A root object extends to the last line of the document, so this case does not arise for object roots.)
-  - In strict mode, if there are two or more non-blank depth-0 lines that are neither headers nor key-value lines, the document is invalid. Example of invalid input (strict mode):
+  - If there are two or more non-blank depth-0 lines that are neither headers nor key-value lines, the document is invalid in strict and non-strict mode alike (§14.2). Example of invalid input:
     ```
     hello
     world
