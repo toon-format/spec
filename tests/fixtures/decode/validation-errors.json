@@ -595,6 +595,37 @@
       "expected": null,
       "shouldError": true,
       "specSection": "7.1"
+    },
+    {
+      "name": "throws on a key-value line at row depth inside a tabular array",
+      "input": "items[2]{a,b}:\n  1,2\n  c: 3,4",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "9.3"
+    },
+    {
+      "name": "throws on a header delimiter mismatch that row widths do not expose",
+      "input": "items[1|]{a,b}:\n  1,2",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "6"
+    },
+    {
+      "name": "throws on a hyphen without a following space at item depth",
+      "input": "items[2]:\n  - a\n  -b",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "5.2"
+    },
+    {
+      "name": "throws on tabular rows at the hyphen-line field depth",
+      "input": "x[1]:\n  - a[1]{p}:\n    1",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "10"
     }
   ]
 }

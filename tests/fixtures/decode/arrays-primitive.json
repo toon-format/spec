@@ -181,6 +181,21 @@
       },
       "specSection": "14.1",
       "minSpecVersion": "4.1"
+    },
+    {
+      "name": "keeps every inline value when the count mismatches in non-strict mode",
+      "input": "tags[1]: a,b",
+      "expected": {
+        "tags": [
+          "a",
+          "b"
+        ]
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "14.1",
+      "minSpecVersion": "4.1"
     }
   ]
 }

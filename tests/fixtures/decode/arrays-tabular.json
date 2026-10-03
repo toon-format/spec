@@ -248,6 +248,23 @@
       },
       "specSection": "12",
       "minSpecVersion": "4.1"
+    },
+    {
+      "name": "materializes a nested field group without cells as an empty object in non-strict mode",
+      "input": "items[1]{a,n{x}}:\n  1",
+      "expected": {
+        "items": [
+          {
+            "a": 1,
+            "n": {}
+          }
+        ]
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "14.1",
+      "minSpecVersion": "4.1"
     }
   ]
 }
