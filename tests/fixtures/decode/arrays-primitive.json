@@ -154,6 +154,18 @@
         "": []
       },
       "specSection": "9.1"
+    },
+    {
+      "name": "parses quoted key with escaped quotes and brackets as an inline array key",
+      "input": "\"has \\\"[2]\\\" in it\"[3]: 3,4,5",
+      "expected": {
+        "has \"[2]\" in it": [
+          3,
+          4,
+          5
+        ]
+      },
+      "specSection": "9.1"
     }
   ]
 }

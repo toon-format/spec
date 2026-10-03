@@ -78,6 +78,15 @@
         "strict": true
       },
       "specSection": "5"
+    },
+    {
+      "name": "parses a root primitive after a leading blank line",
+      "input": "\nhello",
+      "expected": "hello",
+      "options": {
+        "strict": true
+      },
+      "specSection": "5"
     }
   ]
 }

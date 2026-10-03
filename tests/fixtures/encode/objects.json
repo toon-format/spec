@@ -292,6 +292,16 @@
       },
       "expected": "note: \"#x\"",
       "specSection": "7.2"
+    },
+    {
+      "name": "encodes empty string key opening a nested object",
+      "input": {
+        "": {
+          "a": 1
+        }
+      },
+      "expected": "\"\":\n  a: 1",
+      "specSection": "8"
     }
   ]
 }

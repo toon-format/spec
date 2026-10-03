@@ -217,6 +217,23 @@
       "specSection": "14.1",
       "note": "A declared [N] never truncates a scope",
       "minSpecVersion": "4.1"
+    },
+    {
+      "name": "parses quoted structural strings in tabular cells",
+      "input": "rows[2]{note,id}:\n  \"[2]: x\",1\n  \"a: b, c\",2",
+      "expected": {
+        "rows": [
+          {
+            "note": "[2]: x",
+            "id": 1
+          },
+          {
+            "note": "a: b, c",
+            "id": 2
+          }
+        ]
+      },
+      "specSection": "9.3"
     }
   ]
 }
