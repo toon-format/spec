@@ -211,6 +211,26 @@
       "input": "m[2:]{v}:\n\n  a: 1\n  b: 2",
       "expected": { "m": { "a": { "v": 1 }, "b": { "v": 2 } } },
       "specSection": "12"
+    },
+    {
+      "name": "throws on blank line between a nested header and its first row inside a list item",
+      "input": "outer[2]:\n  - inner[1]{a}:\n\n      1\n  - x",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "12"
+    },
+    {
+      "name": "throws on blank line after a nested object inside a list item",
+      "input": "a[2]:\n  - x:\n      y: 1\n\n  - 2",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "12"
     }
   ]
 }
