@@ -536,7 +536,7 @@ When tabular requirements are not met (encoding; including any column that is ne
 - Each element is rendered as a list item at depth +1 under the header:
   - Primitive: `- <primitive>`
   - Primitive array: `- [M<delim?>]: v1<delim>…`
-  - Array of objects or non-uniform array: `- [M<delim?>]:` on the hyphen line, followed by the nested array's list items at depth +1 relative to the hyphen line (i.e. +2 from the outer array header). Items are encoded recursively per §9.1–§9.4 as each item's shape requires; tabular form (§9.3) is not available in this position (a keyless fields-bearing header is valid only at the document root, §6) – encoders MUST use list form.
+  - Any other array (of objects, of arrays, or mixed): `- [M<delim?>]:` on the hyphen line, followed by the nested array's list items at depth +1 relative to the hyphen line (i.e. +2 from the outer array header). Items are encoded recursively per §9.1–§9.4 as each item's shape requires; tabular form (§9.3) is not available in this position (a keyless fields-bearing header is valid only at the document root, §6) – encoders MUST use list form.
   - Object: formatted per §10 (objects as list items).
 
 Decoding:

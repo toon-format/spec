@@ -139,6 +139,22 @@
       ],
       "expected": "[1]:\n  - [1]:\n    - [1]: 1",
       "specSection": "9.4"
+    },
+    {
+      "name": "encodes a non-uniform array as a list item",
+      "input": {
+        "a": [
+          [
+            1,
+            {
+              "x": 1
+            }
+          ],
+          2
+        ]
+      },
+      "expected": "a[2]:\n  - [2]:\n    - 1\n    - x: 1\n  - 2",
+      "specSection": "9.4"
     }
   ]
 }
