@@ -220,16 +220,16 @@
     },
     {
       "name": "parses quoted structural strings in tabular cells",
-      "input": "rows[2]{id,note}:\n  1,\"[2]: x\"\n  2,\"a: b, c\"",
+      "input": "rows[2]{note,id}:\n  \"[2]: x\",1\n  \"a: b, c\",2",
       "expected": {
         "rows": [
           {
-            "id": 1,
-            "note": "[2]: x"
+            "note": "[2]: x",
+            "id": 1
           },
           {
-            "id": 2,
-            "note": "a: b, c"
+            "note": "a: b, c",
+            "id": 2
           }
         ]
       },
