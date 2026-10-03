@@ -2,22 +2,11 @@
 
 This directory contains **language-agnostic JSON test fixtures** for validating TOON implementations against the specification. These fixtures cover core specification requirements; conformance is defined by SPEC.md (§13 and Appendix C), not by this fixture suite.
 
-## Directory Structure
-
-```
-tests/
-├── fixtures.schema.json    # JSON Schema for fixture validation
-├── fixtures/
-│   ├── encode/             # Encoding tests (JSON → TOON)
-│   └── decode/             # Decoding tests (TOON → JSON)
-└── README.md               # This file
-```
-
 The [Test Coverage](#test-coverage) tables below index every fixture file.
 
 ## Fixture Format
 
-All test fixtures follow a standard JSON structure defined in [`fixtures.schema.json`](./fixtures.schema.json):
+Every fixture file follows [`fixtures.schema.json`](./fixtures.schema.json), which documents each field and option:
 
 ```json
 {
@@ -36,49 +25,6 @@ All test fixtures follow a standard JSON structure defined in [`fixtures.schema.
   ]
 }
 ```
-
-### Field Descriptions
-
-| Field | Required | Description |
-|-------|----------|-------------|
-| `version` | Yes | Baseline TOON spec version for this file. Per-test `minSpecVersion` overrides this for individual tests that exercise newer behavior. Fixtures remain valid for all later versions. |
-| `category` | Yes | Test category: `"encode"` or `"decode"` |
-| `description` | Yes | Brief description of what this fixture tests |
-| `tests` | Yes | Array of test cases |
-| `tests[].name` | Yes | Descriptive name explaining what is validated |
-| `tests[].input` | Yes | Input value (JSON for encode, TOON string for decode) |
-| `tests[].expected` | Yes | Expected output (TOON string for encode, JSON for decode) |
-| `tests[].shouldError` | No | If `true`, expects an error (default: `false`) |
-| `tests[].options` | No | Encoder/decoder options (see below) |
-| `tests[].specSection` | No | Reference to specification section (e.g., `"7.2"`, `"§6"`) |
-| `tests[].note` | No | Optional explanation for special cases |
-| `tests[].minSpecVersion` | No | Minimum spec version required (e.g., `"4.1"`) |
-
-### Options
-
-#### Encoding Options
-
-```json
-{
-  "delimiter": ",",
-  "indentSize": 2
-}
-```
-
-- `delimiter`: `","` (comma, default), `"\t"` (tab), or `"|"` (pipe). Affects encoder output; decoders parse the delimiter declared in array headers
-- `indentSize`: Number of spaces per indentation level (default: `2`)
-
-#### Decoding Options
-
-```json
-{
-  "indentSize": 2,
-  "strict": true
-}
-```
-
-- `indentSize`: Expected number of spaces per indentation level (default: `2`)
-- `strict`: Enable strict validation (default: `true`)
 
 ### Error Tests
 
@@ -146,10 +92,6 @@ Load each fixture file, run every entry in its `tests` array through your encode
 
 **Coverage note:** §3 host-type normalization (NaN/±Infinity → null, host Date/Set/Map/BigInt mappings) is intentionally outside these JSON fixtures, since the fixture format cannot express non-JSON encode inputs. Implementations should cover §3 in their language-local test suites.
 
-## Validating Fixtures
-
-`pnpm test` validates every fixture against [`fixtures.schema.json`](./fixtures.schema.json) and checks that its `category` matches its directory.
-
 ## Contributing Test Cases
 
-Add your test to the matching fixture file, reference the spec section it exercises, verify the expected output against SPEC.md, and run `pnpm test` before submitting a PR. See [CONTRIBUTING.md](../CONTRIBUTING.md) for guidelines.
+Add a case to the matching fixture file with its `specSection`, check `expected` against SPEC.md, and run `pnpm test` – it validates every fixture against the schema and checks that its `category` matches its directory.
