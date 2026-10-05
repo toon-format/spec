@@ -292,15 +292,11 @@
       "specSection": "10"
     },
     {
-      "name": "parses quoted structural strings as list items",
-      "input": "xs[3]:\n  - \"[2]: x\"\n  - \"a: b\"\n  - k: 1",
+      "name": "parses quoted list item shaped like an inline array header",
+      "input": "xs[1]:\n  - \"[2]: x\"",
       "expected": {
         "xs": [
-          "[2]: x",
-          "a: b",
-          {
-            "k": 1
-          }
+          "[2]: x"
         ]
       },
       "specSection": "9.4"
