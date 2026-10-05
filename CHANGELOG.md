@@ -6,20 +6,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [4.2] - Unreleased
 
-### Added
-
-- §5.2: a `"` opens a quoted span wherever it occurs in a line, so a colon, delimiter, bracket, or brace between it and the next unescaped `"` (or the line end) is quoted.
-- §14: a non-strict decoder applies the leniency the specification names, or errors where that leniency is optional; 4.2 adds three – a depth jump's first line sets the scope's content depth (§8), ill-formed UTF-8 MAY become U+FFFD (§4), and unmatched braces MAY fall through to key-value parsing (§6).
-- Conformance fixtures for the new decoder rules, the shortest digits, and list-item quoting.
-
 ### Changed
 
-- Encoder output is narrowed: numbers use the shortest round-trip digits (§2), strings and keys stay unquoted unless §7.2 or §7.3 requires quotes, and primitive list items are quoted by the document delimiter like object field values (§7.2, §11.1).
-- Decoder edge cases are settled: a line without an unquoted colon is never a header (§6); an indented first line is over-indented (§5, §8); a hyphen marks a list item only at item depth (§5.2); an empty key token is the empty key and an empty field entry or nameless nested group is a header syntax error (§6, §7.4); whitespace between a field name and its nested field group is a header syntax error (§6); a length beyond the integer range still forms a header (§6); raw control characters inside quoted strings decode as themselves (§7.1); and a line of tabs is blank only under the non-strict tab leniency (§12).
+- Encoders: numbers use the shortest round-trip digits (§2); non-ASCII text is emitted as literal UTF-8 and `\uXXXX` escapes use lowercase hex (§7.1); strings and keys are quoted only where §7.2 or §7.3 requires it; primitive list items are quoted against the document delimiter, like object field values (§11.1).
+- Decoders – edge cases that 4.1 left open:
+  - a `"` opens a quoted span anywhere in a line (§5.2)
+  - a hyphen marks a list item only at item depth (§5.2)
+  - a line without an unquoted colon is never a header (§6)
+  - an indented first line is over-indented (§8)
+  - `: 1` decodes to the empty key; `{a,}` and `{a,{b}}` are header errors (§6, §7.4)
+  - whitespace before a nested field group is a header error (§6)
+  - a length beyond the integer range still forms a header (§6)
+  - raw control characters inside quotes decode as themselves (§7.1)
+  - a line of tabs is not blank, except under the non-strict tab leniency (§12)
+- Non-strict mode: decoders apply only the leniencies the spec names, or error (§14). New in 4.2: a jumped first line sets the scope's depth (§8), ill-formed UTF-8 may become U+FFFD (§4), and unmatched braces may fall through to key-value parsing (§6).
+- Conformance fixtures: cases for every change above; redundant cases removed, so fixture indices shift – runners that skip cases by index need new skip lists.
 
 ### Compatibility
 
-Every decoder change concerns input no conforming 4.0 or 4.1 encoder emits: §7.1–§7.3 escape every control character and quote any string or key that is empty, starts with `-`, or contains `"`, a bracket, or a brace, and encoders never indent the first line, indent with tabs, put a space before a nested field group, or trigger a §14 condition. Each is MINOR under the encoder-unreachability rule in [VERSIONING.md](./VERSIONING.md). The encoder changes are tightenings: decoders read the output of every 4.0 or 4.1 encoder unchanged.
+Every decoder change concerns input no conforming 4.0 or 4.1 encoder emits, so no round-trip is affected. Encoders that quote more than required, print more digits than the shortest round-trip form, escape non-ASCII text, or quote list items against the active delimiter need an update; their output still decodes unchanged.
 
 ## [4.1] - 2026-07-26
 
