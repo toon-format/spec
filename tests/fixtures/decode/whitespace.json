@@ -160,6 +160,15 @@
       },
       "specSection": "12",
       "minSpecVersion": "4.1"
+    },
+    {
+      "name": "removes a byte-order mark before a comment line",
+      "input": "\ufeff# c\na: 1",
+      "expected": {
+        "a": 1
+      },
+      "specSection": "12",
+      "minSpecVersion": "4.1"
     }
   ]
 }

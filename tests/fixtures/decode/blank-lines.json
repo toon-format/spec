@@ -228,6 +228,19 @@
       "shouldError": true,
       "specSection": "14.2",
       "minSpecVersion": "4.2"
+    },
+    {
+      "name": "treats a tab-only line as blank in non-strict mode",
+      "input": "a: 1\n\t\nb: 2",
+      "expected": {
+        "a": 1,
+        "b": 2
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "12",
+      "minSpecVersion": "4.2"
     }
   ]
 }

@@ -663,6 +663,71 @@
       "shouldError": true,
       "specSection": "6",
       "minSpecVersion": "4.2"
+    },
+    {
+      "name": "throws on a \\u escape with a sign before its hex digits",
+      "input": "val: \"\\u+0ab\"",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "7.1"
+    },
+    {
+      "name": "throws on an escaped lone low surrogate",
+      "input": "val: \"\\udc00\"",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "7.1"
+    },
+    {
+      "name": "throws on characters after a closing quote in an inline array cell",
+      "input": "k[2]: \"a\"x,b",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "7.4",
+      "minSpecVersion": "4.1"
+    },
+    {
+      "name": "throws on a key-value line among tabular rows that breaks the declared count",
+      "input": "t[2]{a}:\n  1\n  x: 2",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "9.3"
+    },
+    {
+      "name": "throws on a tabular row with more cells than fields",
+      "input": "items[1]{a}:\n  1,2",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "14.1"
+    },
+    {
+      "name": "throws on more keyed entry rows than declared",
+      "input": "m[1:]{v}:\n  a: 1\n  b: 2",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "14.1"
+    },
+    {
+      "name": "throws on an invalid escape in non-strict mode",
+      "input": "k: \"a\\x\"",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": false
+      },
+      "specSection": "7.1",
+      "minSpecVersion": "4.1"
+    },
+    {
+      "name": "throws on an unterminated string in non-strict mode",
+      "input": "k: \"abc",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": false
+      },
+      "specSection": "7.1",
+      "minSpecVersion": "4.1"
     }
   ]
 }

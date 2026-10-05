@@ -38,6 +38,17 @@
       "specSection": "7.2",
       "note": "The whitespace trigger is U+0020 and U+0009 only",
       "minSpecVersion": "4.1"
+    },
+    {
+      "name": "indents list-item sibling fields by indentSize",
+      "input": {
+        "a": [{ "b": 1, "c": 2 }, 1]
+      },
+      "expected": "a[2]:\n    - b: 1\n        c: 2\n    - 1",
+      "options": {
+        "indentSize": 4
+      },
+      "specSection": "10"
     }
   ]
 }

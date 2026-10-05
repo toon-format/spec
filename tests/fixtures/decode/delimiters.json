@@ -208,6 +208,14 @@
       },
       "specSection": "5.2",
       "minSpecVersion": "4.2"
+    },
+    {
+      "name": "parses a nested tabular header with its own comma delimiter inside a pipe list",
+      "input": "items[1|]:\n  - t[1]{a,b}:\n      1,2",
+      "expected": {
+        "items": [{ "t": [{ "a": 1, "b": 2 }] }]
+      },
+      "specSection": "11.2"
     }
   ]
 }

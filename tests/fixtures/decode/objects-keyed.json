@@ -212,6 +212,18 @@
       },
       "specSection": "9.5",
       "minSpecVersion": "4.1"
+    },
+    {
+      "name": "decodes every entry row beyond the declared count in non-strict mode",
+      "input": "m[1:]{v}:\n  a: 1\n  b: 2",
+      "expected": {
+        "m": { "a": { "v": 1 }, "b": { "v": 2 } }
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "14.1",
+      "minSpecVersion": "4.1"
     }
   ]
 }

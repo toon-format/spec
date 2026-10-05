@@ -298,6 +298,13 @@
       },
       "specSection": "8",
       "minSpecVersion": "4.2"
+    },
+    {
+      "name": "throws on a depth jump to the first tabular row",
+      "input": "rows[1]{a}:\n    1",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "8"
     }
   ]
 }

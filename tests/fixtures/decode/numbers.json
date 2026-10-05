@@ -154,6 +154,14 @@
       },
       "specSection": "4",
       "note": "Host parsers that accept these forms have a wider grammar than the spec permits"
+    },
+    {
+      "name": "treats non-ASCII digits as a string",
+      "input": "value: ٤٢",
+      "expected": {
+        "value": "٤٢"
+      },
+      "specSection": "4"
     }
   ]
 }

@@ -306,6 +306,14 @@
       ],
       "specSection": "6",
       "minSpecVersion": "4.2"
+    },
+    {
+      "name": "unescapes a quoted field name",
+      "input": "a[1]{\"x\\\"y\"}:\n  1",
+      "expected": {
+        "a": [{ "x\"y": 1 }]
+      },
+      "specSection": "6"
     }
   ]
 }
