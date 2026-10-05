@@ -217,20 +217,16 @@
       "input": "outer[2]:\n  - inner[1]{a}:\n\n      1\n  - x",
       "expected": null,
       "shouldError": true,
-      "options": {
-        "strict": true
-      },
-      "specSection": "12"
+      "specSection": "14.2",
+      "note": "The blank is between the inner header and its first row but inside the outer array's span (§12)"
     },
     {
-      "name": "throws on blank line after a nested object inside a list item",
+      "name": "throws on blank line between list items after a nested object",
       "input": "a[2]:\n  - x:\n      y: 1\n\n  - 2",
       "expected": null,
       "shouldError": true,
-      "options": {
-        "strict": true
-      },
-      "specSection": "12"
+      "specSection": "14.2",
+      "note": "The blank is after the nested object's content but inside the outer array's span (§12)"
     }
   ]
 }
