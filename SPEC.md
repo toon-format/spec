@@ -404,12 +404,12 @@ Normative escape grammar:
 ```abnf
 ; Core rules per RFC 5234 §B.1 (DIGIT, DQUOTE, HEXDIG); HEXDIG matches hex digits case-insensitively
 quoted-char    = escaped-char / unescaped-char
-unescaped-char = %x09 / %x20-21 / %x23-5B / %x5D-D7FF / %xE000-FFFF / %x10000-10FFFF
+unescaped-char = %x00-09 / %x0B-21 / %x23-5B / %x5D-D7FF / %xE000-FFFF / %x10000-10FFFF
 escaped-char   = %x5C ( %x5C / DQUOTE / %x6E / %x72 / %x74 / unicode-escape )
 unicode-escape = %x75 4HEXDIG
 ```
 
-Tabs are allowed inside quoted strings and as a declared delimiter; they MUST NOT be used for indentation (§12). Within quoted strings, encoders MUST emit HTAB as `\t` per the escape table above; the literal HTAB in `unescaped-char` expresses decoder leniency only.
+Tabs are allowed inside quoted strings and as a declared delimiter; they MUST NOT be used for indentation (§12). Within quoted strings, encoders MUST escape every U+0000–U+001F character per the escape table above; decoders accept the literal controls in `unescaped-char` in any mode.
 
 ### 7.2 Quoting Rules for String Values
 

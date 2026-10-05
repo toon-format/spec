@@ -170,6 +170,15 @@
       "input": "\"🚀 launch\"",
       "expected": "🚀 launch",
       "specSection": "7.1"
+    },
+    {
+      "name": "decodes a raw control character inside a quoted string",
+      "input": "val: \"x\u0001y\"",
+      "expected": {
+        "val": "x\u0001y"
+      },
+      "specSection": "7.1",
+      "minSpecVersion": "4.2"
     }
   ]
 }
