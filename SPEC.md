@@ -426,12 +426,12 @@ Encoders MUST quote a string value if any of the following is true:
 - It equals "#" or starts with "#" (any number sign at position 0).
 - It is a root primitive (§5) and starts with U+FEFF (§12).
 
-Otherwise, the string MAY be emitted without quotes. Unicode, emoji, and strings with internal (non-leading/trailing) spaces are safe unquoted provided they do not violate the conditions.
+Otherwise, encoders MUST emit the string without quotes. Unicode, emoji, and strings with internal (non-leading/trailing) spaces are safe unquoted provided they do not violate the conditions.
 
 ### 7.3 Key Encoding
 
 Object keys (including entry keys, §9.5) and the field names in a header's field list:
-- MAY be unquoted only if they match: `^[A-Za-z_][A-Za-z0-9_.]*$`.
+- MUST be unquoted if they match: `^[A-Za-z_][A-Za-z0-9_.]*$`.
 - Otherwise, they MUST be quoted and escaped per §7.1.
 
 Keys requiring quoting per the above rules MUST be quoted in all contexts, including array headers (e.g., "my-key"[N]:).
@@ -442,7 +442,7 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
 
 - Quoted keys MUST be unescaped per §7.1; any other escape MUST error.
 - Keys (quoted or unquoted) MUST be followed by ":", optionally after spaces (§12); missing colon MUST error (see also §14.2).
-- Unquoted key token (normative): an unquoted key token is the text before the first unquoted colon of a key-value line (§5.2) or entry row (§9.5), with surrounding spaces trimmed (§12); the text before a header's bracket segment; or a field name in a field list (§6). An empty token before a key-value or entry-row colon is the empty key: `: 1` decodes to `{"": 1}`. Decoders MUST accept any such token as a literal key, in strict and non-strict mode alike, even when it does not match §7.3's unquoted-key pattern: `foo-bar: 1`, `foo-bar[2]: 1,2`, and `items[1]{2key}:` are valid input. §7.3 constrains what encoders may emit unquoted, not what decoders accept.
+- Unquoted key token (normative): an unquoted key token is the text before the first unquoted colon of a key-value line (§5.2) or entry row (§9.5), with surrounding spaces trimmed (§12); the text before a header's bracket segment; or a field name in a field list (§6). An empty token before a key-value or entry-row colon is the empty key: `: 1` decodes to `{"": 1}`. Decoders MUST accept any such token as a literal key, in strict and non-strict mode alike, even when it does not match §7.3's unquoted-key pattern: `foo-bar: 1`, `foo-bar[2]: 1,2`, and `items[1]{2key}:` are valid input. §7.3 governs how encoders emit keys, not what decoders accept.
 - Quoted-token boundary (normative): a token whose first character, after the trimming of §12, is `"` MUST be a complete quoted token – its closing `"` MUST be the token's last character. This applies wherever a token is extracted; any character after the closing quote MUST error. It overrides §4's "Otherwise → string" fallback.
 - Symmetrically for values: an unquoted value token that an encoder would have been required to quote (§7.2) is not an error. Decoders, strict mode included, MUST decode it per §4 – unless another rule of this specification assigns the token structural meaning (§5.2, §6, §9.1). Example: `key: -x` decodes to the string `-x`. §7.2 governs encoder output; it adds no decoder-side rejection.
 
@@ -670,7 +670,7 @@ Conforming encoders MUST:
 - [ ] Use consistent indentation (default 2 spaces, no tabs) (§12)
 - [ ] Escape per §7.1 in quoted strings; never emit other escapes
 - [ ] Quote strings per §7.2 (the relevant delimiter is governed by §11.1: document delimiter for object-field values, active delimiter for inline array values, tabular row cells, and keyed entry-row cells)
-- [ ] Quote and escape object keys, entry keys, and field names that do not match §7.3's unquoted-key pattern (§7.3)
+- [ ] Quote and escape exactly those object keys, entry keys, and field names that do not match §7.3's unquoted-key pattern (§7.3)
 - [ ] Select the form from the value's shape and position, not by preference (§1.4, §9)
 - [ ] Emit declared lengths [N] matching the actual inline value, list item, tabular row, or entry row count (§6, §9)
 - [ ] Preserve object key order as encountered, except where tabular forms reorder to the header's field order (§2)
