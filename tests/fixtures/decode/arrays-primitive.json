@@ -208,6 +208,20 @@
         ]
       },
       "specSection": "9.3"
+    },
+    {
+      "name": "keeps a header whose length exceeds integer range in non-strict mode",
+      "input": "a[99999999999999999999]: 1",
+      "expected": {
+        "a": [
+          1
+        ]
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "6",
+      "minSpecVersion": "4.2"
     }
   ]
 }

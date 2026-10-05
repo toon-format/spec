@@ -631,6 +631,15 @@
       "shouldError": true,
       "specSection": "9.1",
       "note": "Nothing after the colon is list form with zero items, not one empty inline value"
+    },
+    {
+      "name": "throws on a length beyond the integer range that wraps to the value count",
+      "input": "a[18446744073709551617]: 1",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "6",
+      "note": "2^64 + 1 wraps to 1 in 64-bit integers; an unrepresentable length is unmet (§14.1)",
+      "minSpecVersion": "4.2"
     }
   ]
 }
