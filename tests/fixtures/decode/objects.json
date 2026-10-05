@@ -594,6 +594,20 @@
       },
       "specSection": "7.4",
       "minSpecVersion": "4.2"
+    },
+    {
+      "name": "parses a hyphen-leading line at list-item field depth as a key-value line",
+      "input": "items[1]:\n  - a: 1\n    - y: 2",
+      "expected": {
+        "items": [
+          {
+            "a": 1,
+            "- y": 2
+          }
+        ]
+      },
+      "specSection": "5.2",
+      "minSpecVersion": "4.2"
     }
   ]
 }
