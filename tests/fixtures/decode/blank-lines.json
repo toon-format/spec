@@ -227,6 +227,14 @@
       "shouldError": true,
       "specSection": "14.2",
       "note": "The blank is after the nested object's content but inside the outer array's span (§12)"
+    },
+    {
+      "name": "throws on a tab-only line, which is not blank",
+      "input": "a: 1\n\t\nb: 2",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "14.2",
+      "minSpecVersion": "4.2"
     }
   ]
 }
