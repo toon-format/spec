@@ -13,7 +13,7 @@
       "name": "parses empty quoted string",
       "input": "\"\"",
       "expected": "",
-      "specSection": "7.4"
+      "specSection": "4"
     },
     {
       "name": "parses quoted string with newline escape",
@@ -59,21 +59,21 @@
     },
     {
       "name": "parses Unicode string",
-      "input": "café",
-      "expected": "café",
-      "specSection": "7.4"
+      "input": "caf\u00e9",
+      "expected": "caf\u00e9",
+      "specSection": "16"
     },
     {
       "name": "parses Chinese characters",
       "input": "你好",
       "expected": "你好",
-      "specSection": "7.4"
+      "specSection": "16"
     },
     {
       "name": "parses string with emoji and spaces",
       "input": "hello 👋 world",
       "expected": "hello 👋 world",
-      "specSection": "7.4"
+      "specSection": "16"
     },
     {
       "name": "parses positive integer",
@@ -115,13 +115,13 @@
       "name": "respects ambiguity quoting for true",
       "input": "\"true\"",
       "expected": "true",
-      "specSection": "7.4"
+      "specSection": "4"
     },
     {
       "name": "respects ambiguity quoting for integer",
       "input": "\"42\"",
       "expected": "42",
-      "specSection": "7.4"
+      "specSection": "4"
     },
     {
       "name": "decodes supplementary scalar (U+1F680) in quoted string as literal UTF-8",

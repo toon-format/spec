@@ -23,7 +23,7 @@
       "specSection": "8"
     },
     {
-      "name": "encodes empty objects as empty string",
+      "name": "encodes an empty root object as an empty document",
       "input": {},
       "expected": "",
       "specSection": "8"

@@ -42,7 +42,7 @@
         "value": 0
       },
       "specSection": "4",
-      "note": "Negative zero decodes to 0; most host environments do not distinguish -0 from 0"
+      "note": "Most host environments do not distinguish -0 from 0"
     },
     {
       "name": "parses negative zero with fractional part",
@@ -58,8 +58,7 @@
       "expected": {
         "nums": [42, -1000, 1.5, 0, 250]
       },
-      "specSection": "4",
-      "note": "Decoders normalize all numeric forms to host numeric values"
+      "specSection": "4"
     },
     {
       "name": "treats leading zero as string not number",

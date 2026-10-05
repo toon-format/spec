@@ -36,7 +36,7 @@
       "input": "\"a\\x\"",
       "expected": null,
       "shouldError": true,
-      "specSection": "14.2"
+      "specSection": "7.1"
     },
     {
       "name": "throws on truncated unicode escape \\u00b",
@@ -57,7 +57,7 @@
       "input": "\"unterminated",
       "expected": null,
       "shouldError": true,
-      "specSection": "14.2"
+      "specSection": "7.1"
     },
     {
       "name": "throws on missing colon in key-value context",
@@ -81,7 +81,7 @@
       "input": "items[2\t]{a\tb}:\n  1,2\n  3,4",
       "expected": null,
       "shouldError": true,
-      "specSection": "14.1",
+      "specSection": "11.2",
       "note": "Active delimiter is tab; rows using comma each parse as 1 value, failing the row width check"
     },
     {

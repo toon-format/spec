@@ -23,7 +23,7 @@
       "specSection": "8"
     },
     {
-      "name": "parses empty nested object header",
+      "name": "decodes a bare key: as an empty object, not an empty array",
       "input": "user:",
       "expected": {
         "user": {}
@@ -55,7 +55,7 @@
       "expected": {
         "note": "a:b"
       },
-      "specSection": "8"
+      "specSection": "4"
     },
     {
       "name": "parses quoted object value with comma",
@@ -63,7 +63,7 @@
       "expected": {
         "note": "a,b"
       },
-      "specSection": "8"
+      "specSection": "4"
     },
     {
       "name": "parses quoted object value with newline escape",
@@ -87,7 +87,7 @@
       "expected": {
         "text": " padded "
       },
-      "specSection": "8"
+      "specSection": "4"
     },
     {
       "name": "parses quoted string value that looks like true",
@@ -95,7 +95,7 @@
       "expected": {
         "v": "true"
       },
-      "specSection": "8"
+      "specSection": "4"
     },
     {
       "name": "parses quoted string value that looks like integer",
@@ -103,7 +103,7 @@
       "expected": {
         "v": "42"
       },
-      "specSection": "8"
+      "specSection": "4"
     },
     {
       "name": "parses quoted object value shaped like an inline array header",
@@ -120,7 +120,7 @@
       "expected": {
         "a": "[1]: x"
       },
-      "specSection": "8",
+      "specSection": "4",
       "note": "Quoting makes the value opaque (§4), so it is never parsed as a header – the matching count is irrelevant because a quoted scalar is never a header candidate"
     },
     {
@@ -129,7 +129,7 @@
       "expected": {
         "key": "foo [2]: bar"
       },
-      "specSection": "6",
+      "specSection": "5.2",
       "note": "An unquoted key cannot contain a colon, so the first colon ends the key; the bracket-and-colon shape in the remainder is value text, not an array header"
     },
     {
@@ -138,7 +138,7 @@
       "expected": {
         "a": "b [2]{x,y}: 1,2"
       },
-      "specSection": "6",
+      "specSection": "5.2",
       "note": "An unquoted key cannot contain a colon, so the first colon ends the key; the tabular-header shape in the remainder is value text, not an array header"
     },
     {
@@ -147,7 +147,7 @@
       "expected": {
         "content": "accept (process.argv[2]) and greet: name"
       },
-      "specSection": "8"
+      "specSection": "5.2"
     },
     {
       "name": "parses quoted key with colon",
@@ -155,7 +155,7 @@
       "expected": {
         "order:id": 7
       },
-      "specSection": "8"
+      "specSection": "7.4"
     },
     {
       "name": "decodes \\uXXXX in quoted key (U+0004 control character)",
@@ -179,7 +179,7 @@
       "expected": {
         "[index]": 5
       },
-      "specSection": "8"
+      "specSection": "7.4"
     },
     {
       "name": "treats extra brackets after valid array segment as literal key (non-strict)",
@@ -235,7 +235,7 @@
       "expected": {
         "{key}": 5
       },
-      "specSection": "8"
+      "specSection": "7.4"
     },
     {
       "name": "parses quoted key with comma",
@@ -243,7 +243,7 @@
       "expected": {
         "a,b": 1
       },
-      "specSection": "8"
+      "specSection": "7.4"
     },
     {
       "name": "parses quoted key with spaces",
@@ -251,7 +251,7 @@
       "expected": {
         "full name": "Ada"
       },
-      "specSection": "8"
+      "specSection": "7.4"
     },
     {
       "name": "parses quoted key with leading hyphen",
@@ -259,7 +259,7 @@
       "expected": {
         "-lead": 1
       },
-      "specSection": "8"
+      "specSection": "7.4"
     },
     {
       "name": "parses quoted key with leading and trailing spaces",
@@ -267,7 +267,7 @@
       "expected": {
         " a ": 1
       },
-      "specSection": "8"
+      "specSection": "7.4"
     },
     {
       "name": "parses quoted numeric key",
@@ -275,7 +275,7 @@
       "expected": {
         "123": "x"
       },
-      "specSection": "8"
+      "specSection": "7.4"
     },
     {
       "name": "parses quoted empty string key",
@@ -283,7 +283,7 @@
       "expected": {
         "": 1
       },
-      "specSection": "8"
+      "specSection": "7.4"
     },
     {
       "name": "parses dotted keys as identifiers",
@@ -447,7 +447,7 @@
       "specSection": "15"
     },
     {
-      "name": "falls through to a key-value line when whitespace precedes the bracket segment",
+      "name": "falls through to a key-value line when whitespace precedes the bracket segment (non-strict)",
       "input": "foo [2]: bar,baz",
       "expected": {
         "foo [2]": "bar,baz"
@@ -584,7 +584,7 @@
       "expected": {
         "a[2": "]{x}"
       },
-      "specSection": "6",
+      "specSection": "5.2",
       "minSpecVersion": "4.2"
     }
   ]

@@ -58,7 +58,7 @@
       "specSection": "11"
     },
     {
-      "name": "parses nested arrays inside list items with default comma delimiter",
+      "name": "parses nested arrays inside list items with default comma delimiter when parent uses tab",
       "input": "items[1\t]:\n  - tags[3]: a,b,c",
       "expected": {
         "items": [{ "tags": ["a", "b", "c"] }]

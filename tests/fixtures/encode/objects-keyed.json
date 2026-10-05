@@ -62,14 +62,10 @@
     {
       "name": "quotes entry keys per key encoding",
       "input": {
-        "ids": {
-          "42": { "v": 1 },
-          "my key": { "v": 2 }
-        }
+        "ids": { "42": { "v": 1 }, "my key": { "v": 2 } }
       },
       "expected": "ids[2:]{v}:\n  \"42\": 1\n  \"my key\": 2",
-      "specSection": "9.5",
-      "note": "Entry keys follow §7.3, the same rule as object keys"
+      "specSection": "9.5"
     },
     {
       "name": "quotes entry-row cells containing the active delimiter",

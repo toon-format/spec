@@ -76,7 +76,7 @@
       "specSection": "12"
     },
     {
-      "name": "accepts whitespace-only line at non-multiple indent as blank in strict mode",
+      "name": "accepts a spaces-only line at non-multiple indent as blank in strict mode",
       "input": "a: 1\n   \nb: 2",
       "expected": {
         "a": 1,

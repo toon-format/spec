@@ -68,7 +68,7 @@
       "specSection": "9.1"
     },
     {
-      "name": "quotes strings that look like booleans in arrays",
+      "name": "quotes strings that look like literals or numbers in arrays",
       "input": {
         "items": ["x", "true", "42", "-3.14"]
       },

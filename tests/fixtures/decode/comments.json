@@ -106,24 +106,20 @@
       "input": "items[2]{id}:\n  #1\n  2",
       "expected": null,
       "shouldError": true,
-      "specSection": "14.1",
+      "specSection": "5.1",
       "note": "The first cell makes the whole line a comment; only one row remains for [2]"
     },
     {
-      "name": "drops hash-leading row silently in non-strict mode",
+      "name": "strips a hash-leading row as a comment in non-strict mode",
       "input": "items[2]{id}:\n  #1\n  2",
       "expected": {
-        "items": [
-          {
-            "id": 2
-          }
-        ]
+        "items": [{ "id": 2 }]
       },
       "options": {
         "strict": false
       },
       "specSection": "5.1",
-      "note": "A hash-leading first cell makes the whole line a comment; non-strict mode drops the row silently"
+      "note": "Comment removal applies in both modes; the resulting count mismatch is not an error when strict=false (§14.1)"
     },
     {
       "name": "throws on tab-indented hash line, which is not a comment",

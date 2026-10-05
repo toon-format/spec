@@ -84,24 +84,20 @@
       "specSection": "10"
     },
     {
-      "name": "parses objects containing arrays (including empty arrays) in list form",
+      "name": "parses a legacy [0] header as a later field of a list-item object",
       "input": "items[1]:\n  - name: Ada\n    data[0]:",
       "expected": {
-        "items": [
-          { "name": "Ada", "data": [] }
-        ]
+        "items": [{ "name": "Ada", "data": [] }]
       },
-      "specSection": "9.4"
+      "specSection": "10"
     },
     {
-      "name": "parses arrays of arrays within objects",
+      "name": "parses a list-form array as the first field of a list-item object",
       "input": "items[1]:\n  - matrix[2]:\n      - [2]: 1,2\n      - [2]: 3,4\n    name: grid",
       "expected": {
-        "items": [
-          { "matrix": [[1, 2], [3, 4]], "name": "grid" }
-        ]
+        "items": [{ "matrix": [[1, 2], [3, 4]], "name": "grid" }]
       },
-      "specSection": "9.2"
+      "specSection": "10"
     },
     {
       "name": "parses quoted strings and mixed lengths in nested arrays",
