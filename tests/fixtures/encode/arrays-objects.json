@@ -186,6 +186,19 @@
       "specSection": "9.5",
       "note": "Keyed tabular form is mandated in object-field and root positions, not in a column",
       "minSpecVersion": "4.1"
+    },
+    {
+      "name": "places an empty object first field on the hyphen line",
+      "input": {
+        "items": [
+          {
+            "a": {},
+            "b": 1
+          }
+        ]
+      },
+      "expected": "items[1]:\n  - a:\n    b: 1",
+      "specSection": "10"
     }
   ]
 }

@@ -217,6 +217,19 @@
       "specSection": "14.1",
       "note": "A declared [N] never truncates a scope",
       "minSpecVersion": "4.1"
+    },
+    {
+      "name": "parses quoted leading tabular cell shaped like an inline array header",
+      "input": "rows[1]{note,id}:\n  \"[2]: x\",1",
+      "expected": {
+        "rows": [
+          {
+            "note": "[2]: x",
+            "id": 1
+          }
+        ]
+      },
+      "specSection": "9.3"
     }
   ]
 }
