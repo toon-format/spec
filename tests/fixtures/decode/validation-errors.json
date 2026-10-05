@@ -640,6 +640,14 @@
       "specSection": "6",
       "note": "2^64 + 1 wraps to 1 in 64-bit integers; an unrepresentable length is unmet (§14.1)",
       "minSpecVersion": "4.2"
+    },
+    {
+      "name": "throws on an empty field entry",
+      "input": "a[0]{x,}:",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "6",
+      "minSpecVersion": "4.2"
     }
   ]
 }
