@@ -106,6 +106,18 @@
       "expected": "items[2]",
       "specSection": "6",
       "minSpecVersion": "4.2"
+    },
+    {
+      "name": "throws on an indented root primitive in non-strict mode",
+      "input": "  hello",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": false
+      },
+      "specSection": "5",
+      "note": "The non-strict skip for over-indented lines excludes scalar lines (§5.2)",
+      "minSpecVersion": "4.2"
     }
   ]
 }

@@ -208,6 +208,14 @@
       "specSection": "8",
       "note": "The non-strict skip for over-indented lines excludes scalar lines (§5.2)",
       "minSpecVersion": "4.1"
+    },
+    {
+      "name": "throws on an indented first line",
+      "input": "  a: 1",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "8",
+      "minSpecVersion": "4.2"
     }
   ]
 }

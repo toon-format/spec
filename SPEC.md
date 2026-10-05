@@ -276,8 +276,8 @@ TOON is a deterministic, line-oriented, indentation-based notation.
 - Root form discovery (applied to the comment-stripped line sequence, §5.1; line classes per §5.2):
   - If the first non-blank depth-0 line is a valid root array header per §6, decode a root array.
   - Else if the first non-blank depth-0 line is a valid keyless keyed header per §6 ([N:<delim?>]{…}:), decode a root object in keyed tabular form (§9.5).
-  - Else if the first non-blank line is the literal token `[]`, decode an empty root array (§9.1).
-  - Else if the document has exactly one non-blank line and it is neither a valid array header nor a key-value line (quoted or unquoted key), decode a single primitive (examples: `hello`, `42`, `true`).
+  - Else if the first non-blank line is the literal token `[]` at depth 0, decode an empty root array (§9.1).
+  - Else if the document has exactly one non-blank line, at depth 0, and it is neither a valid array header nor a key-value line (quoted or unquoted key), decode a single primitive (examples: `hello`, `42`, `true`).
   - Otherwise, decode an object.
   - An empty document (no non-blank lines after comment removal, §5.1) decodes to an empty object `{}`. A document consisting only of comment and blank lines is therefore `{}`.
   - The root form spans the whole document: once a root array, an empty root array (`[]`), or a keyed tabular root object is complete, no further non-comment, non-blank line may follow. In strict mode, decoders MUST error on such trailing content (§14.2) – it MUST NOT be silently discarded. In non-strict mode, decoders MAY ignore it, except scalar lines, which are an error in any mode (§5.2). (A root object extends to the last line of the document, so this case does not arise for object roots.)
@@ -458,7 +458,7 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
   - Lines in an object body are classified per §5.2; the rules below cover its key-value class.
   - A line "key:" with nothing after the colon at depth d opens an object; subsequent lines at depth > d belong to that object until the depth decreases to ≤ d.
   - In strict mode, the first line of a non-empty nested scope MUST be at exactly depth d+1; a depth increase of more than one level relative to the enclosing scope MUST error (§14.2). Conforming encoders never produce depth jumps; §10's depth model governs fields carried on a list-item hyphen line.
-  - A line deeper than the content depth of its enclosing scope whose preceding line did not open a scope belongs to no scope (e.g., a depth d+1 line directly under a depth-d primitive field). In strict mode, decoders MUST error (§14.2) – such lines MUST NOT be silently discarded. In non-strict mode, decoders MAY skip them, except scalar lines, which are an error in any mode (§5.2).
+  - A line deeper than the content depth of its enclosing scope whose preceding line did not open a scope belongs to no scope (e.g., a depth d+1 line directly under a depth-d primitive field, or the document's first line at depth 1 or more). In strict mode, decoders MUST error (§14.2) – such lines MUST NOT be silently discarded. In non-strict mode, decoders MAY skip them, except scalar lines, which are an error in any mode (§5.2).
   - A bare `key:` (no value after the colon) MUST decode as an empty or nested object, not an empty array. Empty arrays use the explicit `key: []` form (§9.1).
   - Lines "key: value" at the same depth are sibling fields.
   - Duplicate sibling keys at the same depth: see §14.3 for strict/non-strict behavior.
@@ -734,7 +734,7 @@ When strict mode is enabled (default), decoders MUST error on the conditions lis
 - Any whitespace between a key and its bracket segment, and any content between a valid bracket segment and the colon (or field list), prevents array-header interpretation; decoders MUST NOT silently discard that content. In non-strict mode, decoders MAY fall through to key-value parsing.
 - Indentation and blank-line invariants per §12, evaluated after comment removal (§5.1).
 - Indentation depth jumps (§8): a line more than one level deeper than its enclosing scope (e.g., a depth d+2 line directly under a depth-d parent).
-- Over-indented lines (§8): a line deeper than the content depth of its enclosing scope when the preceding line did not open a scope (e.g., a depth d+1 line directly under a depth-d primitive field). Decoders MUST NOT silently discard such lines.
+- Over-indented lines (§8): a line deeper than the content depth of its enclosing scope when the preceding line did not open a scope (e.g., a depth d+1 line directly under a depth-d primitive field, or the document's first line at depth 1 or more). Decoders MUST NOT silently discard such lines.
 - Trailing content after a completed root form (§5): any non-comment, non-blank line following the inline values, rows, items, or entries of a root array or keyed tabular root object, or following a root `[]`.
 - Ill-formed UTF-8 in byte input (§4).
 - A scalar line (§5.2) anywhere other than root primitive position – e.g., a bare token line inside an array or object scope (any mode; §5.2).
