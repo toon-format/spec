@@ -302,6 +302,17 @@
       },
       "expected": "\"\":\n  a: 1",
       "specSection": "8"
+    },
+    {
+      "name": "keeps strings that only resemble numbers or literals unquoted",
+      "input": {
+        "a": ".5",
+        "b": "NaN",
+        "c": "True"
+      },
+      "expected": "a: .5\nb: NaN\nc: True",
+      "specSection": "7.2",
+      "minSpecVersion": "4.2"
     }
   ]
 }

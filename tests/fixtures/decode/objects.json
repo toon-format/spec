@@ -617,6 +617,15 @@
       },
       "specSection": "5.2",
       "minSpecVersion": "4.2"
+    },
+    {
+      "name": "reads a line whose only unquoted colon sits in the bracket segment as a key-value line",
+      "input": "a[2:]{x}",
+      "expected": {
+        "a[2": "]{x}"
+      },
+      "specSection": "6",
+      "minSpecVersion": "4.2"
     }
   ]
 }

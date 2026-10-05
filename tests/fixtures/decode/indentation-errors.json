@@ -216,6 +216,32 @@
       "shouldError": true,
       "specSection": "8",
       "minSpecVersion": "4.2"
+    },
+    {
+      "name": "throws on a hyphen-leading bare token under a primitive field in non-strict mode",
+      "input": "a: 1\n  - x",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": false
+      },
+      "specSection": "5.2",
+      "minSpecVersion": "4.2"
+    },
+    {
+      "name": "adopts the depth of a jumped first line in non-strict mode",
+      "input": "a:\n    b: 1\n  c: 2\n    d: 3",
+      "expected": {
+        "a": {
+          "b": 1,
+          "d": 3
+        }
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "8",
+      "minSpecVersion": "4.2"
     }
   ]
 }

@@ -290,6 +290,33 @@
         ]
       },
       "specSection": "9.3"
+    },
+    {
+      "name": "ignores a brace inside a mid-name quote span in a field list",
+      "input": "a[1]{x\"}\"y}:\n  1",
+      "expected": {
+        "a": [
+          {
+            "x\"}\"y": 1
+          }
+        ]
+      },
+      "specSection": "6",
+      "minSpecVersion": "4.2"
+    },
+    {
+      "name": "parses a quoted empty field name",
+      "input": "[2]{\"\"}:\n  1\n  2",
+      "expected": [
+        {
+          "": 1
+        },
+        {
+          "": 2
+        }
+      ],
+      "specSection": "6",
+      "minSpecVersion": "4.2"
     }
   ]
 }

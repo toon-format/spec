@@ -656,6 +656,14 @@
       "shouldError": true,
       "specSection": "6",
       "minSpecVersion": "4.2"
+    },
+    {
+      "name": "throws on a nested field group without a name",
+      "input": "a[0]{x,{y}}:",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "6",
+      "minSpecVersion": "4.2"
     }
   ]
 }

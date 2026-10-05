@@ -125,6 +125,17 @@
       "expected": "a\"b: 1",
       "specSection": "5.2",
       "minSpecVersion": "4.2"
+    },
+    {
+      "name": "throws on a scalar line after a skipped over-indented first line in non-strict mode",
+      "input": "  a: 1\nhello",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": false
+      },
+      "specSection": "5",
+      "minSpecVersion": "4.2"
     }
   ]
 }
