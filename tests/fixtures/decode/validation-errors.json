@@ -611,7 +611,7 @@
       "specSection": "5.2"
     },
     {
-      "name": "throws on tabular rows at the hyphen-line field depth",
+      "name": "throws on tabular rows at depth +1 under a list-item first-field header",
       "input": "x[1]:\n  - a[1]{p}:\n    1",
       "expected": null,
       "shouldError": true,
