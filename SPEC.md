@@ -735,7 +735,7 @@ When strict mode is enabled (default), decoders MUST error on the conditions lis
 - Keyless headers outside their valid positions (§6): a keyless non-keyed header in object-field position (e.g., `[2]: x,y` under an object field, or as a non-first depth-0 line), or a keyless fields-bearing header as a list item (`- [2]{a}:`).
 - Any whitespace between a key and its bracket segment or between a field name and its nested field group, and any content between a valid bracket segment and the colon (or field list), prevents array-header interpretation; decoders MUST NOT silently discard that content. In non-strict mode, decoders MAY fall through to key-value parsing.
 - Indentation and blank-line invariants per §12, evaluated after comment removal (§5.1).
-- Indentation depth jumps (§8): the first line of a nested scope standing more than one level deeper than the line that opens it (e.g., a depth d+2 line directly under a depth-d `key:`).
+- Indentation depth jumps (§8): the first line of a nested scope standing deeper than the scope's content depth (§1.3; e.g., a depth d+2 line directly under a depth-d `key:`).
 - Over-indented lines (§8): a line deeper than the content depth of its enclosing scope when the preceding line did not open a scope (e.g., a depth d+1 line directly under a depth-d primitive field, or the document's first line at depth 1 or more). Decoders MUST NOT silently discard such lines.
 - Trailing content after a completed root form (§5): any non-comment, non-blank line following the inline values, rows, items, or entries of a root array or keyed tabular root object, or following a root `[]`.
 - Ill-formed UTF-8 in byte input (§4).
