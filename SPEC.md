@@ -238,7 +238,7 @@ See Appendix E for non-normative language-specific examples.
 
 Decoders map text tokens to host values:
 
-- Byte input: decoders that accept bytes MUST decode them as UTF-8. In strict mode, ill-formed UTF-8 (invalid or truncated sequences, or bytes encoding surrogate code points) MUST error; it MUST NOT be silently replaced with U+FFFD. Decoders that accept host strings (already decoded from bytes) are outside this rule.
+- Byte input: decoders that accept bytes MUST decode them as UTF-8. In strict mode, ill-formed UTF-8 (invalid or truncated sequences, or bytes encoding surrogate code points) MUST error; it MUST NOT be silently replaced with U+FFFD. Non-strict decoders MAY instead replace each ill-formed sequence with U+FFFD. Decoders that accept host strings (already decoded from bytes) are outside this rule.
 - Quoted tokens (strings and keys):
   - MUST be unescaped per §7.1. Any other escape or an unterminated string MUST error.
   - Quoted primitives remain strings even if they look like numbers/booleans/null.
@@ -709,7 +709,7 @@ Validators SHOULD verify:
 
 ## 14. Strict Mode Errors and Diagnostics (Authoritative Checklist)
 
-When strict mode is enabled (default), decoders MUST error on the conditions listed below. Conditions marked "(any mode)" are errors in strict and non-strict mode alike. Error type, code, and message text are implementation-defined.
+When strict mode is enabled (default), decoders MUST error on the conditions listed below. Conditions marked "(any mode)" are errors in strict and non-strict mode alike. For every other condition, a non-strict decoder applies the leniency this specification names for it, or errors where that leniency is optional; it MUST NOT recover in any other way. Error type, code, and message text are implementation-defined.
 
 ### 14.1 Array Count and Width Mismatches
 
