@@ -206,7 +206,7 @@ Row, entry, and item terms:
     - If the fractional part is zero after normalization, emit as an integer (e.g., 1.0 → 1).
     - -0 MUST be normalized to 0.
   - For finite numbers outside the canonical range above (non-zero |n| < 1e-6, or |n| ≥ 1e21), encoders MAY emit exponent notation conforming to the JSON number grammar [RFC8259] §6 (e.g., 1e-7, 1e+21). Encoders SHOULD use lowercase `e` and an explicit exponent sign for byte-for-byte determinism.
-  - Encoders MUST emit the fewest significant digits for which, after any §3 host-type normalization, decode(encode(x)) equals x under the JSON-model equality defined below; when several candidates qualify, they MUST emit the one closest to x, ties to even (as ECMAScript's Number::toString does for binary64).
+  - Encoders MUST emit the fewest significant digits for which, after any §3 host-type normalization, decode(encode(x)) equals x under the JSON-model equality defined below; when several candidates qualify, they MUST emit the one closest to x, ties to even.
   - If a source value is outside the implementation's documented numeric domain (e.g., arbitrary-precision decimals or integers exceeding that domain), the encoder MAY:
     - Emit a quoted string containing a lossless decimal representation (plain decimal or JSON exponent form); the chosen form MUST be documented.
     - Emit a number that round-trips to the host's numeric approximation (losing precision), provided it conforms to the rules above.
@@ -300,7 +300,7 @@ Quoting keeps "#"-leading data out of the comment rule: string values that equal
 
 ### 5.2 Line Classification
 
-Decoders classify each line of the comment-stripped sequence (§5.1) by its content after the leading indentation. The first matching class applies. Classification is lexical; whether a class is admissible at a given depth and position is determined by the enclosing construct (root form above, §8–§10). Within a tabular array's scope, lines at row depth are divided between the row and key-value classes by the disambiguation rules of §9.3, which are authoritative for that position and take precedence over the order below. Within a keyed tabular object's scope, every line at entry depth containing an unquoted colon is an entry row; §9.5 is likewise authoritative for that position.
+Decoders classify each line of the comment-stripped sequence (§5.1) by its content after the leading indentation. The first matching class applies. Classification is lexical except for class 2's item-depth condition; whether a class is admissible at a given depth and position is determined by the enclosing construct (root form above, §8–§10). Within a tabular array's scope, lines at row depth are divided between the row and key-value classes by the disambiguation rules of §9.3, which are authoritative for that position and take precedence over the order below. Within a keyed tabular object's scope, every line at entry depth containing an unquoted colon is an entry row; §9.5 is likewise authoritative for that position.
 
 Throughout this specification, a `"` opens a quoted span wherever it occurs in a line, and the next unescaped `"` closes it; without one, the span runs to the end of the line. A colon, delimiter, bracket, or brace inside a quoted span is quoted; any other is unquoted.
 
@@ -411,7 +411,7 @@ escaped-char   = %x5C ( %x5C / DQUOTE / %x6E / %x72 / %x74 / unicode-escape )
 unicode-escape = %x75 4HEXDIG
 ```
 
-Tabs are allowed inside quoted strings and as a declared delimiter; they MUST NOT be used for indentation (§12). Within quoted strings, encoders MUST escape every U+0000–U+001F character per the escape table above; decoders accept the literal controls in `unescaped-char` in any mode.
+Tabs are allowed inside quoted strings and as a declared delimiter; they MUST NOT be used for indentation (§12). Within quoted strings, decoders accept the literal controls in `unescaped-char` in any mode.
 
 ### 7.2 Quoting Rules for String Values
 
@@ -671,7 +671,7 @@ Conforming encoders MUST:
 - [ ] Produce UTF-8 output with LF (U+000A) line endings (§1.2)
 - [ ] Use consistent indentation (default 2 spaces, no tabs) (§12)
 - [ ] Escape per §7.1 in quoted strings; never emit other escapes
-- [ ] Quote strings per §7.2 (the relevant delimiter is governed by §11.1: document delimiter for object-field values and primitive list items, active delimiter for inline array values, tabular row cells, and keyed entry-row cells)
+- [ ] Quote strings per §7.2, with the relevant delimiter per §11.1
 - [ ] Quote and escape exactly those object keys, entry keys, and field names that do not match §7.3's unquoted-key pattern (§7.3)
 - [ ] Select the form from the value's shape and position, not by preference (§1.4, §9)
 - [ ] Emit declared lengths [N] matching the actual inline value, list item, tabular row, or entry row count (§6, §9)
@@ -954,7 +954,7 @@ These sketches illustrate structure and common decoding helpers. They are inform
 
 ### B.2 Array Header Parsing
 
-- Identify the optional key prefix first (quoted: a `"…"` literal at line start; unquoted: the characters up to the first `[`, which contain no whitespace, §6). This sketch applies only to lines §5.2 has already classified as array-header lines. The bracket segment `[ … ]` begins at the first `[` after the key; parse:
+- Identify the optional key prefix first (quoted: a `"…"` literal at line start; unquoted: the characters up to the first unquoted `[`, which contain no whitespace, §6). This sketch applies only to lines §5.2 has already classified as array-header lines. The bracket segment `[ … ]` begins at the first `[` after the key; parse:
   - Length N as decimal integer.
   - A colon immediately after the length marks a keyed header (§9.5); it requires a field list. Entry rows split at their first unquoted colon into entry key and cell sequence; the cells then split on the active delimiter.
   - Optional delimiter symbol at the end: HTAB or pipe (comma otherwise).
