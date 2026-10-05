@@ -590,7 +590,8 @@
       "input": "items[2]{a,b}:\n  1,2\n  c: 3,4",
       "expected": null,
       "shouldError": true,
-      "specSection": "9.3"
+      "specSection": "9.3",
+      "note": "The colon precedes the delimiter, so the line ends the rows instead of becoming a second row"
     },
     {
       "name": "throws on a header delimiter mismatch that row widths do not expose",
