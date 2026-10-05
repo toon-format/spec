@@ -314,6 +314,7 @@
         "strict": false
       },
       "specSection": "14.1",
+      "note": "A legacy [0] is a declared length, so its content is decoded (§14.1)",
       "minSpecVersion": "4.1"
     }
   ]
