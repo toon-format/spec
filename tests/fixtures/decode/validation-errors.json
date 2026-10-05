@@ -616,6 +616,21 @@
       "expected": null,
       "shouldError": true,
       "specSection": "10"
+    },
+    {
+      "name": "throws on invalid escape sequence in a quoted key",
+      "input": "\"a\\x\": 1",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "7.4"
+    },
+    {
+      "name": "throws on a [1] header with nothing after the colon",
+      "input": "a[1]:",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "9.1",
+      "note": "Nothing after the colon is list form with zero items, not one empty inline value"
     }
   ]
 }

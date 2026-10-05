@@ -198,6 +198,16 @@
       },
       "specSection": "14.1",
       "minSpecVersion": "4.1"
+    },
+    {
+      "name": "decodes the inline element [] as a string, not an empty array",
+      "input": "a[1]: []",
+      "expected": {
+        "a": [
+          "[]"
+        ]
+      },
+      "specSection": "9.3"
     }
   ]
 }

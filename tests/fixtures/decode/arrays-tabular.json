@@ -261,6 +261,35 @@
       },
       "specSection": "14.1",
       "minSpecVersion": "4.1"
+    },
+    {
+      "name": "drops surplus cells when the width mismatches in non-strict mode",
+      "input": "items[1]{a}:\n  1,2",
+      "expected": {
+        "items": [
+          {
+            "a": 1
+          }
+        ]
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "14.1",
+      "minSpecVersion": "4.1"
+    },
+    {
+      "name": "parses unquoted colon after the delimiter in tabular row as data",
+      "input": "items[1]{id,note}:\n  1,a:b",
+      "expected": {
+        "items": [
+          {
+            "id": 1,
+            "note": "a:b"
+          }
+        ]
+      },
+      "specSection": "9.3"
     }
   ]
 }

@@ -152,6 +152,15 @@
         "b": 1
       },
       "specSection": "12"
+    },
+    {
+      "name": "keeps a second leading byte-order mark as content",
+      "input": "\ufeff\ufeffa: 1",
+      "expected": {
+        "\ufeffa": 1
+      },
+      "specSection": "12",
+      "minSpecVersion": "4.1"
     }
   ]
 }
