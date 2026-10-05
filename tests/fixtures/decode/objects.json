@@ -521,10 +521,10 @@
       "specSection": "8"
     },
     {
-      "name": "parses quoted key containing a bracket segment and colon",
-      "input": "\"k [2]: y\": 1",
+      "name": "parses quoted key shaped like an inline array header",
+      "input": "\"k[2]: y\": 1",
       "expected": {
-        "k [2]: y": 1
+        "k[2]: y": 1
       },
       "specSection": "5.2"
     },
