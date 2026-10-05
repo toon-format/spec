@@ -558,10 +558,10 @@
     },
     {
       "name": "keeps keys that differ only in normalization form distinct",
-      "input": "é: 1\né: 2",
+      "input": "\u00e9: 1\ne\u0301: 2",
       "expected": {
-        "é": 1,
-        "é": 2
+        "\u00e9": 1,
+        "e\u0301": 2
       },
       "specSection": "16",
       "minSpecVersion": "4.1"
