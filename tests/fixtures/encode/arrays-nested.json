@@ -129,7 +129,7 @@
       "minSpecVersion": "4.1"
     },
     {
-      "name": "encodes three levels of nested arrays",
+      "name": "uses list form for an array of arrays in list-item position",
       "input": [
         [
           [

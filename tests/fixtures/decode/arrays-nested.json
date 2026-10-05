@@ -246,7 +246,7 @@
       "minSpecVersion": "4.1"
     },
     {
-      "name": "parses three levels of nested arrays",
+      "name": "parses an array of arrays in list-item position",
       "input": "[1]:\n  - [1]:\n    - [1]: 1",
       "expected": [
         [
