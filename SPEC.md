@@ -542,7 +542,7 @@ When tabular requirements are not met (encoding; including any column that is ne
   - Object: formatted per §10 (objects as list items).
 
 Decoding:
-- Header declares list length N and the active delimiter for any nested inline arrays.
+- Header declares list length N; nested headers declare their own delimiter (§6).
 - Each list item is a list-item line (§5.2) starting with "- " at depth +1 (or the bare marker "-" for an empty object list item, §10) and is parsed as:
   - Primitive (no colon and no array header),
   - Inline primitive array (`- [M<delim?>]: …`) or the empty-array item `- []` (§9.2),
