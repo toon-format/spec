@@ -2,7 +2,7 @@
 
 ## Token-Oriented Object Notation
 
-**Version:** 4.1
+**Version:** 4.2
 
 **Date:** 2026-07-26
 
@@ -663,7 +663,7 @@ Options:
 
 Strict-mode errors are enumerated in §14; validators MAY add informative diagnostics for style and encoding invariants.
 
-Implementations SHOULD declare the specification version they target (e.g., `toon-spec: 4.1`) in their documentation.
+Implementations SHOULD declare the specification version they target (e.g., `toon-spec: 4.2`) in their documentation.
 
 ### 13.1 Encoder Conformance Checklist
 
