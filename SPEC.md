@@ -276,7 +276,7 @@ TOON is a deterministic, line-oriented, indentation-based notation.
 - Root form discovery (applied to the comment-stripped line sequence, §5.1; line classes per §5.2):
   - If the first non-blank depth-0 line is a valid root array header per §6, decode a root array.
   - Else if the first non-blank depth-0 line is a valid keyless keyed header per §6 ([N:<delim?>]{…}:), decode a root object in keyed tabular form (§9.5).
-  - Else if the first non-blank line is the literal token `[]` at depth 0, decode an empty root array (§9.1).
+  - Else if the first non-blank depth-0 line is the literal token `[]`, decode an empty root array (§9.1).
   - Else if the document has exactly one non-blank line, at depth 0, and it is neither a valid array header nor a key-value line (quoted or unquoted key), decode a single primitive (examples: `hello`, `42`, `true`).
   - Otherwise, decode an object.
   - An empty document (no non-blank lines after comment removal, §5.1) decodes to an empty object `{}`. A document consisting only of comment and blank lines is therefore `{}`.
