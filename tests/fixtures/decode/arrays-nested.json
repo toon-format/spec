@@ -259,11 +259,12 @@
     },
     {
       "name": "parses an empty object as the first field of a list-item object",
-      "input": "items[1]:\n  - a:",
+      "input": "items[1]:\n  - a:\n    b: 1",
       "expected": {
         "items": [
           {
-            "a": {}
+            "a": {},
+            "b": 1
           }
         ]
       },

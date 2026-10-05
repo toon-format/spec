@@ -192,11 +192,12 @@
       "input": {
         "items": [
           {
-            "a": {}
+            "a": {},
+            "b": 1
           }
         ]
       },
-      "expected": "items[1]:\n  - a:",
+      "expected": "items[1]:\n  - a:\n    b: 1",
       "specSection": "10"
     }
   ]
