@@ -549,7 +549,7 @@
       "minSpecVersion": "4.1"
     },
     {
-      "name": "parses a hyphen-led line outside a list as a key-value line",
+      "name": "parses a hyphen-leading line outside a list as a key-value line",
       "input": "- a: 1",
       "expected": {
         "- a": 1
