@@ -55,7 +55,7 @@
     },
     {
       "name": "throws on blank line in nested list array",
-      "input": "outer[2]:\n  - inner[2]:\n    - a\n\n    - b\n  - x",
+      "input": "outer[2]:\n  - inner[2]:\n      - a\n\n      - b\n  - x",
       "expected": null,
       "shouldError": true,
       "options": {
