@@ -242,6 +242,73 @@
       },
       "specSection": "8",
       "minSpecVersion": "4.2"
+    },
+    {
+      "name": "skips a line above the adopted entry depth in non-strict mode",
+      "input": "m[1:]{a}:\n    x: 1\n  y: 2",
+      "expected": {
+        "m": {
+          "x": {
+            "a": 1
+          }
+        }
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "8",
+      "minSpecVersion": "4.2"
+    },
+    {
+      "name": "skips a line above the adopted row depth in non-strict mode",
+      "input": "rows[2]{a}:\n    1\n  x: 9\n    2",
+      "expected": {
+        "rows": [
+          {
+            "a": 1
+          },
+          {
+            "a": 2
+          }
+        ]
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "8",
+      "minSpecVersion": "4.2"
+    },
+    {
+      "name": "skips an over-indented line under a primitive list item in non-strict mode",
+      "input": "items[2]:\n  - a\n    b: 1\n  - c",
+      "expected": {
+        "items": [
+          "a",
+          "c"
+        ]
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "8",
+      "minSpecVersion": "4.2"
+    },
+    {
+      "name": "skips an over-indented line under a list-item field in non-strict mode",
+      "input": "items[1]:\n  - a: 1\n      deep: 1\n    b: 2",
+      "expected": {
+        "items": [
+          {
+            "a": 1,
+            "b": 2
+          }
+        ]
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "8",
+      "minSpecVersion": "4.2"
     }
   ]
 }
