@@ -248,6 +248,24 @@
         "delimiter": "|"
       },
       "specSection": "11"
+    },
+    {
+      "name": "quotes a primitive list item containing the document delimiter",
+      "input": {
+        "a": [
+          "x|y",
+          "p,q",
+          {
+            "b": 1
+          }
+        ]
+      },
+      "expected": "a[3|]:\n  - \"x|y\"\n  - p,q\n  - b: 1",
+      "options": {
+        "delimiter": "|"
+      },
+      "specSection": "11.1",
+      "minSpecVersion": "4.2"
     }
   ]
 }

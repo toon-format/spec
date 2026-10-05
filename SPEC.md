@@ -421,7 +421,7 @@ Encoders MUST quote a string value if any of the following is true:
 - It contains a colon (:), double quote ("), or backslash (\\).
 - It contains brackets or braces ([, ], {, }).
 - It contains control characters in U+0000 through U+001F.
-- It contains the relevant delimiter – the active delimiter for inline array values, tabular row cells, and keyed entry-row cells; the document delimiter for object field values (§11.1, which is authoritative for delimiter-aware quoting).
+- It contains the relevant delimiter – the active delimiter for inline array values, tabular row cells, and keyed entry-row cells; the document delimiter for object field values, primitive list items, and root primitives (§11.1, which is authoritative for delimiter-aware quoting).
 - It equals "-" or starts with "-" (any hyphen at position 0).
 - It equals "#" or starts with "#" (any number sign at position 0).
 - It is a root primitive (§5) and starts with U+FEFF (§12).
@@ -603,11 +603,11 @@ For an object appearing as a list item:
 
 ### 11.1 Encoding Rules
 
-- Document delimiter: Encoders select a document delimiter (option: comma, tab, pipe; default comma). Encoders MUST declare it as the active delimiter of every header they emit (§6); it also governs delimiter-aware quoting for object field values (key: value) and root primitives.
+- Document delimiter: Encoders select a document delimiter (option: comma, tab, pipe; default comma). Encoders MUST declare it as the active delimiter of every header they emit (§6); it also governs delimiter-aware quoting for object field values (key: value), primitive list items (`- value`), and root primitives.
 - Active delimiter: Inside a header's scope, the active delimiter governs quoting only for inline array values, tabular row cells, and keyed entry-row cells (§9.5).
 - Delimiter-aware quoting:
   - Inline array values, tabular row cells, and keyed entry-row cells: strings containing the active delimiter MUST be quoted.
-  - Object field values (key: value): encoders use the document delimiter to decide delimiter-aware quoting, regardless of whether the object appears within an array's scope. Entry rows (§9.5) are not object-field lines: the content after the entry key's colon is a delimiter-joined cell sequence, quoted per the active delimiter.
+  - Object field values (key: value) and primitive list items (`- value`): encoders use the document delimiter to decide delimiter-aware quoting, regardless of the enclosing array's scope. Entry rows (§9.5) are not object-field lines: the content after the entry key's colon is a delimiter-joined cell sequence, quoted per the active delimiter.
   - Strings containing non-active delimiters do not require quoting unless another condition applies (§7.2).
 
 ### 11.2 Decoding Rules
@@ -669,7 +669,7 @@ Conforming encoders MUST:
 - [ ] Produce UTF-8 output with LF (U+000A) line endings (§1.2)
 - [ ] Use consistent indentation (default 2 spaces, no tabs) (§12)
 - [ ] Escape per §7.1 in quoted strings; never emit other escapes
-- [ ] Quote strings per §7.2 (the relevant delimiter is governed by §11.1: document delimiter for object-field values, active delimiter for inline array values, tabular row cells, and keyed entry-row cells)
+- [ ] Quote strings per §7.2 (the relevant delimiter is governed by §11.1: document delimiter for object-field values and primitive list items, active delimiter for inline array values, tabular row cells, and keyed entry-row cells)
 - [ ] Quote and escape exactly those object keys, entry keys, and field names that do not match §7.3's unquoted-key pattern (§7.3)
 - [ ] Select the form from the value's shape and position, not by preference (§1.4, §9)
 - [ ] Emit declared lengths [N] matching the actual inline value, list item, tabular row, or entry row count (§6, §9)
