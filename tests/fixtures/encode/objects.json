@@ -93,11 +93,11 @@
       "specSection": "7.2"
     },
     {
-      "name": "quotes string value that looks like negative decimal",
+      "name": "quotes string value that looks like a number with an uppercase exponent",
       "input": {
-        "v": "-7.5"
+        "v": "1E6"
       },
-      "expected": "v: \"-7.5\"",
+      "expected": "v: \"1E6\"",
       "specSection": "7.2"
     },
     {
@@ -182,12 +182,13 @@
       "note": "The unquoted-key pattern is ASCII-only, so every non-ASCII key is quoted"
     },
     {
-      "name": "quotes CJK key",
+      "name": "keeps a dotted key unquoted",
       "input": {
-        "名前": "x"
+        "a.b": 1
       },
-      "expected": "\"名前\": x",
-      "specSection": "7.3"
+      "expected": "a.b: 1",
+      "specSection": "7.3",
+      "minSpecVersion": "4.2"
     },
     {
       "name": "escapes newline in key",

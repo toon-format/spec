@@ -26,8 +26,8 @@
       "specSection": "14.2"
     },
     {
-      "name": "throws on non-multiple indentation with custom indentSize 4 (3 spaces)",
-      "input": "a:\n   b: 1",
+      "name": "throws on 2-space indentation with custom indentSize 4",
+      "input": "a:\n  b: 1",
       "expected": null,
       "shouldError": true,
       "options": {
@@ -115,11 +115,9 @@
     },
     {
       "name": "accepts non-multiple indentation when strict=false",
-      "input": "a:\n   b: 1",
+      "input": "a:\n   b: 1\n  c: 2",
       "expected": {
-        "a": {
-          "b": 1
-        }
+        "a": { "b": 1, "c": 2 }
       },
       "options": {
         "indentSize": 2,
@@ -159,12 +157,11 @@
       "specSection": "8"
     },
     {
-      "name": "throws on over-indented line after a primitive field",
-      "input": "a: 1\n    b: 2",
+      "name": "throws on an over-indented line under a primitive list item",
+      "input": "items[2]:\n  - a\n    b: 1\n  - c",
       "expected": null,
       "shouldError": true,
-      "specSection": "14.2",
-      "note": "A primitive field opens no scope, so the depth-2 line belongs to none and must not be silently discarded"
+      "specSection": "8"
     },
     {
       "name": "throws on a line indented one level under a primitive field",

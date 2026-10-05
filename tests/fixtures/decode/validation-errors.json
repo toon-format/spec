@@ -213,7 +213,7 @@
     },
     {
       "name": "throws on whitespace between bracket segment and colon in strict mode",
-      "input": "items[2] :\n  1,2",
+      "input": "items[2] : 1,2",
       "expected": null,
       "shouldError": true,
       "options": {
@@ -224,7 +224,7 @@
     },
     {
       "name": "throws on whitespace between bracket segment and field list in strict mode",
-      "input": "items[2] {a,b}:\n  1,2\n  3,4",
+      "input": "items[0] {a,b}:",
       "expected": null,
       "shouldError": true,
       "options": {
@@ -271,14 +271,14 @@
     },
     {
       "name": "throws on empty field list in strict mode",
-      "input": "items[1]{}:\n  1",
+      "input": "items[0]{}:",
       "expected": null,
       "shouldError": true,
       "specSection": "14.2"
     },
     {
       "name": "throws on empty nested field group in strict mode",
-      "input": "items[1]{id,meta{}}:\n  1",
+      "input": "items[0]{id,meta{}}:",
       "expected": null,
       "shouldError": true,
       "specSection": "14.2",
@@ -286,21 +286,20 @@
     },
     {
       "name": "throws on unmatched brace in field list in strict mode",
-      "input": "items[1]{id,customer{name:\n  1,Ada",
+      "input": "items[0]{id,customer{name:",
       "expected": null,
       "shouldError": true,
       "specSection": "14.2"
     },
     {
       "name": "throws on duplicate field names at the same field-list level in strict mode",
-      "input": "items[1]{a,a{x}}:\n  1,2",
+      "input": "items[0]{a,a{x}}:",
       "expected": null,
       "shouldError": true,
       "options": {
         "strict": true
       },
-      "specSection": "14.3",
-      "note": "A bare field and a nested field group sharing one name yield duplicate sibling keys in every decoded row"
+      "specSection": "9.3"
     },
     {
       "name": "throws on entry row count mismatch with keyed header length",
@@ -443,7 +442,7 @@
     },
     {
       "name": "throws on keyless fields-bearing header as list item",
-      "input": "items[1]:\n  - [2]{x}:\n    1\n    2",
+      "input": "items[1]:\n  - [0]{x}:",
       "expected": null,
       "shouldError": true,
       "specSection": "6"

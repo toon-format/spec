@@ -5,7 +5,7 @@
   "tests": [
     {
       "name": "throws on blank line inside list array",
-      "input": "items[3]:\n  - a\n\n  - b\n  - c",
+      "input": "items[2]:\n  - a\n\n  - b",
       "expected": null,
       "shouldError": true,
       "options": {
@@ -137,9 +137,9 @@
     },
     {
       "name": "ignores blank lines inside list array when strict=false",
-      "input": "items[3]:\n  - a\n\n  - b\n  - c",
+      "input": "items[2]:\n  - a\n\n  - b",
       "expected": {
-        "items": ["a", "b", "c"]
+        "items": ["a", "b"]
       },
       "options": {
         "strict": false

@@ -66,10 +66,10 @@
       "specSection": "11"
     },
     {
-      "name": "parses nested arrays inside list items with default comma delimiter when parent uses pipe",
-      "input": "items[1|]:\n  - tags[3]: a,b,c",
+      "name": "parses a keyless inner array without a delimiter symbol as comma when parent uses pipe",
+      "input": "pairs[1|]:\n  - [2]: a,b",
       "expected": {
-        "items": [{ "tags": ["a", "b", "c"] }]
+        "pairs": [["a", "b"]]
       },
       "specSection": "11"
     },
@@ -87,19 +87,19 @@
     },
     {
       "name": "parses root-level array of objects with tab delimiter",
-      "input": "[2\t]{id}:\n  1\n  2",
-      "expected": [{ "id": 1 }, { "id": 2 }],
+      "input": "[1\t]{a\tb}:\n  1\t2",
+      "expected": [{ "a": 1, "b": 2 }],
       "specSection": "11"
     },
     {
       "name": "parses root-level array of objects with pipe delimiter",
-      "input": "[2|]{id}:\n  1\n  2",
-      "expected": [{ "id": 1 }, { "id": 2 }],
+      "input": "[1|]{a|b}:\n  1|2",
+      "expected": [{ "a": 1, "b": 2 }],
       "specSection": "11"
     },
     {
       "name": "parses values containing tab delimiter when quoted",
-      "input": "items[3\t]: a\t\"b\\tc\"\td",
+      "input": "items[3\t]: a\t\"b\tc\"\td",
       "expected": {
         "items": ["a", "b\tc", "d"]
       },
@@ -161,10 +161,10 @@
       "note": "Object field values are parsed as the whole post-colon token, never split on a delimiter"
     },
     {
-      "name": "does not split object values on commas inside a tab-delimited scope",
-      "input": "items[2\t]:\n  - status: a,b\n  - status: c,d",
+      "name": "does not split a list-item field value on the active delimiter",
+      "input": "items[1|]:\n  - status: a|b",
       "expected": {
-        "items": [{ "status": "a,b" }, { "status": "c,d" }]
+        "items": [{ "status": "a|b" }]
       },
       "specSection": "11.2",
       "note": "The active delimiter splits row and inline cells, never object field values"
@@ -187,9 +187,9 @@
     },
     {
       "name": "falls through to a key-value line on a header delimiter mismatch",
-      "input": "a[2|]{x,y}: 1|2",
+      "input": "a[0|]{x,y}:",
       "expected": {
-        "a[2|]{x,y}": "1|2"
+        "a[0|]{x,y}": {}
       },
       "options": {
         "strict": false

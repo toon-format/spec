@@ -15,9 +15,8 @@
     },
     {
       "name": "parses null values in objects",
-      "input": "id: 123\nvalue: null",
+      "input": "value: null",
       "expected": {
-        "id": 123,
         "value": null
       },
       "specSection": "8"
@@ -31,12 +30,13 @@
       "specSection": "8"
     },
     {
-      "name": "bare key: with no children decodes as empty object, not array",
-      "input": "matches:",
+      "name": "decodes a bare key followed by trailing spaces as an empty object",
+      "input": "matches: ",
       "expected": {
         "matches": {}
       },
-      "specSection": "8"
+      "specSection": "12",
+      "minSpecVersion": "4.1"
     },
     {
       "name": "applies last-write-wins for duplicate sibling keys in non-strict mode",
@@ -106,13 +106,12 @@
       "specSection": "4"
     },
     {
-      "name": "parses quoted object value shaped like an inline array header",
-      "input": "a: \"[2]: x\"",
+      "name": "parses an unquoted field value starting with a bracket segment as a string",
+      "input": "a: [2]: x",
       "expected": {
         "a": "[2]: x"
       },
-      "specSection": "8",
-      "note": "Quoted value is opaque (§4); the bracket-and-colon shape inside the quotes is data, not an array header (§6)"
+      "specSection": "5.2"
     },
     {
       "name": "parses quoted object value shaped like a count-matching inline array header",
