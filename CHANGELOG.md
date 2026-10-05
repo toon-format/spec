@@ -4,6 +4,23 @@ All notable changes to the TOON specification will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). The project follows the MAJOR.MINOR versioning policy described in [VERSIONING.md](./VERSIONING.md).
 
+## [4.2] - Unreleased
+
+### Added
+
+- §5.2: a `"` opens a quoted span wherever it occurs in a line, so a colon, delimiter, bracket, or brace between it and the next unescaped `"` (or the line end) is quoted.
+- §14: a non-strict decoder either errors or applies the leniency the specification names; §8 names one for depth jumps – the first line's depth becomes the scope's content depth.
+- Conformance fixtures for the new decoder rules, the shortest digits, and list-item quoting.
+
+### Changed
+
+- Encoder output is fully determined: numbers use the shortest round-trip digits (§2), strings and keys stay unquoted unless §7.2 or §7.3 requires quotes, and primitive list items are quoted by the document delimiter like object field values (§7.2, §11.1).
+- Decoder edge cases are settled: a line without an unquoted colon is never a header (§6); an indented first line is over-indented (§5, §8); a hyphen marks a list item only at item depth (§5.2); an empty key token is the empty key and an empty field entry is a header syntax error (§6, §7.4); whitespace between a field name and its nested field group is a header syntax error (§6); a length beyond the integer range still forms a header (§6); raw control characters inside quoted strings decode as themselves (§7.1); and a line of tabs is not blank (§12).
+
+### Compatibility
+
+Every decoder change concerns input no conforming 4.1 encoder emits: §7.1–§7.3 escape every control character and quote any string or key that is empty, starts with `-`, or contains `"`, a bracket, or a brace, and encoders never indent the first line, indent with tabs, put a space before a nested field group, or trigger a §14 condition. Each is MINOR under the encoder-unreachability rule in [VERSIONING.md](./VERSIONING.md). The encoder changes are tightenings: decoders read the output of every 4.1 encoder unchanged.
+
 ## [4.1] - 2026-07-26
 
 ### Added
