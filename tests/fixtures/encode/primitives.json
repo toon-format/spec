@@ -281,6 +281,14 @@
       "specSection": "7.2",
       "note": "Unquoted, a decoder would remove the U+FEFF as a byte-order mark (§12) and read the number 8",
       "minSpecVersion": "4.1"
+    },
+    {
+      "name": "encodes a large integer-valued number with its shortest round-trip digits",
+      "input": 123456789012345680000,
+      "expected": "123456789012345680000",
+      "specSection": "2",
+      "note": "The binary64 value is exactly 123456789012345683968",
+      "minSpecVersion": "4.2"
     }
   ]
 }
