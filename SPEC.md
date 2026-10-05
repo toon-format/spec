@@ -139,7 +139,7 @@ All normative text is in Sections 1–16; the appendices and all examples are in
 - Indentation level (depth): Leading indentation measured in fixed-size space units (indentSize). Depth 0 has no indentation.
 - Indentation unit (indentSize): A fixed number of spaces per level (default 2). Tabs MUST NOT be used for indentation.
 - Content depth: The depth at which a scope's immediate content appears – 0 for the root scope, otherwise one level deeper than the depth at which the scope's opening line stands (see §10 for first fields carried on a list-item hyphen line, and §8 for the non-strict depth-jump leniency).
-- Row depth, entry depth: The content depth of a tabular array's or keyed tabular object's scope, at which its rows or entry rows appear (§9.3, §9.5).
+- Row depth, entry depth, item depth: The content depth of a tabular array's, keyed tabular object's, or list-form array's scope, at which its rows, entry rows, or list items appear (§9.3, §9.4, §9.5).
 
 ### 1.4 Array and Tabular Terms
 
