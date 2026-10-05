@@ -394,9 +394,9 @@ In quoted strings and keys, codepoints are encoded according to the following ta
 | LF (U+000A)                                            | MUST emit `\n`                                | MUST decode `\n` → LF                                           |
 | CR (U+000D)                                            | MUST emit `\r`                                | MUST decode `\r` → CR                                           |
 | HTAB (U+0009)                                          | MUST emit `\t`                                | MUST decode `\t` → HTAB                                         |
-| Other U+0000–U+001F controls                           | MUST emit `\uXXXX` (lowercase hex SHOULD)     | MUST decode `\uXXXX` (case-insensitive hex)                     |
+| Other U+0000–U+001F controls                           | MUST emit `\uXXXX` with lowercase hex         | MUST decode `\uXXXX` (case-insensitive hex)                     |
 | U+D800–U+DFFF surrogates                               | (not produced by valid encoders)              | MUST reject when decoded from `\uXXXX`, lone or paired          |
-| Other BMP codepoints (U+0020–U+D7FF, U+E000–U+FFFF)    | SHOULD emit literal UTF-8; MAY emit `\uXXXX`  | MUST accept either form                                         |
+| Other BMP codepoints (U+0020–U+D7FF, U+E000–U+FFFF)    | MUST emit literal UTF-8                       | MUST accept either form                                         |
 | Supplementary scalar values (U+10000–U+10FFFF)         | MUST emit as literal UTF-8                    | MUST accept literal UTF-8; surrogate `\uXXXX` escapes MUST be rejected (see row above) |
 
 Decoders MUST reject any escape sequence not listed above, MUST reject `\u` followed by fewer than four hex digits, and MUST reject unterminated strings.
