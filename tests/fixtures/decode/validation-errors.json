@@ -136,11 +136,11 @@
       "specSection": "14.3"
     },
     {
-      "name": "throws on array header missing colon",
+      "name": "throws on a header-shaped line without a colon above indented rows",
       "input": "items[2]{id,name}\n  1,Ada\n  2,Bob",
       "expected": null,
       "shouldError": true,
-      "specSection": "6"
+      "specSection": "5.2"
     },
     {
       "name": "throws when inline values fall short of the declared length",

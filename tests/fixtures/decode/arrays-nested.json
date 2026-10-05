@@ -316,6 +316,17 @@
       "specSection": "14.1",
       "note": "A legacy [0] is a declared length, so its content is decoded (§14.1)",
       "minSpecVersion": "4.1"
+    },
+    {
+      "name": "parses a list item shaped like a header without a colon as a string",
+      "input": "a[1]:\n  - [2]",
+      "expected": {
+        "a": [
+          "[2]"
+        ]
+      },
+      "specSection": "6",
+      "minSpecVersion": "4.2"
     }
   ]
 }

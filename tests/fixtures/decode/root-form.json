@@ -99,6 +99,13 @@
       "specSection": "5",
       "note": "The non-strict leniency for trailing content excludes scalar lines (§5.2)",
       "minSpecVersion": "4.1"
+    },
+    {
+      "name": "parses a root line shaped like a header without a colon as a string",
+      "input": "items[2]",
+      "expected": "items[2]",
+      "specSection": "6",
+      "minSpecVersion": "4.2"
     }
   ]
 }
