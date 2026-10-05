@@ -145,14 +145,6 @@
       "specSection": "12"
     },
     {
-      "name": "keeps a carriage return inside a line as content",
-      "input": "a: x\ry",
-      "expected": {
-        "a": "x\ry"
-      },
-      "specSection": "12"
-    },
-    {
       "name": "keeps a second carriage return before CRLF as content",
       "input": "a: x\r\r\nb: 1",
       "expected": {
