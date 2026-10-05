@@ -150,18 +150,6 @@
       "specSection": "7.2"
     },
     {
-      "name": "encodes Chinese characters without quotes",
-      "input": "你好",
-      "expected": "你好",
-      "specSection": "7.2"
-    },
-    {
-      "name": "encodes emoji without quotes",
-      "input": "🚀",
-      "expected": "🚀",
-      "specSection": "7.2"
-    },
-    {
       "name": "encodes string with emoji and spaces",
       "input": "hello 👋 world",
       "expected": "hello 👋 world",

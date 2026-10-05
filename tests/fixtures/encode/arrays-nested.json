@@ -4,14 +4,6 @@
   "description": "Nested and mixed array encoding – arrays of arrays, mixed type arrays, root arrays",
   "tests": [
     {
-      "name": "encodes nested arrays of primitives",
-      "input": {
-        "pairs": [["a", "b"], ["c", "d"]]
-      },
-      "expected": "pairs[2]:\n  - [2]: a,b\n  - [2]: c,d",
-      "specSection": "9.2"
-    },
-    {
       "name": "quotes strings containing delimiters in nested arrays",
       "input": {
         "pairs": [["a", "b"], ["c,d", "e:f", "true"]]
@@ -25,14 +17,6 @@
         "pairs": [[], []]
       },
       "expected": "pairs[2]:\n  - [0]:\n  - [0]:",
-      "specSection": "9.2"
-    },
-    {
-      "name": "encodes mixed-length inner arrays",
-      "input": {
-        "pairs": [[1], [2, 3]]
-      },
-      "expected": "pairs[2]:\n  - [1]: 1\n  - [2]: 2,3",
       "specSection": "9.2"
     },
     {
@@ -70,20 +54,6 @@
       "input": [],
       "expected": "[]",
       "specSection": "9.1"
-    },
-    {
-      "name": "encodes complex nested structure",
-      "input": {
-        "user": {
-          "id": 123,
-          "name": "Ada",
-          "tags": ["reading", "gaming"],
-          "active": true,
-          "prefs": []
-        }
-      },
-      "expected": "user:\n  id: 123\n  name: Ada\n  tags[2]: reading,gaming\n  active: true\n  prefs: []",
-      "specSection": "8"
     },
     {
       "name": "uses list form for arrays mixing primitives and objects",

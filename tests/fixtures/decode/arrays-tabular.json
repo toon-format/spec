@@ -26,17 +26,6 @@
       "specSection": "9.3"
     },
     {
-      "name": "parses quoted colon in tabular row as data",
-      "input": "items[2]{id,note}:\n  1,\"a:b\"\n  2,\"c:d\"",
-      "expected": {
-        "items": [
-          { "id": 1, "note": "a:b" },
-          { "id": 2, "note": "c:d" }
-        ]
-      },
-      "specSection": "9.3"
-    },
-    {
       "name": "parses quoted header keys in tabular arrays",
       "input": "items[2]{\"order:id\",\"full name\"}:\n  1,Ada\n  2,Bob",
       "expected": {

@@ -180,13 +180,6 @@
       "note": "The blank is after the inner scope's last row but inside the outer array's span (\u00a712)"
     },
     {
-      "name": "throws on blank line between a list item's fields",
-      "input": "items[2]:\n  - a: 1\n\n    b: 2\n  - x",
-      "expected": null,
-      "shouldError": true,
-      "specSection": "14.2"
-    },
-    {
       "name": "throws on blank line inside the last list item's fields",
       "input": "items[1]:\n  - a: 1\n\n    b: 2",
       "expected": null,

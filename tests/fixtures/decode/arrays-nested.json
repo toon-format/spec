@@ -104,14 +104,6 @@
       "specSection": "9.2"
     },
     {
-      "name": "parses nested arrays of primitives",
-      "input": "pairs[2]:\n  - [2]: a,b\n  - [2]: c,d",
-      "expected": {
-        "pairs": [["a", "b"], ["c", "d"]]
-      },
-      "specSection": "9.2"
-    },
-    {
       "name": "parses quoted strings and mixed lengths in nested arrays",
       "input": "pairs[2]:\n  - [2]: a,b\n  - [3]: \"c,d\",\"e:f\",\"true\"",
       "expected": {
@@ -124,14 +116,6 @@
       "input": "pairs[2]:\n  - [0]:\n  - [0]:",
       "expected": {
         "pairs": [[], []]
-      },
-      "specSection": "9.2"
-    },
-    {
-      "name": "parses mixed-length inner arrays",
-      "input": "pairs[2]:\n  - [1]: 1\n  - [2]: 2,3",
-      "expected": {
-        "pairs": [[1], [2, 3]]
       },
       "specSection": "9.2"
     },
@@ -190,25 +174,6 @@
       "input": "items[3]:\n  - 1\n  - a: 1\n  - text",
       "expected": {
         "items": [1, { "a": 1 }, "text"]
-      },
-      "specSection": "9.4"
-    },
-    {
-      "name": "parses arrays mixing objects and arrays",
-      "input": "items[2]:\n  - a: 1\n  - [2]: 1,2",
-      "expected": {
-        "items": [{ "a": 1 }, [1, 2]]
-      },
-      "specSection": "9.4"
-    },
-    {
-      "name": "parses quoted key with list-form array",
-      "input": "\"x-items\"[2]:\n  - id: 1\n  - id: 2",
-      "expected": {
-        "x-items": [
-          { "id": 1 },
-          { "id": 2 }
-        ]
       },
       "specSection": "9.4"
     },

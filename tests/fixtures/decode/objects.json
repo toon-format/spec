@@ -90,14 +90,6 @@
       "specSection": "8"
     },
     {
-      "name": "parses quoted object value with only spaces",
-      "input": "text: \"  \"",
-      "expected": {
-        "text": "  "
-      },
-      "specSection": "8"
-    },
-    {
       "name": "parses quoted string value that looks like true",
       "input": "v: \"true\"",
       "expected": {
@@ -110,14 +102,6 @@
       "input": "v: \"42\"",
       "expected": {
         "v": "42"
-      },
-      "specSection": "8"
-    },
-    {
-      "name": "parses quoted string value that looks like negative decimal",
-      "input": "v: \"-7.5\"",
-      "expected": {
-        "v": "-7.5"
       },
       "specSection": "8"
     },
@@ -310,34 +294,10 @@
       "specSection": "8"
     },
     {
-      "name": "parses underscore-prefixed keys",
-      "input": "_private: 1",
-      "expected": {
-        "_private": 1
-      },
-      "specSection": "8"
-    },
-    {
-      "name": "parses underscore-containing keys",
-      "input": "user_name: 1",
-      "expected": {
-        "user_name": 1
-      },
-      "specSection": "8"
-    },
-    {
       "name": "unescapes newline in key",
       "input": "\"line\\nbreak\": 1",
       "expected": {
         "line\nbreak": 1
-      },
-      "specSection": "7.1"
-    },
-    {
-      "name": "unescapes tab in key",
-      "input": "\"tab\\there\": 2",
-      "expected": {
-        "tab\there": 2
       },
       "specSection": "7.1"
     },

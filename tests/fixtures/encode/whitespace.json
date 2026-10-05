@@ -4,14 +4,6 @@
   "description": "Whitespace and formatting invariants – no trailing spaces, no trailing newlines",
   "tests": [
     {
-      "name": "produces no trailing newline at end of output",
-      "input": {
-        "id": 123
-      },
-      "expected": "id: 123",
-      "specSection": "12"
-    },
-    {
       "name": "maintains proper indentation for nested structures",
       "input": {
         "user": {

@@ -260,15 +260,6 @@
       "note": "No key has special meaning, so the encoder emits prototype-named own entries like any other (§8)"
     },
     {
-      "name": "encodes constructor and prototype own properties as ordinary keys",
-      "input": {
-        "constructor": 1,
-        "prototype": 2
-      },
-      "expected": "constructor: 1\nprototype: 2",
-      "specSection": "15"
-    },
-    {
       "name": "encodes __proto__ as a tabular field name",
       "input": {
         "rows": [

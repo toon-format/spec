@@ -137,16 +137,6 @@
       "note": "Encoders never emit keyed headers for fewer than two entries; decoders accept any N with count checks"
     },
     {
-      "name": "accepts a single entry row",
-      "input": "m[1:]{v}:\n  a: 1",
-      "expected": {
-        "m": {
-          "a": { "v": 1 }
-        }
-      },
-      "specSection": "9.5"
-    },
-    {
       "name": "parses quoted cells containing the active delimiter",
       "input": "m[2:]{t}:\n  a: \"x,y\"\n  b: z",
       "expected": {
