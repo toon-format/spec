@@ -87,6 +87,18 @@
         "strict": true
       },
       "specSection": "5"
+    },
+    {
+      "name": "throws on a trailing bare token after a root array in non-strict mode",
+      "input": "[2]: 1,2\njunk",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": false
+      },
+      "specSection": "5",
+      "note": "The non-strict leniency for trailing content excludes scalar lines (§5.2)",
+      "minSpecVersion": "4.1"
     }
   ]
 }
