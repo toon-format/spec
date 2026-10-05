@@ -246,7 +246,7 @@
       "minSpecVersion": "4.1"
     },
     {
-      "name": "treats a delimiter after a mid-token quote as quoted",
+      "name": "treats a delimiter inside a mid-token quote span as quoted",
       "input": "k[2]: a\"b,c\",d",
       "expected": {
         "k": [

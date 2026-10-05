@@ -651,7 +651,7 @@
     },
     {
       "name": "throws on a space between a field name and its nested field group",
-      "input": "a[1]{b {c}}:\n  1",
+      "input": "a[0]{b {c}}:",
       "expected": null,
       "shouldError": true,
       "specSection": "6",
