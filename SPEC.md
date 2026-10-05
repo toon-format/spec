@@ -629,7 +629,7 @@ For an object appearing as a list item:
   - Encoders MUST NOT emit a trailing newline at the end of the document.
 - Decoding:
   - Byte-order mark: a single U+FEFF at the very start of the document is a byte-order mark, not content – decoders MUST remove it before any processing in §5.1 and this section. A U+FEFF anywhere else is content. Encoders MUST NOT emit one.
-  - Line terminators: a single CR (U+000D) at the end of a line is part of the line terminator, not of the line's content – decoders MUST exclude it before any processing in §5.1 and this section, thereby accepting CRLF input. A CR anywhere else in a line is content, including a second CR before the line end.
+  - Line terminators: a single CR (U+000D) at the end of a line is part of the line terminator, not of the line's content – decoders MUST exclude it before any processing in §5.1 and this section, thereby accepting CRLF input. A CR anywhere else in a line is content.
   - Strict mode:
     - The number of leading spaces on a line MUST be an exact multiple of indentSize; otherwise MUST error.
     - Tabs used as indentation MUST error (see §7.1 for tabs in quoted strings and as the HTAB delimiter).
