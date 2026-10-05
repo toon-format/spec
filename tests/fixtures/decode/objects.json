@@ -585,6 +585,15 @@
       },
       "specSection": "16",
       "minSpecVersion": "4.1"
+    },
+    {
+      "name": "parses an empty unquoted key as the empty key",
+      "input": ": 1",
+      "expected": {
+        "": 1
+      },
+      "specSection": "7.4",
+      "minSpecVersion": "4.2"
     }
   ]
 }
