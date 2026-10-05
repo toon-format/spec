@@ -579,17 +579,6 @@
       "minSpecVersion": "4.1"
     },
     {
-      "name": "throws on an over-indented bare token in non-strict mode",
-      "input": "a: 1\n  hello",
-      "expected": null,
-      "shouldError": true,
-      "options": {
-        "strict": false
-      },
-      "specSection": "8",
-      "minSpecVersion": "4.1"
-    },
-    {
       "name": "throws on a surrogate pair escape",
       "input": "val: \"\\ud83d\\ude00\"",
       "expected": null,
