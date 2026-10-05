@@ -165,7 +165,8 @@
           5
         ]
       },
-      "specSection": "9.1"
+      "specSection": "9.1",
+      "note": "An escaped quote does not close a quoted key, so the [2] inside it is not a bracket segment"
     }
   ]
 }
