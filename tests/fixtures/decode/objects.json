@@ -608,6 +608,15 @@
       },
       "specSection": "5.2",
       "minSpecVersion": "4.2"
+    },
+    {
+      "name": "parses a key whose closed mid-token quote span hides a colon",
+      "input": "a\"b:c\"d: 1",
+      "expected": {
+        "a\"b:c\"d": 1
+      },
+      "specSection": "5.2",
+      "minSpecVersion": "4.2"
     }
   ]
 }

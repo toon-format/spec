@@ -244,6 +244,18 @@
       },
       "specSection": "6",
       "minSpecVersion": "4.1"
+    },
+    {
+      "name": "treats a delimiter after a mid-token quote as quoted",
+      "input": "k[2]: a\"b,c\",d",
+      "expected": {
+        "k": [
+          "a\"b,c\"",
+          "d"
+        ]
+      },
+      "specSection": "5.2",
+      "minSpecVersion": "4.2"
     }
   ]
 }

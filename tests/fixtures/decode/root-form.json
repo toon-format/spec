@@ -118,6 +118,13 @@
       "specSection": "5",
       "note": "The non-strict skip for over-indented lines excludes scalar lines (§5.2)",
       "minSpecVersion": "4.2"
+    },
+    {
+      "name": "parses a root primitive whose colon follows an unclosed quote",
+      "input": "a\"b: 1",
+      "expected": "a\"b: 1",
+      "specSection": "5.2",
+      "minSpecVersion": "4.2"
     }
   ]
 }
