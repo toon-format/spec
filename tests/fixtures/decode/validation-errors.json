@@ -545,8 +545,8 @@
       "specSection": "6"
     },
     {
-      "name": "throws on tabular row count mismatch inside a later list item",
-      "input": "groups[2]:\n  - a: foo\n    b[1]{w,x}:\n      wince,0\n  - a: bar\n    b[2]{w,x}:\n      wise,1",
+      "name": "throws on tabular row count mismatch in a later field of a list-item object",
+      "input": "items[1]:\n  - id: 1\n    users[2]{id,name}:\n      1,Ada",
       "expected": null,
       "shouldError": true,
       "specSection": "14.1"
