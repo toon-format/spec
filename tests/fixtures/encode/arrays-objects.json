@@ -199,6 +199,28 @@
       },
       "expected": "items[1]:\n  - a:\n    b: 1",
       "specSection": "10"
+    },
+    {
+      "name": "uses tabular form for a later field of a list-item object",
+      "input": {
+        "items": [
+          {
+            "id": 1,
+            "users": [
+              {
+                "id": 1,
+                "name": "Ada"
+              },
+              {
+                "id": 2,
+                "name": "Bob"
+              }
+            ]
+          }
+        ]
+      },
+      "expected": "items[1]:\n  - id: 1\n    users[2]{id,name}:\n      1,Ada\n      2,Bob",
+      "specSection": "10"
     }
   ]
 }

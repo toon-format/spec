@@ -538,6 +538,53 @@
         ]
       },
       "specSection": "15"
+    },
+    {
+      "name": "materializes __proto__ entry key as an ordinary own key",
+      "input": "u[1:]{x}:\n  __proto__: 1",
+      "expected": {
+        "u": {
+          "__proto__": {
+            "x": 1
+          }
+        }
+      },
+      "specSection": "15"
+    },
+    {
+      "name": "parses an unquoted key followed by spaces before the colon",
+      "input": "a : 1",
+      "expected": {
+        "a": 1
+      },
+      "specSection": "7.4"
+    },
+    {
+      "name": "parses a quoted key followed by spaces before the colon",
+      "input": "\"a\" : 1",
+      "expected": {
+        "a": 1
+      },
+      "specSection": "7.4",
+      "minSpecVersion": "4.1"
+    },
+    {
+      "name": "parses a hyphen-leading line outside a list as a key-value line",
+      "input": "- a: 1",
+      "expected": {
+        "- a": 1
+      },
+      "specSection": "5.2"
+    },
+    {
+      "name": "keeps keys that differ only in normalization form distinct",
+      "input": "\u00e9: 1\ne\u0301: 2",
+      "expected": {
+        "\u00e9": 1,
+        "e\u0301": 2
+      },
+      "specSection": "16",
+      "minSpecVersion": "4.1"
     }
   ]
 }

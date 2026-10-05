@@ -566,6 +566,71 @@
       "shouldError": true,
       "specSection": "7.4",
       "minSpecVersion": "4.1"
+    },
+    {
+      "name": "throws on two primitives at root depth in non-strict mode",
+      "input": "hello\nworld",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": false
+      },
+      "specSection": "5",
+      "minSpecVersion": "4.1"
+    },
+    {
+      "name": "throws on a surrogate pair escape",
+      "input": "val: \"\\ud83d\\ude00\"",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "7.1"
+    },
+    {
+      "name": "throws on a key-value line at row depth inside a tabular array",
+      "input": "items[2]{a,b}:\n  1,2\n  c: 3,4",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "9.3",
+      "note": "The colon precedes the delimiter, so the line ends the rows instead of becoming a second row"
+    },
+    {
+      "name": "throws on a header delimiter mismatch that row widths do not expose",
+      "input": "items[1|]{a,b}:\n  1,2",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": true
+      },
+      "specSection": "6"
+    },
+    {
+      "name": "throws on a hyphen without a following space at item depth",
+      "input": "items[2]:\n  - a\n  -b",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "5.2"
+    },
+    {
+      "name": "throws on tabular rows at depth +1 under a list-item first-field header",
+      "input": "x[1]:\n  - a[1]{p}:\n    1",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "10"
+    },
+    {
+      "name": "throws on invalid escape sequence in a quoted key",
+      "input": "\"a\\x\": 1",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "7.4"
+    },
+    {
+      "name": "throws on a [1] header with nothing after the colon",
+      "input": "a[1]:",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "9.1",
+      "note": "Nothing after the colon is list form with zero items, not one empty inline value"
     }
   ]
 }

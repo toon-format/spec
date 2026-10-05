@@ -196,6 +196,18 @@
       "shouldError": true,
       "specSection": "14.2",
       "note": "A scalar line is valid only at root primitive position"
+    },
+    {
+      "name": "throws on orphan scalar line under a primitive field in non-strict mode",
+      "input": "a: 1\n  hello",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": false
+      },
+      "specSection": "8",
+      "note": "The non-strict skip for over-indented lines excludes scalar lines (§5.2)",
+      "minSpecVersion": "4.1"
     }
   ]
 }

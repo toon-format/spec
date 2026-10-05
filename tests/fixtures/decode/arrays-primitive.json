@@ -167,6 +167,47 @@
       },
       "specSection": "9.1",
       "note": "An escaped quote does not close a quoted key, so the [2] inside it is not a bracket segment"
+    },
+    {
+      "name": "keeps inline values under a legacy [0] header in non-strict mode",
+      "input": "a[0]: 1,2",
+      "expected": {
+        "a": [
+          1,
+          2
+        ]
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "14.1",
+      "note": "A legacy [0] is a declared length, so its content is decoded (§14.1)",
+      "minSpecVersion": "4.1"
+    },
+    {
+      "name": "keeps every inline value when the count mismatches in non-strict mode",
+      "input": "tags[1]: a,b",
+      "expected": {
+        "tags": [
+          "a",
+          "b"
+        ]
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "14.1",
+      "minSpecVersion": "4.1"
+    },
+    {
+      "name": "decodes the inline element [] as a string, not an empty array",
+      "input": "a[1]: []",
+      "expected": {
+        "a": [
+          "[]"
+        ]
+      },
+      "specSection": "9.3"
     }
   ]
 }
