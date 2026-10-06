@@ -16,21 +16,9 @@
       "specSection": "4"
     },
     {
-      "name": "parses quoted string with newline escape",
-      "input": "\"line1\\nline2\"",
-      "expected": "line1\nline2",
-      "specSection": "7.1"
-    },
-    {
-      "name": "parses quoted string with tab escape",
-      "input": "\"tab\\there\"",
-      "expected": "tab\there",
-      "specSection": "7.1"
-    },
-    {
-      "name": "parses quoted string with carriage return escape",
-      "input": "\"return\\rcarriage\"",
-      "expected": "return\rcarriage",
+      "name": "parses quoted strings with newline, tab, and carriage return escapes",
+      "input": "[3]: \"line1\\nline2\",\"tab\\there\",\"return\\rcarriage\"",
+      "expected": ["line1\nline2", "tab\there", "return\rcarriage"],
       "specSection": "7.1"
     },
     {

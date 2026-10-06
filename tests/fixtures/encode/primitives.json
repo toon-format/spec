@@ -65,21 +65,9 @@
       "note": "Matches the numeric-like pattern, so it MUST be quoted"
     },
     {
-      "name": "escapes newline in string",
-      "input": "line1\nline2",
-      "expected": "\"line1\\nline2\"",
-      "specSection": "7.1"
-    },
-    {
-      "name": "escapes tab in string",
-      "input": "tab\there",
-      "expected": "\"tab\\there\"",
-      "specSection": "7.1"
-    },
-    {
-      "name": "escapes carriage return in string",
-      "input": "return\rcarriage",
-      "expected": "\"return\\rcarriage\"",
+      "name": "escapes newline, tab, and carriage return in strings",
+      "input": ["line1\nline2", "tab\there", "return\rcarriage"],
+      "expected": "[3]: \"line1\\nline2\",\"tab\\there\",\"return\\rcarriage\"",
       "specSection": "7.1"
     },
     {
@@ -108,30 +96,16 @@
       "specSection": "7.2"
     },
     {
-      "name": "quotes single hyphen as object value",
-      "input": { "marker": "-" },
-      "expected": "marker: \"-\"",
+      "name": "quotes single hyphen and hyphen-space string as object values",
+      "input": { "marker": "-", "note": "- item" },
+      "expected": "marker: \"-\"\nnote: \"- item\"",
       "specSection": "7.2",
-      "note": "Single hyphen must be quoted to avoid list item ambiguity"
+      "note": "Either would otherwise read as a list item marker"
     },
     {
-      "name": "quotes string starting with hyphen as object value",
-      "input": { "note": "- item" },
-      "expected": "note: \"- item\"",
-      "specSection": "7.2"
-    },
-    {
-      "name": "quotes single hyphen in array",
-      "input": { "items": ["-"] },
-      "expected": "items[1]: \"-\"",
-      "specSection": "7.2"
-    },
-    {
-      "name": "quotes leading-hyphen string in array",
-      "input": {
-        "tags": ["-x"]
-      },
-      "expected": "tags[1]: \"-x\"",
+      "name": "quotes single hyphen and leading-hyphen string in array",
+      "input": { "items": ["-", "-x"] },
+      "expected": "items[2]: \"-\",\"-x\"",
       "specSection": "7.2"
     },
     {
