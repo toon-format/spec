@@ -4,6 +4,12 @@ All notable changes to the TOON specification will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). The project follows the MAJOR.MINOR versioning policy described in [VERSIONING.md](./VERSIONING.md).
 
+## [Unreleased]
+
+### Changed
+
+- Conformance fixtures: cases for earlier behavior that implementations got wrong, each carrying the spec version that introduced the behavior.
+
 ## [4.2] - 2026-10-06
 
 ### Changed

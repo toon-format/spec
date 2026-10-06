@@ -51,9 +51,10 @@
     },
     {
       "name": "parses nested arrays with pipe delimiter",
-      "input": "pairs[2|]:\n  - [2|]: a|b\n  - [2|]: c|d",
+      "input": "pairs[2|]:\n  - [2|]: a|b\n  - [2|]: c|d\nitems[1|]:\n  - k[1|]:\n      - [2|]:\n        - 1\n        - x: 1",
       "expected": {
-        "pairs": [["a", "b"], ["c", "d"]]
+        "pairs": [["a", "b"], ["c", "d"]],
+        "items": [{ "k": [[1, { "x": 1 }]] }]
       },
       "specSection": "11"
     },
@@ -198,12 +199,15 @@
       "minSpecVersion": "4.1"
     },
     {
-      "name": "treats a delimiter inside a mid-token quote span as quoted",
-      "input": "k[2]: a\"b,c\",d",
+      "name": "treats a delimiter inside a closed or unclosed mid-token quote span as quoted",
+      "input": "k[2]: a\"b,c\",d\nu[1]: x\"y,z",
       "expected": {
         "k": [
           "a\"b,c\"",
           "d"
+        ],
+        "u": [
+          "x\"y,z"
         ]
       },
       "specSection": "5.2",
