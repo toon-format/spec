@@ -5,7 +5,7 @@
   "tests": [
     {
       "name": "throws on blank line inside list array",
-      "input": "items[3]:\n  - a\n\n  - b\n  - c",
+      "input": "items[2]:\n  - a\n\n  - b",
       "expected": null,
       "shouldError": true,
       "options": {
@@ -55,7 +55,7 @@
     },
     {
       "name": "throws on blank line in nested list array",
-      "input": "outer[2]:\n  - inner[2]:\n    - a\n\n    - b\n  - x",
+      "input": "outer[2]:\n  - inner[2]:\n      - a\n\n      - b\n  - x",
       "expected": null,
       "shouldError": true,
       "options": {
@@ -76,7 +76,7 @@
       "specSection": "12"
     },
     {
-      "name": "accepts whitespace-only line at non-multiple indent as blank in strict mode",
+      "name": "accepts a spaces-only line at non-multiple indent as blank in strict mode",
       "input": "a: 1\n   \nb: 2",
       "expected": {
         "a": 1,
@@ -137,9 +137,9 @@
     },
     {
       "name": "ignores blank lines inside list array when strict=false",
-      "input": "items[3]:\n  - a\n\n  - b\n  - c",
+      "input": "items[2]:\n  - a\n\n  - b",
       "expected": {
-        "items": ["a", "b", "c"]
+        "items": ["a", "b"]
       },
       "options": {
         "strict": false
@@ -178,13 +178,6 @@
       "shouldError": true,
       "specSection": "14.2",
       "note": "The blank is after the inner scope's last row but inside the outer array's span (\u00a712)"
-    },
-    {
-      "name": "throws on blank line between a list item's fields",
-      "input": "items[2]:\n  - a: 1\n\n    b: 2\n  - x",
-      "expected": null,
-      "shouldError": true,
-      "specSection": "14.2"
     },
     {
       "name": "throws on blank line inside the last list item's fields",
@@ -227,6 +220,27 @@
       "shouldError": true,
       "specSection": "14.2",
       "note": "The blank is after the nested object's content but inside the outer array's span (§12)"
+    },
+    {
+      "name": "throws on a tab-only line, which is not blank",
+      "input": "a: 1\n\t\nb: 2",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "14.2",
+      "minSpecVersion": "4.2"
+    },
+    {
+      "name": "treats a tab-only line as blank in non-strict mode",
+      "input": "a: 1\n\t\nb: 2",
+      "expected": {
+        "a": 1,
+        "b": 2
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "12",
+      "minSpecVersion": "4.2"
     }
   ]
 }

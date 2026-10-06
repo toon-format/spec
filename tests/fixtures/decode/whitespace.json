@@ -9,8 +9,7 @@
       "expected": {
         "tags": ["a", "b", "c"]
       },
-      "specSection": "12",
-      "note": "Trimming removes U+0020 only, never other Unicode whitespace"
+      "specSection": "12"
     },
     {
       "name": "tolerates spaces around pipes in inline arrays",
@@ -158,6 +157,15 @@
       "input": "\ufeff\ufeffa: 1",
       "expected": {
         "\ufeffa": 1
+      },
+      "specSection": "12",
+      "minSpecVersion": "4.1"
+    },
+    {
+      "name": "removes a byte-order mark before a comment line",
+      "input": "\ufeff# c\na: 1",
+      "expected": {
+        "a": 1
       },
       "specSection": "12",
       "minSpecVersion": "4.1"

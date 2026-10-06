@@ -4,6 +4,28 @@ All notable changes to the TOON specification will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). The project follows the MAJOR.MINOR versioning policy described in [VERSIONING.md](./VERSIONING.md).
 
+## [4.2] - Unreleased
+
+### Changed
+
+- Encoders: numbers use the shortest round-trip digits (§2); non-ASCII text is emitted as literal UTF-8 and `\uXXXX` escapes use lowercase hex (§7.1); strings and keys are quoted only where §7.2 or §7.3 requires it; primitive list items are quoted against the document delimiter, like object field values (§11.1).
+- Decoders – edge cases that 4.1 left open:
+  - a `"` opens a quoted span anywhere in a line (§5.2)
+  - a hyphen marks a list item only at item depth (§5.2)
+  - a line without an unquoted colon is never a header (§6)
+  - an indented first line is over-indented (§8)
+  - `: 1` decodes to the empty key; `{a,}` and `{a,{b}}` are header errors (§6, §7.4)
+  - whitespace before a nested field group is a header error (§6)
+  - a length beyond the integer range still forms a header (§6)
+  - raw control characters inside quotes decode as themselves (§7.1)
+  - a line of tabs is not blank, except under the non-strict tab leniency (§12)
+- Non-strict mode: decoders apply only the leniencies the spec names, or error (§14). New in 4.2: a jumped first line sets the scope's depth (§8), ill-formed UTF-8 may become U+FFFD (§4), and unmatched braces may fall through to key-value parsing (§6).
+- Conformance fixtures: cases for every change above; redundant cases removed, so fixture indices shift – runners that skip cases by index need new skip lists.
+
+### Compatibility
+
+Every decoder change concerns input no conforming 4.0 or 4.1 encoder emits, so no round-trip is affected. Encoders that quote more than required, print more digits than the shortest round-trip form, escape non-ASCII text, or quote list items against the active delimiter need an update; their output still decodes unchanged.
+
 ## [4.1] - 2026-07-26
 
 ### Added

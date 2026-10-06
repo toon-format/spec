@@ -2,7 +2,7 @@
 
 ## Token-Oriented Object Notation
 
-**Version:** 4.1
+**Version:** 4.2
 
 **Date:** 2026-07-26
 
@@ -138,8 +138,8 @@ All normative text is in Sections 1–16; the appendices and all examples are in
 
 - Indentation level (depth): Leading indentation measured in fixed-size space units (indentSize). Depth 0 has no indentation.
 - Indentation unit (indentSize): A fixed number of spaces per level (default 2). Tabs MUST NOT be used for indentation.
-- Content depth: The depth at which a scope's immediate content appears – 0 for the root scope, otherwise one level deeper than the depth at which the scope's opening line stands (see §10 for first fields carried on a list-item hyphen line).
-- Row depth, entry depth: The content depth of a tabular array's or keyed tabular object's scope, at which its rows or entry rows appear (§9.3, §9.5).
+- Content depth: The depth at which a scope's immediate content appears – 0 for the root scope, otherwise one level deeper than the depth at which the scope's opening line stands (see §10 for first fields carried on a list-item hyphen line, and §8 for the non-strict depth-jump leniency).
+- Row depth, entry depth, item depth: The content depth of a tabular array's, keyed tabular object's, or list-form array's scope, at which its rows, entry rows, or list items appear (§9.3, §9.4, §9.5).
 
 ### 1.4 Array and Tabular Terms
 
@@ -206,7 +206,7 @@ Row, entry, and item terms:
     - If the fractional part is zero after normalization, emit as an integer (e.g., 1.0 → 1).
     - -0 MUST be normalized to 0.
   - For finite numbers outside the canonical range above (non-zero |n| < 1e-6, or |n| ≥ 1e21), encoders MAY emit exponent notation conforming to the JSON number grammar [RFC8259] §6 (e.g., 1e-7, 1e+21). Encoders SHOULD use lowercase `e` and an explicit exponent sign for byte-for-byte determinism.
-  - Encoders MUST emit sufficient precision so that, after any §3 host-type normalization, decode(encode(x)) equals x under the JSON-model equality defined below.
+  - Encoders MUST emit the fewest significant digits for which, after any §3 host-type normalization, decode(encode(x)) equals x under the JSON-model equality defined below; when several candidates qualify, they MUST emit the one closest to x, ties to even.
   - If a source value is outside the implementation's documented numeric domain (e.g., arbitrary-precision decimals or integers exceeding that domain), the encoder MAY:
     - Emit a quoted string containing a lossless decimal representation (plain decimal or JSON exponent form); the chosen form MUST be documented.
     - Emit a number that round-trips to the host's numeric approximation (losing precision), provided it conforms to the rules above.
@@ -238,7 +238,7 @@ See Appendix E for non-normative language-specific examples.
 
 Decoders map text tokens to host values:
 
-- Byte input: decoders that accept bytes MUST decode them as UTF-8. In strict mode, ill-formed UTF-8 (invalid or truncated sequences, or bytes encoding surrogate code points) MUST error; it MUST NOT be silently replaced with U+FFFD. Decoders that accept host strings (already decoded from bytes) are outside this rule.
+- Byte input: decoders that accept bytes MUST decode them as UTF-8. In strict mode, ill-formed UTF-8 (invalid or truncated sequences, or bytes encoding surrogate code points) MUST error; it MUST NOT be silently replaced with U+FFFD. Non-strict decoders MAY instead replace each ill-formed sequence with U+FFFD. Decoders that accept host strings (already decoded from bytes) are outside this rule.
 - Quoted tokens (strings and keys):
   - MUST be unescaped per §7.1. Any other escape or an unterminated string MUST error.
   - Quoted primitives remain strings even if they look like numbers/booleans/null.
@@ -276,8 +276,8 @@ TOON is a deterministic, line-oriented, indentation-based notation.
 - Root form discovery (applied to the comment-stripped line sequence, §5.1; line classes per §5.2):
   - If the first non-blank depth-0 line is a valid root array header per §6, decode a root array.
   - Else if the first non-blank depth-0 line is a valid keyless keyed header per §6 ([N:<delim?>]{…}:), decode a root object in keyed tabular form (§9.5).
-  - Else if the first non-blank line is the literal token `[]`, decode an empty root array (§9.1).
-  - Else if the document has exactly one non-blank line and it is neither a valid array header nor a key-value line (quoted or unquoted key), decode a single primitive (examples: `hello`, `42`, `true`).
+  - Else if the first non-blank depth-0 line is the literal token `[]`, decode an empty root array (§9.1).
+  - Else if the document has exactly one non-blank line, at depth 0, and it is neither a valid array header nor a key-value line (quoted or unquoted key), decode a single primitive (examples: `hello`, `42`, `true`).
   - Otherwise, decode an object.
   - An empty document (no non-blank lines after comment removal, §5.1) decodes to an empty object `{}`. A document consisting only of comment and blank lines is therefore `{}`.
   - The root form spans the whole document: once a root array, an empty root array (`[]`), or a keyed tabular root object is complete, no further non-comment, non-blank line may follow. In strict mode, decoders MUST error on such trailing content (§14.2) – it MUST NOT be silently discarded. In non-strict mode, decoders MAY ignore it, except scalar lines, which are an error in any mode (§5.2). (A root object extends to the last line of the document, so this case does not arise for object roots.)
@@ -300,10 +300,12 @@ Quoting keeps "#"-leading data out of the comment rule: string values that equal
 
 ### 5.2 Line Classification
 
-Decoders classify each line of the comment-stripped sequence (§5.1) by its content after the leading indentation. The first matching class applies. Classification is lexical; whether a class is admissible at a given depth and position is determined by the enclosing construct (root form above, §8–§10). Within a tabular array's scope, lines at row depth are divided between the row and key-value classes by the disambiguation rules of §9.3, which are authoritative for that position and take precedence over the order below. Within a keyed tabular object's scope, every line at entry depth containing an unquoted colon is an entry row; §9.5 is likewise authoritative for that position.
+Decoders classify each line of the comment-stripped sequence (§5.1) by its content after the leading indentation. The first matching class applies. Classification is lexical except for class 2's item-depth condition; whether a class is admissible at a given depth and position is determined by the enclosing construct (root form above, §8–§10). Within a tabular array's scope, lines at row depth are divided between the row and key-value classes by the disambiguation rules of §9.3, which are authoritative for that position and take precedence over the order below. Within a keyed tabular object's scope, every line at entry depth containing an unquoted colon is an entry row; §9.5 is likewise authoritative for that position.
 
-1. Blank line – the content trims to empty. Handled per §12; blank lines never create or close structure.
-2. List-item line – the content is the bare marker "-" or begins with "- " (hyphen, space). The remainder after the marker is parsed per §9.2, §9.4, and §10. Outside the scope of an array in list form, a leading hyphen has no structural meaning and the line is classified by the remaining classes.
+Throughout this specification, a `"` opens a quoted span wherever it occurs in a line, and the next unescaped `"` closes it; without one, the span runs to the end of the line. A colon, delimiter, bracket, or brace inside a quoted span is quoted; any other is unquoted.
+
+1. Blank line – blank per §12, which governs its handling; blank lines never create or close structure.
+2. List-item line – the content is the bare marker "-" or begins with "- " (hyphen, space). The remainder after the marker is parsed per §9.2, §9.4, and §10. A leading hyphen marks a list item only at the item depth of an array in list form; elsewhere – including a list-item object's field depth (§10) – the line is classified by the remaining classes.
 3. Array-header line – the content matches the header or keyed-header grammar of §6. A line whose first unquoted colon precedes its first unquoted "[" is never a header; it is a key-value line. Only unquoted occurrences count: a quoted key containing a colon can still open a header (e.g., `"a:b"[2]: 1,2` is a header), while `a:b[2]: x` is a key-value line with key `a`.
 4. Key-value line – the content contains an unquoted colon and no earlier class applies. The key token precedes the first unquoted colon and is decoded per §7.4; the remainder after the colon is the value (§8). A line that contains an unquoted colon but fails the §6 header grammar falls through to this class (e.g., `foo [2]: bar`); the strict-mode header errors enumerated in §6 and §14.2 are unaffected by this fall-through.
 5. Row line – within a tabular array's scope, a delimiter-separated value line at row depth (§9.3); within a keyed tabular object's scope, an entry row at entry depth (§9.5).
@@ -363,17 +365,17 @@ The ABNF does not express delimiter equality between the `bracket-seg` and `fiel
 
 Note: The grammar above specifies header syntax only. Tabular row disambiguation is defined in §9.3.
 
-Whitespace MUST NOT appear between a key and its bracket segment, and content MUST NOT appear between `]` and `{`/`:` (e.g., `foo [2]:`, `[1][bar]:`, `[2]extra:`, `[2] :`). Such intervening whitespace or content, and the malformed bracket segments enumerated in the decoding requirements below, are strict-mode errors; non-strict decoders MAY parse the line as a key-value line, with the key treated as a literal token.
+Whitespace MUST NOT appear between a key and its bracket segment or between a field name and its nested field group, and content MUST NOT appear between `]` and `{`/`:` (e.g., `foo [2]:`, `{b {c}}`, `[1][bar]:`, `[2]extra:`, `[2] :`). Such intervening whitespace or content, and the malformed bracket segments enumerated in the decoding requirements below, are strict-mode errors; non-strict decoders MAY parse the line as a key-value line, with the key treated as a literal token.
 
 Decoding requirements:
-- The bracket segment MUST parse as a non-negative integer length N with no leading zeros (the single digit `0` is the only canonical form for length zero). Tokens like `[03]` or `[-1]` MUST NOT be interpreted as bracket segments.
+- The bracket segment MUST parse as a non-negative integer length N with no leading zeros (the single digit `0` is the only canonical form for length zero). Tokens like `[03]` or `[-1]` MUST NOT be interpreted as bracket segments. N has no upper bound: a length the implementation cannot represent still forms a header, and its count is unmet (§14.1).
 - A bracket segment without a length token (`key[]:`) is not a header: strict mode MUST error; non-strict decoders MAY fall through to key-value parsing. This does not affect the empty-array value form `key: []` (§9.1), where `[]` follows the colon.
 - A colon immediately after the length and before the optional delimiter symbol marks a keyed header (§9.5): `[N:]` declares comma, `[N:<TAB>]` tab, `[N:|]` pipe. The colon MUST occupy exactly that position – tokens such as `[2|:]`, `[2 :]`, or `[2:,]` are malformed bracket segments, and the length rules above apply unchanged (`[03:]` is malformed).
 - A keyed header MUST carry a field list: `key[2:]:` without braces is a header syntax error in strict mode; non-strict decoders MAY fall through to key-value parsing (§14.2).
 - If a trailing tab or pipe appears inside the brackets, it selects the active delimiter; otherwise comma is active.
-- If a field list occurs between the bracket and the colon, parse field entries recursively using the active delimiter at every nesting level; quoted names MUST be unescaped per §7.1. Brace matching MUST ignore `{` and `}` inside quoted names.
-- A field list MUST contain at least one field entry at every nesting level: an empty field list (`{}`, including a nested `field{}`) is a header syntax error in strict mode; non-strict decoders MAY fall through to key-value parsing (§14.2). Unmatched braces in a field list are likewise header syntax errors.
-- A colon MUST follow the bracket segment and optional field list; missing colon MUST error.
+- If a field list occurs between the bracket and the colon, parse field entries recursively using the active delimiter at every nesting level; quoted names MUST be unescaped per §7.1. Brace matching MUST ignore `{` and `}` inside quoted spans (§5.2).
+- A field list MUST contain at least one field entry at every nesting level: an empty field list (`{}`, including a nested `field{}`), an empty field entry (`{a,}`), or a nameless nested group (`{a,{b}}`) is a header syntax error in strict mode; non-strict decoders MAY fall through to key-value parsing (§14.2). Unmatched braces in a field list are likewise header syntax errors, with the same non-strict fall-through.
+- A line without any unquoted colon is neither a header nor a key context (§5.2): `items[2]` alone is a scalar line, and `- [2]` is a list item carrying the string `[2]`.
 - A non-keyed header without a field list: content after its colon is an inline primitive array (§9.1); nothing after the colon opens a block scope (§9.2, §9.4). A fields-bearing header – keyed or not – carries no inline content: in strict mode, non-whitespace content after its colon MUST error (§14.2); non-strict decoders MAY fall through to key-value parsing.
 - Keyless header positions: a keyless non-keyed header without a field list is valid only as the document's root header (§5) or as a list item after the `- ` marker (§9.2, §9.4); a keyless header with a field list – keyed or not – is valid only as the document's root header. In any other position, strict decoders MUST error (§14.2); non-strict decoders MAY parse the line as a key-value line, with the key treated as a literal token.
 
@@ -392,9 +394,9 @@ In quoted strings and keys, codepoints are encoded according to the following ta
 | LF (U+000A)                                            | MUST emit `\n`                                | MUST decode `\n` → LF                                           |
 | CR (U+000D)                                            | MUST emit `\r`                                | MUST decode `\r` → CR                                           |
 | HTAB (U+0009)                                          | MUST emit `\t`                                | MUST decode `\t` → HTAB                                         |
-| Other U+0000–U+001F controls                           | MUST emit `\uXXXX` (lowercase hex SHOULD)     | MUST decode `\uXXXX` (case-insensitive hex)                     |
+| Other U+0000–U+001F controls                           | MUST emit `\uXXXX` with lowercase hex         | MUST decode `\uXXXX` (case-insensitive hex)                     |
 | U+D800–U+DFFF surrogates                               | (not produced by valid encoders)              | MUST reject when decoded from `\uXXXX`, lone or paired          |
-| Other BMP codepoints (U+0020–U+D7FF, U+E000–U+FFFF)    | SHOULD emit literal UTF-8; MAY emit `\uXXXX`  | MUST accept either form                                         |
+| Other BMP codepoints (U+0020–U+D7FF, U+E000–U+FFFF)    | MUST emit literal UTF-8                       | MUST accept either form                                         |
 | Supplementary scalar values (U+10000–U+10FFFF)         | MUST emit as literal UTF-8                    | MUST accept literal UTF-8; surrogate `\uXXXX` escapes MUST be rejected (see row above) |
 
 Decoders MUST reject any escape sequence not listed above, MUST reject `\u` followed by fewer than four hex digits, and MUST reject unterminated strings.
@@ -404,12 +406,12 @@ Normative escape grammar:
 ```abnf
 ; Core rules per RFC 5234 §B.1 (DIGIT, DQUOTE, HEXDIG); HEXDIG matches hex digits case-insensitively
 quoted-char    = escaped-char / unescaped-char
-unescaped-char = %x09 / %x20-21 / %x23-5B / %x5D-D7FF / %xE000-FFFF / %x10000-10FFFF
+unescaped-char = %x00-09 / %x0B-21 / %x23-5B / %x5D-D7FF / %xE000-FFFF / %x10000-10FFFF
 escaped-char   = %x5C ( %x5C / DQUOTE / %x6E / %x72 / %x74 / unicode-escape )
 unicode-escape = %x75 4HEXDIG
 ```
 
-Tabs are allowed inside quoted strings and as a declared delimiter; they MUST NOT be used for indentation (§12). Within quoted strings, encoders MUST emit HTAB as `\t` per the escape table above; the literal HTAB in `unescaped-char` expresses decoder leniency only.
+Tabs are allowed inside quoted strings and as a declared delimiter; they MUST NOT be used for indentation (§12). Within quoted strings, decoders accept the literal controls in `unescaped-char` in any mode.
 
 ### 7.2 Quoting Rules for String Values
 
@@ -421,17 +423,17 @@ Encoders MUST quote a string value if any of the following is true:
 - It contains a colon (:), double quote ("), or backslash (\\).
 - It contains brackets or braces ([, ], {, }).
 - It contains control characters in U+0000 through U+001F.
-- It contains the relevant delimiter – the active delimiter for inline array values, tabular row cells, and keyed entry-row cells; the document delimiter for object field values (§11.1, which is authoritative for delimiter-aware quoting).
+- It contains the relevant delimiter – the active delimiter for inline array values, tabular row cells, and keyed entry-row cells; the document delimiter for object field values, primitive list items, and root primitives (§11.1, which is authoritative for delimiter-aware quoting).
 - It equals "-" or starts with "-" (any hyphen at position 0).
 - It equals "#" or starts with "#" (any number sign at position 0).
 - It is a root primitive (§5) and starts with U+FEFF (§12).
 
-Otherwise, the string MAY be emitted without quotes. Unicode, emoji, and strings with internal (non-leading/trailing) spaces are safe unquoted provided they do not violate the conditions.
+Otherwise, encoders MUST emit the string without quotes. Unicode, emoji, and strings with internal (non-leading/trailing) spaces are safe unquoted provided they do not violate the conditions.
 
 ### 7.3 Key Encoding
 
 Object keys (including entry keys, §9.5) and the field names in a header's field list:
-- MAY be unquoted only if they match: `^[A-Za-z_][A-Za-z0-9_.]*$`.
+- MUST be unquoted if they match: `^[A-Za-z_][A-Za-z0-9_.]*$`.
 - Otherwise, they MUST be quoted and escaped per §7.1.
 
 Keys requiring quoting per the above rules MUST be quoted in all contexts, including array headers (e.g., "my-key"[N]:).
@@ -442,7 +444,7 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
 
 - Quoted keys MUST be unescaped per §7.1; any other escape MUST error.
 - Keys (quoted or unquoted) MUST be followed by ":", optionally after spaces (§12); missing colon MUST error (see also §14.2).
-- Unquoted key token (normative): an unquoted key token is the text before the first unquoted colon of a key-value line (§5.2) or entry row (§9.5), with surrounding spaces trimmed (§12); the text before a header's bracket segment; or a field name in a field list (§6). Decoders MUST accept any such token as a literal key, in strict and non-strict mode alike, even when it does not match §7.3's unquoted-key pattern: `foo-bar: 1`, `foo-bar[2]: 1,2`, and `items[1]{2key}:` are valid input. §7.3 constrains what encoders may emit unquoted, not what decoders accept.
+- Unquoted key token (normative): an unquoted key token is the text before the first unquoted colon of a key-value line (§5.2) or entry row (§9.5), with surrounding spaces trimmed (§12); the text before a header's bracket segment; or a field name in a field list (§6). An empty token before a key-value or entry-row colon is the empty key: `: 1` decodes to `{"": 1}`. Decoders MUST accept any non-empty such token as a literal key, in strict and non-strict mode alike, even when it does not match §7.3's unquoted-key pattern: `foo-bar: 1`, `foo-bar[2]: 1,2`, and `items[1]{2key}:` are valid input. §7.3 governs how encoders emit keys, not what decoders accept.
 - Quoted-token boundary (normative): a token whose first character, after the trimming of §12, is `"` MUST be a complete quoted token – its closing `"` MUST be the token's last character. This applies wherever a token is extracted; any character after the closing quote MUST error. It overrides §4's "Otherwise → string" fallback.
 - Symmetrically for values: an unquoted value token that an encoder would have been required to quote (§7.2) is not an error. Decoders, strict mode included, MUST decode it per §4 – unless another rule of this specification assigns the token structural meaning (§5.2, §6, §9.1). Example: `key: -x` decodes to the string `-x`. §7.2 governs encoder output; it adds no decoder-side rejection.
 
@@ -457,8 +459,8 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
 - Decoding:
   - Lines in an object body are classified per §5.2; the rules below cover its key-value class.
   - A line "key:" with nothing after the colon at depth d opens an object; subsequent lines at depth > d belong to that object until the depth decreases to ≤ d.
-  - In strict mode, the first line of a non-empty nested scope MUST be at exactly depth d+1; a depth increase of more than one level relative to the enclosing scope MUST error (§14.2). Conforming encoders never produce depth jumps; §10's depth model governs fields carried on a list-item hyphen line.
-  - A line deeper than the content depth of its enclosing scope whose preceding line did not open a scope belongs to no scope (e.g., a depth d+1 line directly under a depth-d primitive field). In strict mode, decoders MUST error (§14.2) – such lines MUST NOT be silently discarded. In non-strict mode, decoders MAY skip them, except scalar lines, which are an error in any mode (§5.2).
+  - In strict mode, the first line of a non-empty nested scope MUST be at exactly depth d+1; a depth increase of more than one level relative to the enclosing scope MUST error (§14.2). In non-strict mode, decoders MAY instead take the first line's depth as the scope's content depth; a later line deeper than d but shallower than that depth is then treated as over-indented (below). Conforming encoders never produce depth jumps; §10's depth model governs fields carried on a list-item hyphen line.
+  - A line deeper than the content depth of its enclosing scope whose preceding line did not open a scope belongs to no scope (e.g., a depth d+1 line directly under a depth-d primitive field, or the document's first line at depth 1 or more). In strict mode, decoders MUST error (§14.2) – such lines MUST NOT be silently discarded. In non-strict mode, decoders MAY skip them, except scalar lines, which are an error in any mode (§5.2).
   - A bare `key:` (no value after the colon) MUST decode as an empty or nested object, not an empty array. Empty arrays use the explicit `key: []` form (§9.1).
   - Lines "key: value" at the same depth are sibling fields.
   - Duplicate sibling keys at the same depth: see §14.3 for strict/non-strict behavior.
@@ -540,7 +542,7 @@ When tabular requirements are not met (encoding; including any column that is ne
   - Object: formatted per §10 (objects as list items).
 
 Decoding:
-- Header declares list length N and the active delimiter for any nested inline arrays.
+- Header declares list length N; nested headers declare their own delimiter (§6).
 - Each list item is a list-item line (§5.2) starting with "- " at depth +1 (or the bare marker "-" for an empty object list item, §10) and is parsed as:
   - Primitive (no colon and no array header),
   - Inline primitive array (`- [M<delim?>]: …`) or the empty-array item `- []` (§9.2),
@@ -603,11 +605,11 @@ For an object appearing as a list item:
 
 ### 11.1 Encoding Rules
 
-- Document delimiter: Encoders select a document delimiter (option: comma, tab, pipe; default comma). Encoders MUST declare it as the active delimiter of every header they emit (§6); it also governs delimiter-aware quoting for object field values (key: value) and root primitives.
+- Document delimiter: Encoders select a document delimiter (option: comma, tab, pipe; default comma). Encoders MUST declare it as the active delimiter of every header they emit (§6); it also governs delimiter-aware quoting for object field values (key: value), primitive list items (`- value`), and root primitives.
 - Active delimiter: Inside a header's scope, the active delimiter governs quoting only for inline array values, tabular row cells, and keyed entry-row cells (§9.5).
 - Delimiter-aware quoting:
   - Inline array values, tabular row cells, and keyed entry-row cells: strings containing the active delimiter MUST be quoted.
-  - Object field values (key: value): encoders use the document delimiter to decide delimiter-aware quoting, regardless of whether the object appears within an array's scope. Entry rows (§9.5) are not object-field lines: the content after the entry key's colon is a delimiter-joined cell sequence, quoted per the active delimiter.
+  - Object field values (key: value) and primitive list items (`- value`): encoders use the document delimiter to decide delimiter-aware quoting, regardless of the enclosing array's scope. Entry rows (§9.5) are not object-field lines: the content after the entry key's colon is a delimiter-joined cell sequence, quoted per the active delimiter.
   - Strings containing non-active delimiters do not require quoting unless another condition applies (§7.2).
 
 ### 11.2 Decoding Rules
@@ -635,12 +637,12 @@ For an object appearing as a list item:
     - Tabs used as indentation MUST error (see §7.1 for tabs in quoted strings and as the HTAB delimiter).
   - Non-strict mode:
     - Depth MAY be computed as floor(indentSpaces / indentSize).
-    - Implementations MAY accept tab characters in indentation. When they do, leading tabs are indentation and MUST be removed from the line's content before classification (§5.2). Depth computation for tabs is implementation-defined and MUST be documented.
+    - Implementations MAY accept tab characters in indentation. When they do, leading tabs are indentation and MUST be removed from the line's content before classification (§5.2), and a line of only tabs and spaces counts as blank. Depth computation for tabs is implementation-defined and MUST be documented.
   - Trailing spaces: trailing spaces (U+0020) at the end of a line are not part of the line's content. Decoders MUST strip them after the CR exclusion above and before line classification (§5.2); a line whose content is `-` followed only by spaces is therefore the bare marker for an empty-object list item (§9.4, §10), not a list item carrying an empty token.
-  - Token trimming: when a token is extracted – a key token before a key-value colon or an entry key's colon (§7.4, §9.5), a field entry in a field list (§6), or a value token after a key-value colon, after an array-header colon, or around each delimiter-separated token – decoders MUST trim surrounding spaces, exactly U+0020, no other characters. Any other whitespace (e.g., NBSP, or HTAB outside its delimiter role) is part of the token; internal semantics follow quoting rules. This trimming does not apply between a key and its bracket segment, where whitespace is a header syntax error (§6).
+  - Token trimming: when a token is extracted – a key token before a key-value colon or an entry key's colon (§7.4, §9.5), a field entry in a field list (§6), or a value token after a key-value colon, after an array-header colon, or around each delimiter-separated token – decoders MUST trim surrounding spaces, exactly U+0020, no other characters. Any other whitespace (e.g., NBSP, or HTAB outside its delimiter role) is part of the token; internal semantics follow quoting rules. This trimming does not apply between a key and its bracket segment or between a field name and its nested field group, where whitespace is a header syntax error (§6).
   - Comment lines are removed before any check in this section applies (§5.1).
   - Blank lines:
-    - A line whose content trims to empty is blank, regardless of leading-space count; the indentation checks above do not apply to blank lines.
+    - A line consisting of spaces only is blank, regardless of their count; the indentation checks above do not apply to blank lines. A line of tabs, or of spaces and tabs, is blank only under the non-strict tab leniency (above); otherwise its tabs are indentation.
     - Header span: the lines from the first item, row, or entry line in a header's scope through the last line of that scope's content (which may be a deeper line inside its last item). A blank line inside any header span: in strict mode, MUST error; in non-strict mode, MAY be ignored and not counted as a row/item/entry.
     - All other blank lines – including between a header and the scope's first item, row, or entry line, and after a scope's content: in strict mode, decoders MUST ignore them (they do not create or close structures and are not counted); in non-strict mode, decoders SHOULD ignore them.
   - Trailing newline at end-of-file: decoders SHOULD accept; validators MAY warn.
@@ -661,7 +663,7 @@ Options:
 
 Strict-mode errors are enumerated in §14; validators MAY add informative diagnostics for style and encoding invariants.
 
-Implementations SHOULD declare the specification version they target (e.g., `toon-spec: 4.1`) in their documentation.
+Implementations SHOULD declare the specification version they target (e.g., `toon-spec: 4.2`) in their documentation.
 
 ### 13.1 Encoder Conformance Checklist
 
@@ -669,8 +671,8 @@ Conforming encoders MUST:
 - [ ] Produce UTF-8 output with LF (U+000A) line endings (§1.2)
 - [ ] Use consistent indentation (default 2 spaces, no tabs) (§12)
 - [ ] Escape per §7.1 in quoted strings; never emit other escapes
-- [ ] Quote strings per §7.2 (the relevant delimiter is governed by §11.1: document delimiter for object-field values, active delimiter for inline array values, tabular row cells, and keyed entry-row cells)
-- [ ] Quote and escape object keys, entry keys, and field names that do not match §7.3's unquoted-key pattern (§7.3)
+- [ ] Quote strings per §7.2, with the relevant delimiter per §11.1
+- [ ] Quote and escape exactly those object keys, entry keys, and field names that do not match §7.3's unquoted-key pattern (§7.3)
 - [ ] Select the form from the value's shape and position, not by preference (§1.4, §9)
 - [ ] Emit declared lengths [N] matching the actual inline value, list item, tabular row, or entry row count (§6, §9)
 - [ ] Preserve object key order as encountered, except where tabular forms reorder to the header's field order (§2)
@@ -709,7 +711,7 @@ Validators SHOULD verify:
 
 ## 14. Strict Mode Errors and Diagnostics (Authoritative Checklist)
 
-When strict mode is enabled (default), decoders MUST error on the conditions listed below. Conditions marked "(any mode)" are errors in strict and non-strict mode alike. Error type, code, and message text are implementation-defined.
+When strict mode is enabled (default), decoders MUST error on the conditions listed below. Conditions marked "(any mode)" are errors in strict and non-strict mode alike. For every other condition, a non-strict decoder applies the leniency this specification names for it, or errors where that leniency is optional; it MUST NOT recover in any other way. Error type, code, and message text are implementation-defined.
 
 ### 14.1 Array Count and Width Mismatches
 
@@ -727,14 +729,14 @@ When strict mode is enabled (default), decoders MUST error on the conditions lis
 - Invalid escape sequences or unterminated strings in quoted tokens, and characters after a quoted token's closing quote (any mode; §4, §7.1, §7.4).
 - Header delimiter mismatch (§6): MUST error as a header syntax error, independent of row width/count checks.
 - Malformed bracket lengths and malformed keyed markers in headers (§6).
-- Malformed field lists in headers: an empty field list (`{}`, including a nested `field{}`), unmatched braces, or a field name repeated within the same field list (`{a,a}`, including inside a nested group); see §6, §9.3, §9.5. These are diagnosed from the header line alone, independent of the declared count and of any following rows or entry rows.
+- Malformed field lists in headers: an empty field list (`{}`, including a nested `field{}`), an empty field entry (`{a,}`), a nameless nested group (`{a,{b}}`), unmatched braces, or a field name repeated within the same field list (`{a,a}`, including inside a nested group); see §6, §9.3, §9.5. These are diagnosed from the header line alone, independent of the declared count and of any following rows or entry rows.
 - Keyed headers (§9.5): a missing field list (`key[2:]:`), a keyless keyed header anywhere other than as the document's root header, or a line at entry depth without an unquoted colon.
 - Non-whitespace content after a fields-bearing header's colon (§6), keyed or not (e.g., `items[2]{a,b}: 1,2`).
 - Keyless headers outside their valid positions (§6): a keyless non-keyed header in object-field position (e.g., `[2]: x,y` under an object field, or as a non-first depth-0 line), or a keyless fields-bearing header as a list item (`- [2]{a}:`).
-- Any whitespace between a key and its bracket segment, and any content between a valid bracket segment and the colon (or field list), prevents array-header interpretation; decoders MUST NOT silently discard that content. In non-strict mode, decoders MAY fall through to key-value parsing.
+- Any whitespace between a key and its bracket segment or between a field name and its nested field group, and any content between a valid bracket segment and the colon (or field list), prevents array-header interpretation; decoders MUST NOT silently discard that content. In non-strict mode, decoders MAY fall through to key-value parsing.
 - Indentation and blank-line invariants per §12, evaluated after comment removal (§5.1).
-- Indentation depth jumps (§8): a line more than one level deeper than its enclosing scope (e.g., a depth d+2 line directly under a depth-d parent).
-- Over-indented lines (§8): a line deeper than the content depth of its enclosing scope when the preceding line did not open a scope (e.g., a depth d+1 line directly under a depth-d primitive field). Decoders MUST NOT silently discard such lines.
+- Indentation depth jumps (§8): the first line of a nested scope standing deeper than the scope's content depth (§1.3; e.g., a depth d+2 line directly under a depth-d `key:`).
+- Over-indented lines (§8): a line deeper than the content depth of its enclosing scope when the preceding line did not open a scope (e.g., a depth d+1 line directly under a depth-d primitive field, or the document's first line at depth 1 or more). Decoders MUST NOT silently discard such lines.
 - Trailing content after a completed root form (§5): any non-comment, non-blank line following the inline values, rows, items, or entries of a root array or keyed tabular root object, or following a root `[]`.
 - Ill-formed UTF-8 in byte input (§4).
 - A scalar line (§5.2) anywhere other than root primitive position – e.g., a bare token line inside an array or object scope (any mode; §5.2).
@@ -952,11 +954,11 @@ These sketches illustrate structure and common decoding helpers. They are inform
 
 ### B.2 Array Header Parsing
 
-- Identify the optional key prefix first (quoted: a `"…"` literal at line start; unquoted: the characters up to the first `[`, which contain no whitespace, §6). This sketch applies only to lines §5.2 has already classified as array-header lines. The bracket segment `[ … ]` begins at the first `[` after the key; parse:
+- Identify the optional key prefix first (quoted: a `"…"` literal at line start; unquoted: the characters up to the first unquoted `[`, which contain no whitespace, §6). This sketch applies only to lines §5.2 has already classified as array-header lines. The bracket segment `[ … ]` begins at the first `[` after the key; parse:
   - Length N as decimal integer.
   - A colon immediately after the length marks a keyed header (§9.5); it requires a field list. Entry rows split at their first unquoted colon into entry key and cell sequence; the cells then split on the active delimiter.
   - Optional delimiter symbol at the end: HTAB or pipe (comma otherwise).
-- If a "{ … }" field list occurs between the "]" and the ":", parse field entries recursively using the active delimiter: track brace depth, ignoring braces inside quoted names; a fieldname followed by "{" opens a nested field group. Unescape quoted names. The leaf-field list is the depth-first, pre-order walk of the resulting tree; rows assign cells to leaf fields in that order (§9.3).
+- If a "{ … }" field list occurs between the "]" and the ":", parse field entries recursively using the active delimiter: track brace depth, ignoring braces inside quoted spans; a fieldname followed by "{" opens a nested field group. Unescape quoted names. The leaf-field list is the depth-first, pre-order walk of the resulting tree; rows assign cells to leaf fields in that order (§9.3).
 - Require a colon ":" after the bracket/field list.
 - Return the header (key?, length, delimiter, fields?) and any inline values after the colon.
 - Absence of a delimiter symbol in the bracket segment always means comma for that header (no inheritance).

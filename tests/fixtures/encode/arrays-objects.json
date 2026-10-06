@@ -15,18 +15,6 @@
       "specSection": "9.4"
     },
     {
-      "name": "uses list form for objects with nested values",
-      "input": {
-        "items": [
-          { "id": 1, "nested": { "x": 1 } },
-          { "id": 2, "nested": { "y": 2 } }
-        ]
-      },
-      "expected": "items[2]:\n  - id: 1\n    nested:\n      x: 1\n  - id: 2\n    nested:\n      y: 2",
-      "specSection": "9.4",
-      "note": "The nested column mixes key sets {x} and {y}, so it is not nested-uniform (§9.3), so the array uses list form"
-    },
-    {
       "name": "preserves field order in list items - array first",
       "input": {
         "items": [{ "nums": [1, 2, 3], "name": "Ada" }]
@@ -74,22 +62,6 @@
       "specSection": "10"
     },
     {
-      "name": "uses list form for objects with multiple array fields",
-      "input": {
-        "items": [{ "nums": [1, 2], "tags": ["a", "b"], "name": "test" }]
-      },
-      "expected": "items[1]:\n  - nums[2]: 1,2\n    tags[2]: a,b\n    name: test",
-      "specSection": "10"
-    },
-    {
-      "name": "uses list form for objects with only array fields",
-      "input": {
-        "items": [{ "nums": [1, 2, 3], "tags": ["a", "b"] }]
-      },
-      "expected": "items[1]:\n  - nums[3]: 1,2,3\n    tags[2]: a,b",
-      "specSection": "10"
-    },
-    {
       "name": "encodes objects with empty arrays in list form",
       "input": {
         "items": [
@@ -98,15 +70,6 @@
       },
       "expected": "items[1]:\n  - name: Ada\n    data: []",
       "specSection": "10"
-    },
-    {
-      "name": "uses canonical encoding for multi-field list-item objects with tabular arrays",
-      "input": {
-        "items": [{ "users": [{ "id": 1 }, { "id": 2 }], "note": "x" }]
-      },
-      "expected": "items[1]:\n  - users[2]{id}:\n      1\n      2\n    note: x",
-      "specSection": "10",
-      "note": "Tabular header on hyphen line with rows at depth +2 and sibling fields at depth +1"
     },
     {
       "name": "uses canonical encoding for single-field list-item tabular arrays",
@@ -124,15 +87,6 @@
       },
       "expected": "items[1]:\n  - data: []\n    name: x",
       "specSection": "10"
-    },
-    {
-      "name": "encodes empty object list items as bare hyphen",
-      "input": {
-        "items": ["first", "second", {}]
-      },
-      "expected": "items[3]:\n  - first\n  - second\n  -",
-      "specSection": "10",
-      "note": "Empty object list items encode as a single \"-\" line at the list-item depth"
     },
     {
       "name": "uses field order from first object for tabular headers",

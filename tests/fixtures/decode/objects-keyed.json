@@ -93,16 +93,13 @@
       "note": "A keyed scope ends only by dedent or end of input"
     },
     {
-      "name": "treats key-value-shaped lines at entry depth as entry rows",
-      "input": "m[2:]{x}:\n  total: 5\n  other: 6",
+      "name": "splits an entry row at its first unquoted colon when a delimiter precedes it",
+      "input": "m[1:]{x}:\n  a,b: 5",
       "expected": {
-        "m": {
-          "total": { "x": 5 },
-          "other": { "x": 6 }
-        }
+        "m": { "a,b": { "x": 5 } }
       },
       "specSection": "9.5",
-      "note": "Opposite polarity to §9.3: in a tabular array, a colon-before-delimiter line at row depth ends the rows; in a keyed scope it is an entry"
+      "note": "The colon split comes before the delimiter split, so the delimiter before the colon is part of the entry key"
     },
     {
       "name": "splits an entry row at its first unquoted colon before delimiter splitting",
@@ -135,16 +132,6 @@
       },
       "specSection": "9.5",
       "note": "Encoders never emit keyed headers for fewer than two entries; decoders accept any N with count checks"
-    },
-    {
-      "name": "accepts a single entry row",
-      "input": "m[1:]{v}:\n  a: 1",
-      "expected": {
-        "m": {
-          "a": { "v": 1 }
-        }
-      },
-      "specSection": "9.5"
     },
     {
       "name": "parses quoted cells containing the active delimiter",
@@ -224,6 +211,18 @@
         "strict": false
       },
       "specSection": "9.5",
+      "minSpecVersion": "4.1"
+    },
+    {
+      "name": "decodes every entry row beyond the declared count in non-strict mode",
+      "input": "m[1:]{v}:\n  a: 1\n  b: 2",
+      "expected": {
+        "m": { "a": { "v": 1 }, "b": { "v": 2 } }
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "14.1",
       "minSpecVersion": "4.1"
     }
   ]
