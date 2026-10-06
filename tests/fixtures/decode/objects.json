@@ -536,10 +536,11 @@
       "minSpecVersion": "4.2"
     },
     {
-      "name": "parses keys whose closed mid-token quote span hides a colon or precedes a bracket segment",
-      "input": "a\"b:c\"d: 1\na\"b\"[2]: x,y",
+      "name": "parses keys whose closed mid-token quote span hides a colon or a bracket segment, or precedes one",
+      "input": "a\"b:c\"d: 1\ne\"[1]:\"f: 2\na\"b\"[2]: x,y",
       "expected": {
         "a\"b:c\"d": 1,
+        "e\"[1]:\"f": 2,
         "a\"b\"": ["x", "y"]
       },
       "specSection": "5.2",
