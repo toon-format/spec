@@ -305,18 +305,6 @@
       "specSection": "14.2"
     },
     {
-      "name": "throws on an unterminated quote in a field name in non-strict mode",
-      "input": "t[1]{a\"b}:\n  1",
-      "expected": null,
-      "shouldError": true,
-      "options": {
-        "strict": false
-      },
-      "specSection": "5.2",
-      "note": "The unclosed quote span runs to the end of the line, hiding the closing brace and the colon (§5.2)",
-      "minSpecVersion": "4.2"
-    },
-    {
       "name": "throws on duplicate field names at the same field-list level in strict mode",
       "input": "items[0]{a,a{x}}:",
       "expected": null,

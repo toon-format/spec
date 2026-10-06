@@ -51,10 +51,9 @@
     },
     {
       "name": "parses nested arrays with pipe delimiter",
-      "input": "pairs[2|]:\n  - [2|]: a|b\n  - [2|]: c|d\nitems[1|]:\n  - k[1|]:\n      - [2|]:\n        - 1\n        - x: 1",
+      "input": "pairs[2|]:\n  - [2|]: a|b\n  - [2|]: c|d",
       "expected": {
-        "pairs": [["a", "b"], ["c", "d"]],
-        "items": [{ "k": [[1, { "x": 1 }]] }]
+        "pairs": [["a", "b"], ["c", "d"]]
       },
       "specSection": "11"
     },

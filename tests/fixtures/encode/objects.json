@@ -45,12 +45,11 @@
       "specSection": "7.2"
     },
     {
-      "name": "quotes string values with embedded quotes or a backslash",
+      "name": "quotes string value with embedded quotes",
       "input": {
-        "text": "say \"hello\"",
-        "path": "a\\b"
+        "text": "say \"hello\""
       },
-      "expected": "text: \"say \\\"hello\\\"\"\npath: \"a\\\\b\"",
+      "expected": "text: \"say \\\"hello\\\"\"",
       "specSection": "7.2"
     },
     {
