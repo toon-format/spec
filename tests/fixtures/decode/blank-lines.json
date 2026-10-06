@@ -137,9 +137,9 @@
     },
     {
       "name": "ignores blank lines inside list array when strict=false",
-      "input": "items[2]:\n  - a\n\n  - b",
+      "input": "items[3]:\n  - a\n\n  - b\n\n\n  - c",
       "expected": {
-        "items": ["a", "b"]
+        "items": ["a", "b", "c"]
       },
       "options": {
         "strict": false
@@ -154,17 +154,6 @@
           { "id": 1, "name": "Ada" },
           { "id": 2, "name": "Bob" }
         ]
-      },
-      "options": {
-        "strict": false
-      },
-      "specSection": "12"
-    },
-    {
-      "name": "ignores multiple blank lines in arrays when strict=false",
-      "input": "items[2]:\n  - a\n\n\n  - b",
-      "expected": {
-        "items": ["a", "b"]
       },
       "options": {
         "strict": false
