@@ -547,15 +547,27 @@
       "minSpecVersion": "4.2"
     },
     {
-      "name": "falls through to a key-value line in non-strict mode when a header line fails the grammar",
-      "input": "a[2:]{x}",
+      "name": "treats an invalid header line as a key-value line (non-strict)",
+      "input": "[1]{a}: 1\na[2:]{x}\nb[3]:\n  - k[1]{a}: 1\n  - [1]{a}: 2\n  - [1]{a}:",
       "expected": {
-        "a[2": "]{x}"
+        "[1]{a}": 1,
+        "a[2": "]{x}",
+        "b": [
+          {
+            "k[1]{a}": 1
+          },
+          {
+            "[1]{a}": 2
+          },
+          {
+            "[1]{a}": {}
+          }
+        ]
       },
       "options": {
         "strict": false
       },
-      "specSection": "5.2",
+      "specSection": "6",
       "minSpecVersion": "4.2"
     }
   ]
