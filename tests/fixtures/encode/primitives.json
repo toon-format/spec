@@ -222,9 +222,9 @@
       "specSection": "2"
     },
     {
-      "name": "encodes repeating decimal with full precision",
-      "input": 0.3333333333333333,
-      "expected": "0.3333333333333333",
+      "name": "encodes floats with their shortest round-trip digits",
+      "input": [0.3333333333333333, 0.30000000000000004],
+      "expected": "[2]: 0.3333333333333333,0.30000000000000004",
       "specSection": "2"
     },
     {
