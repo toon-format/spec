@@ -172,10 +172,10 @@
     {
       "name": "escapes newline and quotes in keys",
       "input": {
-        "line\nbreak": 1,
+        "line\n": 1,
         "he said \"hi\"": 2
       },
-      "expected": "\"line\\nbreak\": 1\n\"he said \\\"hi\\\"\": 2",
+      "expected": "\"line\\n\": 1\n\"he said \\\"hi\\\"\": 2",
       "specSection": "7.1"
     },
     {

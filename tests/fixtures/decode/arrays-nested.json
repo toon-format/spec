@@ -271,10 +271,11 @@
     },
     {
       "name": "parses list items shaped like headers without a colon as strings",
-      "input": "a[2]:\n  - [2]\n  - [1,2,3]",
+      "input": "a[3]:\n  - [2]\n  - a[2]{x,x}\n  - [1,2,3]",
       "expected": {
         "a": [
           "[2]",
+          "a[2]{x,x}",
           "[1,2,3]"
         ]
       },
