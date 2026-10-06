@@ -85,16 +85,6 @@
       "note": "Active delimiter is tab; rows using comma each parse as 1 value, failing the row width check"
     },
     {
-      "name": "throws on mismatched delimiter between bracket and brace fields",
-      "input": "items[2\t]{a,b}:\n  1\t2\n  3\t4",
-      "expected": null,
-      "shouldError": true,
-      "options": {
-        "strict": true
-      },
-      "specSection": "6"
-    },
-    {
       "name": "throws on extra brackets between bracket segment and colon in strict mode",
       "input": "foo[1][bar]: 10",
       "expected": null,

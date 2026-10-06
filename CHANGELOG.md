@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
-- Conformance fixtures: cases for earlier behavior that implementations got wrong, each carrying the spec version that introduced the behavior.
+- Conformance fixtures: cases for earlier behavior that implementations got wrong, each carrying the spec version that introduced the behavior; redundant cases removed.
 
 ## [4.2] - 2026-10-06
 

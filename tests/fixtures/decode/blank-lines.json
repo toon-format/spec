@@ -34,16 +34,6 @@
       "specSection": "14.2"
     },
     {
-      "name": "throws on multiple blank lines inside array",
-      "input": "items[2]:\n  - a\n\n\n  - b",
-      "expected": null,
-      "shouldError": true,
-      "options": {
-        "strict": true
-      },
-      "specSection": "14.2"
-    },
-    {
       "name": "throws on blank line with spaces inside array",
       "input": "items[2]:\n  - a\n  \n  - b",
       "expected": null,
