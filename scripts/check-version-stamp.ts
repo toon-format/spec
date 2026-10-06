@@ -11,7 +11,7 @@ const specVersion = version.split('.').slice(0, 2).join('.')
 const stamps: [fileName: string, stamp: string][] = [
   ['SPEC.md', `**Version:** ${specVersion}`],
   ['SPEC.md', `\`toon-spec: ${specVersion}\``],
-  ['README.md', `badge/spec-v${specVersion}-`],
+  ['README.md', `[![SPEC v${specVersion}](https://img.shields.io/badge/spec-v${specVersion}-`],
   ['README.md', `Version ${specVersion}, `],
   ['CHANGELOG.md', `## [${specVersion}] - `],
 ]
