@@ -4,22 +4,14 @@
   "description": "Object encoding – simple objects, nested objects, key encoding",
   "tests": [
     {
-      "name": "preserves key order in objects",
+      "name": "preserves key order in objects with primitive values",
       "input": {
         "id": 123,
         "name": "Ada",
-        "active": true
-      },
-      "expected": "id: 123\nname: Ada\nactive: true",
-      "specSection": "8"
-    },
-    {
-      "name": "encodes null values in objects",
-      "input": {
-        "id": 123,
+        "active": true,
         "value": null
       },
-      "expected": "id: 123\nvalue: null",
+      "expected": "id: 123\nname: Ada\nactive: true\nvalue: null",
       "specSection": "8"
     },
     {
@@ -109,19 +101,12 @@
       "specSection": "7.3"
     },
     {
-      "name": "quotes key with brackets",
+      "name": "quotes keys with brackets or braces",
       "input": {
-        "[index]": 5
+        "[index]": 5,
+        "{key}": 6
       },
-      "expected": "\"[index]\": 5",
-      "specSection": "7.3"
-    },
-    {
-      "name": "quotes key with braces",
-      "input": {
-        "{key}": 5
-      },
-      "expected": "\"{key}\": 5",
+      "expected": "\"[index]\": 5\n\"{key}\": 6",
       "specSection": "7.3"
     },
     {
@@ -133,11 +118,12 @@
       "specSection": "7.3"
     },
     {
-      "name": "quotes key with spaces",
+      "name": "quotes keys with spaces",
       "input": {
-        "full name": "Ada"
+        "full name": "Ada",
+        " a ": 1
       },
-      "expected": "\"full name\": Ada",
+      "expected": "\"full name\": Ada\n\" a \": 1",
       "specSection": "7.3"
     },
     {
@@ -146,14 +132,6 @@
         "-lead": 1
       },
       "expected": "\"-lead\": 1",
-      "specSection": "7.3"
-    },
-    {
-      "name": "quotes key with leading and trailing spaces",
-      "input": {
-        " a ": 1
-      },
-      "expected": "\" a \": 1",
       "specSection": "7.3"
     },
     {
@@ -191,11 +169,12 @@
       "minSpecVersion": "4.2"
     },
     {
-      "name": "escapes newline in key",
+      "name": "escapes newline and quotes in keys",
       "input": {
-        "line\nbreak": 1
+        "line\nbreak": 1,
+        "he said \"hi\"": 2
       },
-      "expected": "\"line\\nbreak\": 1",
+      "expected": "\"line\\nbreak\": 1\n\"he said \\\"hi\\\"\": 2",
       "specSection": "7.1"
     },
     {
@@ -204,14 +183,6 @@
         "tab\there": 2
       },
       "expected": "\"tab\\there\": 2",
-      "specSection": "7.1"
-    },
-    {
-      "name": "escapes quotes in key",
-      "input": {
-        "he said \"hi\"": 1
-      },
-      "expected": "\"he said \\\"hi\\\"\": 1",
       "specSection": "7.1"
     },
     {
