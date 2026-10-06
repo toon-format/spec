@@ -548,10 +548,13 @@
       "minSpecVersion": "4.2"
     },
     {
-      "name": "reads a line whose only unquoted colon sits in the bracket segment as a key-value line",
+      "name": "falls through to a key-value line in non-strict mode when a header line fails the grammar",
       "input": "a[2:]{x}",
       "expected": {
         "a[2": "]{x}"
+      },
+      "options": {
+        "strict": false
       },
       "specSection": "5.2",
       "minSpecVersion": "4.2"

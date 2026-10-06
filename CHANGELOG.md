@@ -8,7 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
+- Decoders: a line whose first unquoted `[` precedes its first unquoted colon is an array-header line; if it fails the §6 grammar, strict mode errors instead of reading a key such as `a[1` (§5.2). Non-strict output is unchanged.
 - Conformance fixtures: cases for earlier behavior that implementations got wrong, each carrying the spec version that introduced the behavior; redundant cases removed.
+
+### Compatibility
+
+The decoder change concerns only input no conforming encoder emits – §7.3 quotes every key containing `[`, and every encoded header carries its colon after the bracket segment or field list – so no round-trip is affected.
 
 ## [4.2] - 2026-10-06
 

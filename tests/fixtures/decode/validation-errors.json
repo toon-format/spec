@@ -133,6 +133,22 @@
       "specSection": "5.2"
     },
     {
+      "name": "throws on a header line with an unclosed bracket segment",
+      "input": "a[1:",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "5.2",
+      "minSpecVersion": "4.3"
+    },
+    {
+      "name": "throws on a keyed header line without its colon",
+      "input": "a[2:]{x}",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "5.2",
+      "minSpecVersion": "4.3"
+    },
+    {
       "name": "throws when inline values fall short of the declared length",
       "input": "tags[3]: a,b",
       "expected": null,
