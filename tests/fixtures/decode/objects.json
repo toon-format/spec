@@ -405,9 +405,11 @@
     },
     {
       "name": "falls through to a key-value line when whitespace precedes the bracket segment (non-strict)",
-      "input": "foo [2]: bar,baz",
+      "input": "foo [2]: bar,baz\nt\t[1]: x\nn\u00a0[1]: y",
       "expected": {
-        "foo [2]": "bar,baz"
+        "foo [2]": "bar,baz",
+        "t\t[1]": "x",
+        "n\u00a0[1]": "y"
       },
       "options": {
         "strict": false
