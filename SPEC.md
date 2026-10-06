@@ -4,7 +4,7 @@
 
 **Version:** 4.2
 
-**Date:** 2026-07-26
+**Date:** 2026-10-06
 
 **Status:** Working Draft
 
