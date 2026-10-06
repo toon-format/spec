@@ -33,7 +33,7 @@
   "scripts": {
     "lint": "eslint .",
     "test": "node scripts/validate-fixtures.ts",
-    "release": "bumpp"
+    "release": "bumpp --execute \"node scripts/check-version-stamp.ts\""
   },
   "devDependencies": {
     "@antfu/eslint-config": "^9.5.1",
