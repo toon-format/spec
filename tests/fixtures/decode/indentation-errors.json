@@ -69,7 +69,7 @@
     },
     {
       "name": "throws on mixed tabs and spaces in indentation",
-      "input": "a:\n \tb: 1",
+      "input": "a:\n  b:\n  \t\tc: 1",
       "expected": null,
       "shouldError": true,
       "options": {
