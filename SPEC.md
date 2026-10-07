@@ -132,7 +132,7 @@ All normative text is in Sections 1–16; the appendices and all examples are in
 ### 1.2 Core Concepts
 
 - TOON document: A sequence of UTF-8 text lines formatted according to this spec.
-- Character: A Unicode scalar value. A syntax character, such as a delimiter, quote, bracket, colon, or hyphen, matches as one scalar; a combining mark after it does not change it.
+- Character: A Unicode scalar value [UNICODE]. A syntax character, such as a delimiter, quote, bracket, colon, or hyphen, matches as one scalar; a combining mark after it does not change it.
 - Line: A sequence of non-newline characters. Serialized documents use LF (U+000A) as the line separator between lines; encoders MUST use LF, not CRLF; decoders accept CRLF input (§12).
 - Whitespace: SP (U+0020) and HTAB (U+0009), and no other character. NBSP (U+00A0) and every other Unicode space are ordinary content; decoders MUST NOT apply a host-language whitespace test.
 
@@ -189,7 +189,7 @@ Row, entry, and item terms:
 ### 1.8 Notation
 
 - Regular expressions appear in slash-delimited form.
-- ABNF snippets follow RFC 5234; HTAB means the U+0009 character.
+- ABNF snippets follow [RFC5234]; HTAB means the U+0009 character.
 
 ## 2. Data Model
 
@@ -420,7 +420,7 @@ Otherwise, encoders MUST emit the string without quotes. Unicode, emoji, and str
 ### 7.3 Key Encoding
 
 Object keys (including entry keys, §9.5) and the field names in a header's field list:
-- MUST be unquoted if they match: `^[A-Za-z_][A-Za-z0-9_.]*$`.
+- MUST be unquoted if they match `/^[A-Za-z_][A-Za-z0-9_.]*$/`.
 - Otherwise, they MUST be quoted and escaped per §7.1.
 
 Keys requiring quoting per the above rules MUST be quoted in all contexts, including array headers (e.g., "my-key"[N]:).
