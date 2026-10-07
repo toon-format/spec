@@ -44,11 +44,11 @@ Error tests use `shouldError: true` to indicate that the test expects an error t
 
 ### Non-Strict Tests
 
-Every case with `options.strict: false` is required; none may be skipped.
+Cases with `options.strict: false` are required like every other case.
 
 ## Using These Tests
 
-Load each fixture file, run every entry in its `tests` array through your encoder or decoder with `test.options` applied, and assert the `expected` output – or that an error is thrown when `shouldError` is `true`.
+Load each fixture file, run every entry in its `tests` array whose `minSpecVersion`, if present, is not newer than the spec version you target, through your encoder or decoder with `test.options` applied, and assert the `expected` output – or that an error is thrown when `shouldError` is `true`.
 
 **Note:** `name`, `description`, and `note` are prose, not identifiers. Key your runner on file path and array index, never on these strings – they follow the spec's terminology and are rewritten whenever it changes.
 
@@ -87,7 +87,7 @@ Load each fixture file, run every entry in its `tests` array through your encode
 | `blank-lines.json` | Blank lines inside and outside header spans | §12, §14.2, §14.4 |
 | `comments.json` | Comment-line stripping and full-line-only edge cases | §5.1 |
 
-**Coverage note:** §3 host-type normalization (NaN/±Infinity → null, host Date/Set/Map/BigInt mappings) and §4 byte-input decoding (ill-formed UTF-8 errors in both modes, never U+FFFD) are intentionally outside these JSON fixtures, since the fixture format can express neither non-JSON encode inputs nor raw bytes. Implementations should cover both in their language-local test suites.
+**Coverage note:** §3 host-type normalization (NaN/±Infinity → null, host Date/Set/Map/BigInt mappings, the error on an unpaired surrogate) and §4 byte-input decoding (ill-formed UTF-8 errors in both modes, never U+FFFD) are intentionally outside these JSON fixtures, since the fixture format can express neither non-JSON encode inputs nor raw bytes. Implementations should cover both in their language-local test suites.
 
 ## Contributing Test Cases
 
