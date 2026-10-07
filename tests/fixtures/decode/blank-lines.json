@@ -154,7 +154,8 @@
       "options": {
         "strict": false
       },
-      "specSection": "14.4"
+      "specSection": "14.4",
+      "minSpecVersion": "4.4"
     },
     {
       "name": "ignores blank lines between tabular rows and entry rows when strict=false",
@@ -169,7 +170,8 @@
       "options": {
         "strict": false
       },
-      "specSection": "14.4"
+      "specSection": "14.4",
+      "minSpecVersion": "4.4"
     },
     {
       "name": "throws on blank line between list items after nested tabular rows",
@@ -248,7 +250,7 @@
         "strict": false
       },
       "specSection": "14.4",
-      "minSpecVersion": "4.2"
+      "minSpecVersion": "4.4"
     }
   ]
 }

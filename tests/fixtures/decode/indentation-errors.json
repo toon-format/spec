@@ -134,7 +134,8 @@
         "indentSize": 2,
         "strict": false
       },
-      "specSection": "14.4"
+      "specSection": "14.4",
+      "minSpecVersion": "4.4"
     },
     {
       "name": "counts every tab and space of mixed indentation in non-strict mode",
@@ -245,7 +246,7 @@
         "strict": false
       },
       "specSection": "14.4",
-      "minSpecVersion": "4.2"
+      "minSpecVersion": "4.4"
     },
     {
       "name": "throws on a line above the adopted depth in non-strict mode",
