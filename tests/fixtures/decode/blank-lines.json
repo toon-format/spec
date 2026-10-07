@@ -101,15 +101,18 @@
       "specSection": "12"
     },
     {
-      "name": "accepts blank line after array ends, at root and in a nested object",
-      "input": "items[1]:\n  - a\n\nb: 2\nc:\n  d[1]:\n    - x\n\n  e: 3",
+      "name": "accepts blank lines after list, tabular, and keyed scopes end, at root and in a nested object",
+      "input": "items[1]:\n  - a\n\nb: 2\nc:\n  d[1]:\n    - x\n\n  e: 3\nt[1]{a}:\n  1\n\nm[1:]{v}:\n  k: 1\n\nz: 0",
       "expected": {
         "items": ["a"],
         "b": 2,
         "c": {
           "d": ["x"],
           "e": 3
-        }
+        },
+        "t": [{ "a": 1 }],
+        "m": { "k": { "v": 1 } },
+        "z": 0
       },
       "options": {
         "strict": true
