@@ -149,6 +149,17 @@
       "minSpecVersion": "4.3"
     },
     {
+      "name": "throws on a malformed header line in non-strict mode",
+      "input": "a[2:]{x}",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": false
+      },
+      "specSection": "5.2",
+      "minSpecVersion": "4.4"
+    },
+    {
       "name": "throws when inline values fall short of the declared length",
       "input": "tags[3]: a,b",
       "expected": null,
@@ -533,6 +544,17 @@
       "minSpecVersion": "4.4"
     },
     {
+      "name": "throws on a fields-bearing header with inline content after a list-item hyphen in non-strict mode",
+      "input": "items[1]:\n  - k[1]{a}: 1",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": false
+      },
+      "specSection": "6",
+      "minSpecVersion": "4.4"
+    },
+    {
       "name": "throws on inline content after root tabular header",
       "input": "[2]{a,b}: 1,2",
       "expected": null,
@@ -554,6 +576,17 @@
       "shouldError": true,
       "specSection": "6",
       "minSpecVersion": "4.1"
+    },
+    {
+      "name": "throws on a space before the bracket segment in non-strict mode",
+      "input": "foo [2]: bar,baz",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": false
+      },
+      "specSection": "6",
+      "minSpecVersion": "4.4"
     },
     {
       "name": "throws on a tab between a key and its bracket segment",
