@@ -288,10 +288,9 @@ A comment line is a line whose first character after zero or more leading spaces
 
 - Decoders MUST remove comment lines in a lexical pre-pass over the document's lines. The text of a comment line is discarded without interpretation or unescaping. All subsequent processing – line classification (§5.2), root-form discovery, indentation validation (§12), and the count checks of §14.1 – operates on the comment-stripped line sequence.
 - Removing a comment line MUST NOT create, terminate, or otherwise affect any scope: the surrounding lines are treated as adjacent. In particular, a comment between tabular rows or keyed entry rows does not end them, and a comment line is never counted as a row, entry, list item, or blank line.
-- A comment line MAY carry any number of leading spaces; the indentation checks of §12 do not apply to comment lines.
 - Encoders MUST NOT emit comment lines.
 
-Quoting keeps "#"-leading data out of the comment rule: string values that equal "#" or start with "#" are always quoted (§7.2), and unquoted keys cannot start with "#" (§7.3), so conforming encoder output never contains a line whose first non-space character is "#".
+Quoting keeps "#"-leading data out of the comment rule: string values that start with "#" are always quoted (§7.2), and unquoted keys cannot start with "#" (§7.3), so conforming encoder output never contains a line whose first non-space character is "#".
 
 ### 5.2 Line Classification
 
@@ -413,8 +412,7 @@ Encoders MUST quote a string value if any of the following is true:
 - It contains brackets or braces ([, ], {, }).
 - It contains control characters in U+0000 through U+001F.
 - It contains the relevant delimiter – the active delimiter for inline array values, tabular row cells, and keyed entry-row cells; the document delimiter for object field values, primitive list items, and root primitives (§11.1, which is authoritative for delimiter-aware quoting).
-- It equals "-" or starts with "-" (any hyphen at position 0).
-- It equals "#" or starts with "#" (any number sign at position 0).
+- It starts with "-" or "#".
 - It is a root primitive (§5) and starts with U+FEFF (§12).
 
 Otherwise, encoders MUST emit the string without quotes. Unicode, emoji, and strings with internal (non-leading/trailing) spaces are safe unquoted provided they do not violate the conditions.
