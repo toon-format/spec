@@ -377,7 +377,7 @@ Decoding requirements:
 - A field list MUST contain at least one field entry at every nesting level: an empty field list (`{}`, including a nested `field{}`), an empty field entry (`{a,}`), or a nameless nested group (`{a,{b}}`) is a header syntax error (§14.2), as are unmatched braces in a field list.
 - A line without any unquoted colon is neither a header nor a key context (§5.2): `items[2]` alone is a scalar line, and `- [2]` is a list item carrying the string `[2]`.
 - A non-keyed header without a field list: content after its colon is an inline primitive array (§9.1); nothing after the colon opens a block scope (§9.2, §9.4). A fields-bearing header – keyed or not – carries no inline content: content other than spaces after its colon MUST error (§14.2).
-- Keyless header positions: a keyless non-keyed header without a field list is valid only as the document's root header (§5) or as a list item after the `- ` marker (§9.2, §9.4); a keyless header with a field list – keyed or not – is valid only as the document's root header. In any other position, decoders MUST error (§14.2).
+- Keyless header positions: a keyless non-keyed header without a field list is valid only as the document's root header (§5) or as a list item after the list-item marker and its spaces (§5.2, §9.2, §9.4); a keyless header with a field list – keyed or not – is valid only as the document's root header. In any other position, decoders MUST error (§14.2).
 
 Note: Dotted keys are ordinary literal keys in headers. Example: `data.meta.items[2]{id,name}:` is a valid header whose key is the single literal key `data.meta.items`, followed by a standard bracket segment, field list, and colon.
 
