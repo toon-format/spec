@@ -205,6 +205,13 @@
       "specSection": "8"
     },
     {
+      "name": "throws on an over-indented line after keyed entry rows",
+      "input": "m[1:]{v}:\n  a: 1\n    b: 2",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "8"
+    },
+    {
       "name": "throws on an over-indented line under a primitive field in non-strict mode",
       "input": "a: 1\n  b: 2",
       "expected": null,
