@@ -331,6 +331,20 @@
       "expected": null,
       "shouldError": true,
       "specSection": "8"
+    },
+    {
+      "name": "throws on a depth jump to the first list item",
+      "input": "items[1]:\n    - a",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "8"
+    },
+    {
+      "name": "throws on a depth jump to the first entry row",
+      "input": "m[1:]{v}:\n    k: 1",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "8"
     }
   ]
 }
