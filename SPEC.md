@@ -242,7 +242,7 @@ Decoders map text tokens to host values:
 
 - Byte input: decoders that accept bytes MUST decode them as UTF-8. Ill-formed UTF-8 (invalid or truncated sequences, or bytes encoding surrogate code points) MUST error; it MUST NOT be silently replaced with U+FFFD. Decoders that accept host strings (already decoded from bytes) are outside this rule; a host string type that does not guarantee well-formed UTF-8, such as Go's `string`, counts as byte input.
 - Quoted value tokens:
-  - MUST be unescaped per §7.1. Any other escape or an unterminated string MUST error.
+  - MUST be unescaped per §7.1.
   - Quoted primitives remain strings even if they look like numbers/booleans/null.
 - Unquoted value tokens:
   - true, false, null → booleans/null.
@@ -281,7 +281,7 @@ TOON is a deterministic, line-oriented, indentation-based notation.
   - Otherwise, decode an object.
   - An empty document (no non-blank lines after comment removal, §5.1) decodes to an empty object `{}`. A document consisting only of comment and blank lines is therefore `{}`.
   - The root form spans the whole document: once a root array, an empty root array (`[]`), or a keyed tabular root object is complete, no further non-comment, non-blank line may follow. Decoders MUST error on such trailing content (§14.2) – it MUST NOT be silently discarded. (A root object extends to the last line of the document, so this case does not arise for object roots.)
-  - A scalar line anywhere else is invalid (§5.2, §14.2), including a second depth-0 line. Example of invalid input:
+  - A second depth-0 scalar line is invalid (§5.2):
     ```
     hello
     world
@@ -304,7 +304,7 @@ Decoders classify each line of the comment-stripped sequence (§5.1) by its cont
 
 Throughout this specification, a `"` opens a quoted span wherever it occurs in a line, and the next unescaped `"` closes it; without one, the span runs to the end of the line. A colon, delimiter, bracket, or brace inside a quoted span is quoted; any other is unquoted.
 
-1. Blank line – blank per §12, which governs its handling; blank lines never create or close structure.
+1. Blank line – blank per §12, which governs its handling.
 2. List-item line – the content is the bare marker "-", or "-" followed by one or more spaces. The remainder after those spaces is parsed per §9.2, §9.4, and §10. A leading hyphen marks a list item only at the item depth of an array in list form; elsewhere – including a list-item object's field depth (§10) – the line is classified by the remaining classes.
 3. Array-header line – the content contains an unquoted colon, and its first unquoted "[" precedes its first unquoted colon. It MUST match the header or keyed-header grammar of §6; otherwise it is a header syntax error (e.g., `foo [2]: bar`, `a[1:`, `a[2:]{x}`, `a[1]{x:y}`). A line whose first unquoted colon precedes its first unquoted "[" is never a header; it is a key-value line. Only unquoted occurrences count: a quoted key containing a colon can still open a header (e.g., `"a:b"[2]: 1,2` is a header), while `a:b[2]: x` is a key-value line with key `a`.
 4. Key-value line – the content contains an unquoted colon and no earlier class applies. The key token precedes the first unquoted colon and is decoded per §7.4; the remainder after the colon is the value (§8).
@@ -442,7 +442,7 @@ Keys requiring quoting per the above rules MUST be quoted in all contexts, inclu
 
 Decoding of value tokens follows §4 (unquoted type inference, quoted strings, numeric rules). This section adds key-specific requirements:
 
-- Quoted keys MUST be unescaped per §7.1; any other escape MUST error.
+- Quoted keys MUST be unescaped per §7.1.
 - Keys (quoted or unquoted) MUST be followed by ":", optionally after spaces (§12); missing colon MUST error (see also §14.2).
 - Unquoted key token (normative): an unquoted key token is the text before the first unquoted colon of a key-value line (§5.2) or entry row (§9.5), with surrounding spaces trimmed (§12); the text before a header's bracket segment; or a field name in a field list (§6). An empty token before a key-value or entry-row colon is the empty key: `: 1` decodes to `{"": 1}`. Decoders MUST accept any non-empty such token as a literal key, even when it does not match §7.3's unquoted-key pattern: `foo-bar: 1`, `foo-bar[2]: 1,2`, and `items[1]{2key}:` are valid input. §7.3 governs how encoders emit keys, not what decoders accept.
 - Quoted-token boundary (normative): a token whose first character, after the trimming of §12, is `"` MUST be a complete quoted token – its closing `"` MUST be the token's last character. This applies wherever a token is extracted; any character after the closing quote MUST error. It overrides §4's "Otherwise → string" fallback.
