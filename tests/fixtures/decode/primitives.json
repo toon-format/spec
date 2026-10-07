@@ -34,6 +34,12 @@
       "specSection": "7.1"
     },
     {
+      "name": "closes a quoted token after an escaped backslash",
+      "input": "\"a\\\\\"[2]: \"y\\\\\",z",
+      "expected": { "a\\": ["y\\", "z"] },
+      "specSection": "5.2"
+    },
+    {
       "name": "decodes \\uXXXX escape (U+0004)",
       "input": "val: \"a\\u0004b\"",
       "expected": { "val": "a\u0004b" },
