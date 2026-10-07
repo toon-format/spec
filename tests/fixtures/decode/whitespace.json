@@ -159,10 +159,11 @@
       "specSection": "12"
     },
     {
-      "name": "keeps a second leading byte-order mark as content",
-      "input": "\ufeff\ufeffa: 1",
+      "name": "keeps a byte-order mark after the document start as content",
+      "input": "\ufeff\ufeffa: 1\n\ufeffb: 2",
       "expected": {
-        "\ufeffa": 1
+        "\ufeffa": 1,
+        "\ufeffb": 2
       },
       "specSection": "12",
       "minSpecVersion": "4.1"
