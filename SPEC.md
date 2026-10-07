@@ -556,7 +556,7 @@ Decoding:
 
 For an object appearing as a list item:
 
-- Encoding (normative): a non-empty object's first field, in encounter order, MUST stand on the hyphen line (`- key: …`, `- key[…]…:`). Its other fields follow at depth +1 in encounter order (§8). The content of a scope the first field opens – nested fields, list items, tabular rows, or entry rows – is at depth +2. An empty object is the bare marker `-`.
+- Encoding (normative): a non-empty object's first field, in encounter order, MUST stand on the hyphen line (`- key: …`, `- key[…]…:`); its other fields, in encounter order, and the content of any scope the first field opens follow the depth model below. An empty object is the bare marker `-`.
 - Decoding (normative):
   - Depth model: a first field carried on a list-item hyphen line at depth d stands at depth d+1 for all scope purposes. A list-item object's fields therefore occupy depth d+1 – the first carried on the hyphen line itself – and a scope opened by that first field (a nested object `- key:`, a non-tabular array header `- key[N<delim?>]:`, tabular rows, or keyed entry rows) has its content at depth d+2; §8's scope rules apply with these depths. A subsequent line at depth d+1 is a further field of the list-item object and terminates the first field's scope.
     - This model applies only to *keyed* first fields. A keyless header on a hyphen line (`- [M<delim?>]:`, §9.2, §9.4) is the list item itself rather than a field of a list-item object, so it stands at depth d and its items are at depth d+1, per §9.4. The presence or absence of the key before the bracket is the discriminator.
