@@ -93,7 +93,7 @@
         "strict": true
       },
       "specSection": "6",
-      "note": "Content between ] and : prevents array header interpretation"
+      "note": "The line is an array-header line that fails the §6 grammar (§5.2)"
     },
     {
       "name": "throws on text between bracket segment and colon",
@@ -252,7 +252,7 @@
         "strict": true
       },
       "specSection": "6",
-      "note": "No whitespace is permitted between ] and the colon/field list; any content there prevents header interpretation"
+      "note": "No whitespace is permitted between ] and the colon or field list; the line is an array-header line that fails the §6 grammar (§5.2)"
     },
     {
       "name": "throws on whitespace between bracket segment and field list",
