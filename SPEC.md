@@ -566,20 +566,10 @@ Decoding:
 
 For an object appearing as a list item:
 
-- Empty object list item: a single "-" at the list-item indentation level.
-- Encoding (normative):
-  - When a list-item object has a tabular array (§9.3) or keyed tabular object (§9.5) as its first field in encounter order, encoders MUST emit its header on the hyphen line:
-    - The hyphen and header appear on the same line at the list-item depth: `- key[N<delim?>]{fields}:` or `- key[N:<delim?>]{fields}:`
-    - Rows or entry rows MUST appear at depth +2 (relative to the hyphen line).
-    - All other fields of the same object MUST appear at depth +1 under the hyphen line, in encounter order, using normal object field rules (§8).
-    - Encoders MUST NOT emit rows or entry rows at depth +1 or sibling fields at the same depth as rows when the first field is a tabular array or keyed tabular object.
-  - For all other cases (first field is not a tabular array or keyed tabular object), encoders MUST place the first field on the hyphen line. A bare hyphen on its own line is used only for empty list-item objects.
-  - The keyless keyed header is valid only at the root (§5, §9.5): there is no `- [N:<delim?>]{fields}:` list item. An array element that is itself a keyed-eligible object is anonymous and encodes per this section's general rules.
+- Encoding (normative): a non-empty object's first field, in encounter order, MUST stand on the hyphen line (`- key: …`, `- key[…]…:`). Its other fields follow at depth +1 in encounter order (§8). The content of a scope the first field opens – nested fields, list items, tabular rows, or entry rows – is at depth +2. An empty object is the bare marker `-`.
 - Decoding (normative):
   - Depth model: a first field carried on a list-item hyphen line at depth d stands at depth d+1 for all scope purposes. A list-item object's fields therefore occupy depth d+1 – the first carried on the hyphen line itself – and a scope opened by that first field (a nested object `- key:`, a non-tabular array header `- key[N<delim?>]:`, tabular rows, or keyed entry rows) has its content at depth d+2; §8's scope rules apply with these depths. A subsequent line at depth d+1 is a further field of the list-item object and terminates the first field's scope.
     - This model applies only to *keyed* first fields. A keyless header on a hyphen line (`- [M<delim?>]:`, §9.2, §9.4) is the list item itself rather than a field of a list-item object, so it stands at depth d and its items are at depth d+1, per §9.4. The presence or absence of the key before the bracket is the discriminator.
-  - When a decoder encounters a list-item line (§5.2) of the form `- key[N<delim?>]{fields}:` or `- key[N:<delim?>]{fields}:` at depth d, it MUST treat this as the start of a tabular array or keyed tabular object field named key in the list-item object; its rows or entries are the lines at depth d+2 per the depth model above.
-  - All other object-as-list-item patterns (bare hyphen, first field on hyphen line for non-tabular values) otherwise follow the general rules in §8 and §9.
 
 ## 11. Delimiters
 
