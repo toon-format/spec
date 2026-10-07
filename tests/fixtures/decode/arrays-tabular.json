@@ -162,12 +162,13 @@
       "note": "Duplicate field names yield duplicate sibling keys per row; non-strict resolves last-write-wins"
     },
     {
-      "name": "accepts a field name outside the encoder unquoted-key pattern",
-      "input": "items[1]{2key}:\n  1",
+      "name": "accepts field names outside the encoder unquoted-key pattern",
+      "input": "items[1]{2key,x:y}:\n  1,2",
       "expected": {
         "items": [
           {
-            "2key": 1
+            "2key": 1,
+            "x:y": 2
           }
         ]
       },
