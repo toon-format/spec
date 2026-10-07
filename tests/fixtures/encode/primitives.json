@@ -111,8 +111,8 @@
     },
     {
       "name": "quotes string with bracket notation",
-      "input": "[test]",
-      "expected": "\"[test]\"",
+      "input": "a[test]",
+      "expected": "\"a[test]\"",
       "specSection": "7.2"
     },
     {
