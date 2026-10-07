@@ -172,7 +172,7 @@ Row, entry, and item terms:
 ### 1.5 Delimiter Terms
 
 - Delimiter: The character separating field entries, inline array values, row cells, and entry-row cells: comma (default), tab (HTAB, U+0009), or pipe ("|").
-- Document delimiter: The encoder-selected delimiter used for delimiter-aware quoting where no active delimiter governs (default comma; §11.1).
+- Document delimiter: The encoder-selected delimiter (default comma), declared in every header an encoder emits (§11.1).
 - Active delimiter: The delimiter declared by the closest header in scope – array or keyed (§11).
 
 ### 1.6 Type Terms
@@ -408,7 +408,7 @@ Encoders MUST quote a string value if any of the following is true:
 - It contains a colon (:), double quote ("), or backslash (\\).
 - It contains brackets or braces ([, ], {, }).
 - It contains control characters in U+0000 through U+001F.
-- It contains the relevant delimiter – the active delimiter for inline array values, tabular row cells, and keyed entry-row cells; the document delimiter for object field values, primitive list items, and root primitives (§11.1, which is authoritative for delimiter-aware quoting).
+- It contains the document delimiter (§11.1).
 - It starts with "-" or "#".
 - It is a root primitive (§5) and starts with U+FEFF (§12).
 
@@ -570,11 +570,7 @@ For an object appearing as a list item:
 
 ### 11.1 Encoding Rules
 
-- Document delimiter: Encoders select a document delimiter (option: comma, tab, pipe; default comma). Encoders MUST declare it as the active delimiter of every header they emit (§6).
-- Delimiter-aware quoting:
-  - Inline array values, tabular row cells, and keyed entry-row cells: strings containing the active delimiter MUST be quoted.
-  - Object field values (key: value), primitive list items (`- value`), and root primitives: encoders use the document delimiter to decide delimiter-aware quoting, regardless of the enclosing array's scope. Entry rows (§9.5) are not object-field lines: the content after the entry key's colon is a delimiter-joined cell sequence, quoted per the active delimiter.
-  - Strings containing non-active delimiters do not require quoting unless another condition applies (§7.2).
+- Document delimiter: Encoders select a document delimiter (option: comma, tab, pipe; default comma) and MUST declare it as the active delimiter of every header they emit (§6). §7.2 quotes string values against it in every position; other delimiter characters need no quoting unless another §7.2 condition applies.
 
 ### 11.2 Decoding Rules
 
@@ -628,7 +624,7 @@ Conforming encoders MUST:
 - [ ] Produce UTF-8 output with LF (U+000A) line endings (§1.2)
 - [ ] Use consistent indentation (default 2 spaces, no tabs) (§12)
 - [ ] Escape per §7.1 in quoted strings; never emit other escapes
-- [ ] Quote strings per §7.2, with the relevant delimiter per §11.1
+- [ ] Quote strings per §7.2
 - [ ] Quote and escape exactly those object keys, entry keys, and field names that do not match §7.3's unquoted-key pattern (§7.3)
 - [ ] Select the form from the value's shape and position, not by preference (§1.4, §9)
 - [ ] Emit declared lengths [N] matching the actual inline value, list item, tabular row, or entry row count (§6, §9)

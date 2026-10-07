@@ -113,10 +113,10 @@ _Avoid_: mixed (except in the compound "mixed and non-uniform arrays", which nam
 ## Delimiters
 
 **Active delimiter**:
-The delimiter declared by the closest header in scope. Governs splitting and quoting for inline values, tabular row cells, and entry row cells.
+The delimiter declared by the closest header in scope. Governs splitting for inline values, tabular row cells, and entry row cells.
 
 **Document delimiter**:
-The encoder-selected delimiter used for delimiter-aware quoting wherever no active delimiter governs – object field values, primitive list items, and root primitives.
+The encoder-selected delimiter, declared in every header an encoder emits; encoders quote every string value containing it (SPEC §7.2, §11.1).
 
 ## Beyond the format
 
