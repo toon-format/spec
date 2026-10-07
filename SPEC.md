@@ -598,7 +598,7 @@ For an object appearing as a list item:
   - Indentation: a line's indentation is its leading run of spaces and tabs. It MUST consist of spaces whose count is an exact multiple of indentSize, and the line's depth is that count divided by indentSize; otherwise MUST error, except under §14.4's indentation recovery.
   - Header span: the lines from the first item, row, or entry line in a header's scope through the last line of that scope's content (which may be a deeper line inside its last item). A blank line inside any header span MUST error, except under §14.4's blank-line recovery; decoders MUST ignore all other blank lines.
   - Token trimming: when a token is extracted – a key token before a key-value colon or an entry key's colon (§7.4, §9.5), a field entry in a field list (§6), or a value token after a key-value colon, after an array-header colon, or around each delimiter-separated token – decoders MUST trim surrounding spaces and no other character (§1.2). This trimming does not apply between a key and its bracket segment or between a field name and its nested field group, where whitespace is a header syntax error (§6).
-  - Trailing newline at end-of-file: decoders accept it – the empty line after the final LF is a blank line after the content (above); validators MAY warn.
+  - Trailing newline at end-of-file: decoders accept it – the empty line after the final LF is a blank line after the content (above).
 
 ## 13. Conformance and Options
 
@@ -614,7 +614,7 @@ Options:
   - indentSize (default: 2 spaces)
   - strict (default: `true`)
 
-Decode errors are enumerated in §14; validators MAY add informative diagnostics for style and encoding invariants.
+Decode errors are enumerated in §14.
 
 Implementations SHOULD declare the specification version they target (e.g., `toon-spec: 4.3`) in their documentation.
 
@@ -624,29 +624,31 @@ Conforming encoders MUST:
 - [ ] Produce UTF-8 output with LF (U+000A) line endings (§1.2)
 - [ ] Use consistent indentation (default 2 spaces, no tabs) (§12)
 - [ ] Escape per §7.1 in quoted strings; never emit other escapes
+- [ ] Declare the document delimiter in every header (§11.1)
 - [ ] Quote strings per §7.2
 - [ ] Quote and escape exactly those object keys, entry keys, and field names that do not match §7.3's unquoted-key pattern (§7.3)
 - [ ] Select the form from the value's shape and position, not by preference (§1.4, §9)
 - [ ] Emit declared lengths [N] matching the actual inline value, list item, tabular row, or entry row count (§6, §9)
 - [ ] Preserve object key order as encountered, except where tabular forms reorder to the header's field order (§2)
 - [ ] Emit numbers per §2
-- [ ] Convert -0 to 0 (§2)
 - [ ] Emit booleans and null as lowercase literals (§2)
 - [ ] Convert NaN/±Infinity to null (§3)
+- [ ] Error on a host string containing an unpaired surrogate (§3)
 - [ ] Emit no trailing spaces, blank lines, or trailing newline (§12)
 - [ ] Emit no comment lines (§5.1)
 
 ### 13.2 Decoder Conformance Checklist
 
 Conforming decoders MUST:
-- [ ] Accept CRLF input by excluding a trailing CR from each line's content (§12)
-- [ ] Remove comment lines in a lexical pre-pass before all structural interpretation (§5.1)
+- [ ] Prepare lines in the order of §12: byte-order mark, CR, trailing spaces, comment lines (§5.1), blank lines
+- [ ] Treat only SP and HTAB as whitespace, and trim tokens of spaces only (§1.2, §12)
 - [ ] Parse array and keyed headers per §6 (length, keyed marker, delimiter, fields including nested field groups)
-- [ ] Accept empty arrays in both forms: `key: []` / `[]` and legacy `key[0]:` / `[0]:` (§9.1)
+- [ ] Accept empty arrays in all forms: `key: []` / `[]` / `- []` and legacy `key[0]:` / `[0]:` (§9.1, §9.2)
 - [ ] Split inline arrays, tabular rows, and keyed entry rows using the active delimiter only (§11)
 - [ ] Unescape per §7.1
 - [ ] Type unquoted primitives: true/false/null → booleans/null, numeric → number, else → string (§4)
 - [ ] Accept any unquoted key token as a literal key even when it does not match §7.3's unquoted-key pattern (§7.4)
+- [ ] Materialize every key, including `__proto__`, as an own entry (§15)
 - [ ] Error on every condition of §14; with `strict=false`, apply exactly the recoveries of §14.4 instead
 - [ ] Preserve array order and object key order, except where tabular and keyed tabular forms reorder to the header's field order (§2, §9.3, §9.5)
 - [ ] Decode byte input as UTF-8 and error on ill-formed sequences rather than substituting U+FFFD (§4)
@@ -655,11 +657,10 @@ Conforming decoders MUST:
 ### 13.3 Validator Conformance Checklist
 
 Validators SHOULD verify:
-- [ ] Structural conformance (headers, indentation, list markers)
-- [ ] Whitespace invariants: no trailing spaces on any line (§12); a trailing newline at end-of-file MAY be warned about, but decoders accept it (§12)
-- [ ] Delimiter consistency between headers and rows
-- [ ] Array length counts match declared [N]
-- [ ] Every error condition of §14
+- [ ] Every condition of §14
+- [ ] No trailing spaces on any line (§12)
+
+Validators MAY warn about other deviations from encoder output, such as a trailing newline at end-of-file (§12).
 
 ## 14. Decode Errors and Non-Strict Recoveries (Authoritative Checklist)
 
@@ -903,7 +904,7 @@ These sketches illustrate structure and common decoding helpers. They are inform
 
 ### B.1 Decoding Overview
 
-- Split input into lines, excluding a trailing CR from each line's content (§12); strip comment lines (§5.1); compute depth from leading spaces and indent size (§12).
+- Prepare lines per §12 and compute each line's depth (§12, §14.4).
 - Skip blank lines outside header spans (§12).
 - Decide root form per §5.
 - For objects at depth d: process lines at depth d; for arrays at depth d: read rows/list items at depth d+1.
