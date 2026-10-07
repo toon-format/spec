@@ -737,11 +737,6 @@ Formal registration will be requested following the procedures defined in [RFC68
 
 For the versioning policy, see [VERSIONING.md](./VERSIONING.md); for version history, see [CHANGELOG.md](./CHANGELOG.md).
 
-### Extensibility
-
-- Backward-compatible evolutions should preserve current headers, quoting rules, and indentation semantics.
-- Reserved/structural characters (colon, brackets, braces, hyphen, and the number sign at line start, §5.1) retain their current meanings across versions.
-
 ## 19. Intellectual Property Considerations
 
 This specification is released under the MIT License (see repository and Appendix D for details). No patent disclosures are known at the time of publication. The authors intend this specification to be freely implementable without royalty requirements.
