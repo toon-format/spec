@@ -689,9 +689,9 @@ Decoders MUST error on the conditions listed in §14.1–§14.3. With `strict=fa
 - Header delimiter mismatch (§6): MUST error as a header syntax error, independent of row width/count checks.
 - Array-header lines (§5.2) that fail the §6 grammar – e.g., malformed bracket lengths or keyed markers, an unclosed bracket segment (`a[1:`), or no colon after the bracket segment or field list (`a[2:]{x}`).
 - Malformed field lists in headers: an empty field list (`{}`, including a nested `field{}`), an empty field entry (`{a,}`), a nameless nested group (`{a,{b}}`), unmatched braces, or a field name repeated within the same field list (`{a,a}`, including inside a nested group); see §6, §9.3, §9.5. These are diagnosed from the header line alone, independent of the declared count and of any following rows or entry rows.
-- Keyed headers (§9.5): a missing field list (`key[2:]:`), a keyless keyed header anywhere other than as the document's root header, or a line at entry depth without an unquoted colon.
+- Keyed headers (§9.5): a missing field list (`key[2:]:`) or a line at entry depth without an unquoted colon.
 - Content other than spaces after a fields-bearing header's colon (§6), keyed or not (e.g., `items[2]{a,b}: 1,2`).
-- Keyless headers outside their valid positions (§6): a keyless non-keyed header in object-field position (e.g., `[2]: x,y` under an object field, or as a non-first depth-0 line), or a keyless fields-bearing header as a list item (`- [2]{a}:`).
+- Keyless headers outside their valid positions (§6): a keyless header without a field list in object-field position (e.g., `[2]: x,y` under an object field, or as a non-first depth-0 line), or a keyless fields-bearing header, keyed or not, anywhere but as the document's root header (e.g., `- [2]{a}:`).
 - Whitespace between a key and its bracket segment or between a field name and its nested field group, and any content between a valid bracket segment and the colon (or field list) (§6).
 - Indentation and blank-line invariants per §12, evaluated after comment removal (§5.1).
 - Indentation depth jumps (§8): the first line of a nested scope standing deeper than the scope's content depth (§1.3; e.g., a depth d+2 line directly under a depth-d `key:`).
