@@ -240,7 +240,7 @@ See Appendix E for non-normative language-specific examples.
 
 Decoders map text tokens to host values:
 
-- Byte input: decoders that accept bytes MUST decode them as UTF-8. Ill-formed UTF-8 (invalid or truncated sequences, or bytes encoding surrogate code points) MUST error; it MUST NOT be silently replaced with U+FFFD. Decoders that accept host strings (already decoded from bytes) are outside this rule; a host string type that does not guarantee well-formed UTF-8, such as Go's `string`, counts as byte input.
+- Byte input: decoders that accept bytes MUST decode them as UTF-8. Ill-formed UTF-8 (invalid or truncated sequences, or bytes encoding surrogate code points) MUST error; it MUST NOT be silently replaced with U+FFFD. Decoders that accept host strings (already decoded from bytes) are outside this rule; a host string type that holds UTF-8 bytes without guaranteeing they are well-formed, such as Go's `string`, counts as byte input.
 - Quoted value tokens:
   - MUST be unescaped per §7.1.
   - Quoted primitives remain strings even if they look like numbers/booleans/null.
