@@ -255,6 +255,13 @@
       "note": "No whitespace is permitted between ] and the field list; mirrors the ]-to-colon rule"
     },
     {
+      "name": "throws on whitespace between a field list and the header colon",
+      "input": "a[1]{x} :\n  1",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "6"
+    },
+    {
       "name": "throws on nested duplicate sibling keys in strict mode",
       "input": "outer:\n  name: Ada\n  name: Bob",
       "expected": null,
