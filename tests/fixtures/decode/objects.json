@@ -454,7 +454,7 @@
         "b": 2,
         "c": ["x", "y"]
       },
-      "specSection": "7.4"
+      "specSection": "12"
     },
     {
       "name": "parses a quoted key followed by spaces before the colon",
