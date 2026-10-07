@@ -508,7 +508,7 @@
       "note": "A fields-bearing header carries no inline content; decoding the values as an inline array would silently drop the field list"
     },
     {
-      "name": "throws on a row under a fields-bearing header with inline content in non-strict mode",
+      "name": "throws on a fields-bearing header with inline content and a row in non-strict mode",
       "input": "b[1]{c}: x\n  y",
       "expected": null,
       "shouldError": true,
@@ -763,7 +763,7 @@
         "strict": false
       },
       "specSection": "6",
-      "note": "Not a header (§6 grammar), so the row is a scalar line under a key-value line (§5.2)",
+      "note": "Content after a nested field group fails the §6 grammar",
       "minSpecVersion": "4.2"
     },
     {
