@@ -43,6 +43,19 @@
       "specSection": "14.4"
     },
     {
+      "name": "keeps a last-write-wins key at the position of its first occurrence in non-strict mode",
+      "input": "a: 1\nb: 2\na: 3",
+      "expected": {
+        "a": 3,
+        "b": 2
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "14.4",
+      "minSpecVersion": "4.4"
+    },
+    {
       "name": "parses quoted object value with colon",
       "input": "note: \"a:b\"",
       "expected": {
