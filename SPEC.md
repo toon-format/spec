@@ -589,9 +589,8 @@ For an object appearing as a list item:
 ### 11.2 Decoding Rules
 
 - Delimiter-aware parsing:
-  - Inline arrays, tabular rows, and keyed entry rows (after the entry key is split off at the row's first unquoted colon, §9.5) MUST be split only on the active delimiter declared by the nearest header.
-  - Splitting MUST preserve empty tokens; surrounding spaces are trimmed (§12), and empty tokens decode to the empty string. An empty cell sequence – the content after an entry key's colon that trims to nothing – is zero cells, not one empty cell; a single empty-string cell is written `""`.
-  - Nested headers may change the active delimiter; decoding MUST use the delimiter declared by the nearest header.
+  - Inline arrays, tabular rows, and keyed entry rows (after the entry key is split off at the row's first unquoted colon, §9.5) MUST be split only on their header's active delimiter (§6).
+  - Splitting MUST preserve empty tokens; surrounding spaces are trimmed (§12), and empty tokens decode to the empty string.
 - Object field values (key: value): Decoders parse the entire post-colon token as a single value; document delimiter is not a decoder concept.
 
 ## 12. Indentation and Whitespace
@@ -686,7 +685,7 @@ Decoders MUST error on the conditions listed in §14.1–§14.3. With `strict=fa
 - Arrays in list form: number of list items ≠ declared N.
 - Tabular arrays: number of rows ≠ declared N.
 - Tabular row width mismatches: any row's cell count ≠ the header's leaf-field count (§9.3; equal to the field count when no nested field groups are present).
-- Keyed tabular objects: number of entry rows ≠ declared N; any entry row's cell count ≠ the header's leaf-field count (§9.5; a bare `entrykey:` has zero cells).
+- Keyed tabular objects: number of entry rows ≠ declared N; any entry row's cell count ≠ the header's leaf-field count (§9.5).
 - The count checks above apply only when an explicit `[N]` length is declared. The `key: []` form has no declared length; the count check is N/A (§9.1).
 
 ### 14.2 Syntax and Structural Errors
