@@ -266,11 +266,13 @@
       "specSection": "8"
     },
     {
-      "name": "applies LWW for nested duplicate sibling keys in non-strict mode",
-      "input": "outer:\n  name: Ada\n  name: Bob",
+      "name": "replaces a nested duplicate object key without merging in non-strict mode",
+      "input": "outer:\n  a:\n    x: 1\n  a:\n    y: 2",
       "expected": {
         "outer": {
-          "name": "Bob"
+          "a": {
+            "y": 2
+          }
         }
       },
       "options": {
