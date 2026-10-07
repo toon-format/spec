@@ -225,6 +225,39 @@
       "minSpecVersion": "4.4"
     },
     {
+      "name": "throws on an over-indented line inside a nested object in non-strict mode",
+      "input": "a:\n  b: 1\n      c: 2",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": false
+      },
+      "specSection": "8",
+      "minSpecVersion": "4.4"
+    },
+    {
+      "name": "throws on an over-indented line after tabular rows in non-strict mode",
+      "input": "u[1]{a}:\n  1\n    junk: 9",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": false
+      },
+      "specSection": "8",
+      "minSpecVersion": "4.4"
+    },
+    {
+      "name": "throws on an over-indented line after keyed entry rows in non-strict mode",
+      "input": "m[1:]{v}:\n  a: 1\n    b: 2",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": false
+      },
+      "specSection": "8",
+      "minSpecVersion": "4.4"
+    },
+    {
       "name": "throws on an indented first line",
       "input": "  a: 1",
       "expected": null,
