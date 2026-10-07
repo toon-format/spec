@@ -79,8 +79,8 @@
     },
     {
       "name": "escapes backslash in string",
-      "input": "C:\\Users\\path",
-      "expected": "\"C:\\\\Users\\\\path\"",
+      "input": "Users\\path",
+      "expected": "\"Users\\\\path\"",
       "specSection": "7.1"
     },
     {
