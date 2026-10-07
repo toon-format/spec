@@ -280,7 +280,7 @@ TOON is a deterministic, line-oriented, indentation-based notation.
   - Otherwise, decode an object.
   - An empty document (no non-blank lines after comment removal, §5.1) decodes to an empty object `{}`. A document consisting only of comment and blank lines is therefore `{}`.
   - The root form spans the whole document: once a root array, an empty root array (`[]`), or a keyed tabular root object is complete, no further non-comment, non-blank line may follow. Decoders MUST error on such trailing content (§14.2) – it MUST NOT be silently discarded. (A root object extends to the last line of the document, so this case does not arise for object roots.)
-  - If there are two or more non-blank depth-0 lines that are neither headers nor key-value lines, the document is invalid (§14.2). Example of invalid input:
+  - A scalar line anywhere else is invalid (§5.2, §14.2), including a second depth-0 line. Example of invalid input:
     ```
     hello
     world
@@ -710,7 +710,6 @@ Decoders MUST error on the conditions listed in §14.1–§14.3. With `strict=fa
 
 ### 14.2 Syntax and Structural Errors
 
-- Missing colon in key context (§7.4).
 - Invalid escape sequences or unterminated strings in quoted tokens, and characters after a quoted token's closing quote (§4, §7.1, §7.4).
 - Header delimiter mismatch (§6): MUST error as a header syntax error, independent of row width/count checks.
 - Array-header lines (§5.2) that fail the §6 grammar – e.g., malformed bracket lengths or keyed markers, an unclosed bracket segment (`a[1:`), or no colon after the bracket segment or field list (`a[2:]{x}`).
@@ -724,8 +723,7 @@ Decoders MUST error on the conditions listed in §14.1–§14.3. With `strict=fa
 - Over-indented lines (§8): a line deeper than the content depth of its enclosing scope when the preceding line did not open a scope (e.g., a depth d+1 line directly under a depth-d primitive field, or the document's first line at depth 1 or more). Decoders MUST NOT silently discard such lines.
 - Trailing content after a completed root form (§5): any non-comment, non-blank line following the inline values, rows, items, or entries of a root array or keyed tabular root object, or following a root `[]`.
 - Ill-formed UTF-8 in byte input (§4).
-- A scalar line (§5.2) anywhere other than root primitive position – e.g., a bare token line inside an array or object scope (§5.2).
-- Two or more non-blank depth-0 lines that are neither headers nor key-value lines (§5).
+- A scalar line (§5.2) anywhere other than root primitive position – e.g., a key without a colon (§7.4), a bare token line inside an array scope, or a second depth-0 line (§5).
 
 ### 14.3 Duplicate Object Keys
 
