@@ -74,7 +74,7 @@ Load each fixture file, run every entry in its `tests` array through your encode
 |------|-------------|---------------|
 | `primitives.json` | Parsing primitives, unescaping, ambiguity | §4, §7.1/§7.4 |
 | `numbers.json` | Number edge cases, exponent forms, leading zeros | §4 |
-| `objects.json` | Parsing objects, keys, nesting | §8 (keys: §7.3/§7.1) |
+| `objects.json` | Parsing objects, keys, nesting | §8 (keys: §7.4/§7.1) |
 | `objects-keyed.json` | Keyed header and entry-row parsing | §9.5, §10 |
 | `arrays-primitive.json` | Inline array parsing | §9.1 |
 | `arrays-tabular.json` | Tabular form parsing | §9.3 |
@@ -85,7 +85,7 @@ Load each fixture file, run every entry in its `tests` array through your encode
 | `validation-errors.json` | Syntax errors, length mismatches, malformed input | §6, §14 |
 | `indentation-errors.json` | Indentation validation and its non-strict recoveries | §8, §12, §14.2, §14.4 |
 | `blank-lines.json` | Blank lines inside and outside header spans | §12, §14.2, §14.4 |
-| `comments.json` | Comment-line stripping and full-line-only edge cases | §5.1, §7.2 |
+| `comments.json` | Comment-line stripping and full-line-only edge cases | §5.1 |
 
 **Coverage note:** §3 host-type normalization (NaN/±Infinity → null, host Date/Set/Map/BigInt mappings) and §4 byte-input decoding (ill-formed UTF-8 errors in both modes, never U+FFFD) are intentionally outside these JSON fixtures, since the fixture format can express neither non-JSON encode inputs nor raw bytes. Implementations should cover both in their language-local test suites.
 
