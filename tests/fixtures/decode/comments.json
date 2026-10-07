@@ -104,7 +104,7 @@
         "strict": false
       },
       "specSection": "5.1",
-      "note": "Comment removal applies in both modes; the resulting count mismatch is not an error when strict=false (§14.1)"
+      "note": "Comment removal applies in both modes; the resulting count mismatch is not an error when strict=false (§14.4)"
     },
     {
       "name": "throws on tab-indented hash line, which is not a comment",

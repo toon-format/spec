@@ -163,7 +163,7 @@
       "options": {
         "strict": false
       },
-      "specSection": "14.3",
+      "specSection": "14.4",
       "note": "Entry keys are sibling keys of the decoded object and resolve last-write-wins"
     },
     {
@@ -213,7 +213,7 @@
       "options": {
         "strict": false
       },
-      "specSection": "14.1",
+      "specSection": "14.4",
       "minSpecVersion": "4.1"
     }
   ]

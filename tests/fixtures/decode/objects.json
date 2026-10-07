@@ -40,7 +40,7 @@
       "options": {
         "strict": false
       },
-      "specSection": "14.3"
+      "specSection": "14.4"
     },
     {
       "name": "parses quoted object value with colon",
@@ -263,7 +263,7 @@
       "options": {
         "strict": false
       },
-      "specSection": "14.3"
+      "specSection": "14.4"
     },
     {
       "name": "applies LWW for duplicate keys within a list-item object in non-strict mode",
@@ -278,7 +278,7 @@
       "options": {
         "strict": false
       },
-      "specSection": "14.3"
+      "specSection": "14.4"
     },
     {
       "name": "accepts unquoted key outside the encoder key pattern (hyphen)",

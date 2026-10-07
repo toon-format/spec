@@ -158,7 +158,7 @@
       "options": {
         "strict": false
       },
-      "specSection": "14.3",
+      "specSection": "14.4",
       "note": "Duplicate field names yield duplicate sibling keys per row; non-strict resolves last-write-wins"
     },
     {
@@ -190,7 +190,7 @@
       "options": {
         "strict": false
       },
-      "specSection": "14.1",
+      "specSection": "14.4",
       "note": "A declared [N] never truncates a scope",
       "minSpecVersion": "4.1"
     },
