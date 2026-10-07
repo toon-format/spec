@@ -240,7 +240,7 @@ See Appendix E for non-normative language-specific examples.
 Decoders map text tokens to host values:
 
 - Byte input: decoders that accept bytes MUST decode them as UTF-8. Ill-formed UTF-8 (invalid or truncated sequences, or bytes encoding surrogate code points) MUST error; it MUST NOT be silently replaced with U+FFFD. Decoders that accept host strings (already decoded from bytes) are outside this rule.
-- Quoted tokens (strings and keys):
+- Quoted value tokens:
   - MUST be unescaped per §7.1. Any other escape or an unterminated string MUST error.
   - Quoted primitives remain strings even if they look like numbers/booleans/null.
 - Unquoted value tokens:
@@ -563,7 +563,7 @@ When satisfied (encoding):
 
 Decoding:
 - A keyed header declares the entry count N, the active delimiter, and the field list; the field list is REQUIRED (§6). The decoded value is an object with one key per entry row, in row order.
-- Entry rows appear at depth +1. Each row is parsed in two steps, in this order: first it is split at its first unquoted colon – the token before the colon is the entry key, decoded per §7.4 (quoted keys unescaped per §7.1); then the remainder is split on the active delimiter into cells and decodes exactly as a §9.3 row (cells map to leaf fields depth-first; nested field groups materialize recursively; decoded key order inside each entry value is the header's field order at every level).
+- Entry rows appear at depth +1. Each row is parsed in two steps, in this order: first it is split at its first unquoted colon – the token before the colon is the entry key, decoded per §7.4; then the remainder is split on the active delimiter into cells and decodes exactly as a §9.3 row (cells map to leaf fields depth-first; nested field groups materialize recursively; decoded key order inside each entry value is the header's field order at every level).
 - Cells are primitive tokens (§4). The empty-array form of §9.1 does not apply inside entry rows: `alice: []` is one cell decoding to the string `[]`, and a bare `alice:` has zero cells – a width error, since a field list always declares at least one leaf field.
 - Line classification at entry depth (authoritative, referenced from §5.2): every line at entry depth containing an unquoted colon is an entry row. The §9.3 colon-before-delimiter rule does not apply – a keyed scope ends only when the depth decreases to the header's depth or less, or at end of input. A line at entry depth without an unquoted colon MUST error (§14.2).
 - Entry keys are sibling keys of the decoded object; duplicates are governed by §14.3. Duplicate field names within a field list behave as in §9.3.
