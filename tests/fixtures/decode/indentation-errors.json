@@ -122,11 +122,12 @@
     },
     {
       "name": "accepts non-multiple indentation at nested depths when strict=false",
-      "input": "a:\n   b:\n     c: 1\n  d: 2",
+      "input": "a:\n   b:\n     c: 1\n  d: 2\n   e[2]: 1,2",
       "expected": {
         "a": {
           "b": { "c": 1 },
-          "d": 2
+          "d": 2,
+          "e": [1, 2]
         }
       },
       "options": {
