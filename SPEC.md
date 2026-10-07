@@ -193,10 +193,7 @@ Row, entry, and item terms:
 
 ## 2. Data Model
 
-- TOON models data as:
-  - `JsonPrimitive`: string | number | boolean | null
-  - `JsonObject`: { [string]: `JsonValue` }
-  - `JsonArray`: `JsonValue`[]
+- TOON models data as `JsonValue` (§1.6).
 - Ordering:
   - Array order MUST be preserved.
   - Object key order MUST be preserved as encountered by the encoder, except where tabular forms reorder keys to the header's field order (§9.3, §9.5; see the equality rule below). Decoders MUST preserve the document's key order, subject to the host object model; implementations whose object type reorders keys – for example host types that hoist integer-like keys – MUST document the deviation.
