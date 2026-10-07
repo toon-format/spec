@@ -505,7 +505,7 @@ Decoding:
     - Delimiter before colon → row.
     - Colon before delimiter → not a row (end of rows).
   - If a line has an unquoted colon but no unquoted active delimiter → not a row (end of rows).
-  - A line that ends the rows this way is not itself a row; it then belongs to no scope and §8 governs its disposition.
+  - A line that ends the rows this way belongs to no scope, and §8 governs its disposition.
 - When a tabular array appears as the first field of a list-item object, indentation is governed by §10.
 
 ### 9.4 Mixed and Non-Uniform Arrays – List Form
