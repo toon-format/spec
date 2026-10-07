@@ -157,13 +157,14 @@
       "specSection": "14.4"
     },
     {
-      "name": "ignores blank lines inside tabular array when strict=false",
-      "input": "items[2]{id,name}:\n  1,Ada\n\n  2,Bob",
+      "name": "ignores blank lines between tabular rows and entry rows when strict=false",
+      "input": "items[2]{id,name}:\n  1,Ada\n\n  2,Bob\nm[2:]{v}:\n  a: 1\n\n  b: 2",
       "expected": {
         "items": [
           { "id": 1, "name": "Ada" },
           { "id": 2, "name": "Bob" }
-        ]
+        ],
+        "m": { "a": { "v": 1 }, "b": { "v": 2 } }
       },
       "options": {
         "strict": false
