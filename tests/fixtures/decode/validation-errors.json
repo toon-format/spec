@@ -93,7 +93,7 @@
         "strict": true
       },
       "specSection": "6",
-      "note": "Non-whitespace content between ] and : must error in strict mode; the fall-through is non-strict only"
+      "note": "Content between ] and : prevents array header interpretation"
     },
     {
       "name": "throws on text between bracket segment and colon in strict mode",
@@ -223,6 +223,14 @@
       },
       "specSection": "6",
       "note": "[1e1] is exponent notation, not a DIGIT-only integer length; decoders MUST NOT interpret it as a bracket segment"
+    },
+    {
+      "name": "throws on a bracket length with a non-ASCII digit",
+      "input": "k[\u0662]: a,b",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "6",
+      "note": "A length takes ASCII digits only; a Unicode-aware \\d would accept \u0662"
     },
     {
       "name": "throws on whitespace between bracket segment and colon in strict mode",
@@ -446,16 +454,15 @@
       "specSection": "6"
     },
     {
-      "name": "throws on a keyless list-form header in object field position in non-strict mode",
-      "input": "a:\n  [2]:\n    - 1\n    - 2",
+      "name": "throws on keyless array header in object field position in non-strict mode",
+      "input": "a:\n  [2]: 1,2",
       "expected": null,
       "shouldError": true,
       "options": {
         "strict": false
       },
       "specSection": "6",
-      "note": "Read as a key-value line, the header's list items become scalar lines (§5.2), so no non-strict leniency yields a value",
-      "minSpecVersion": "4.2"
+      "minSpecVersion": "4.4"
     },
     {
       "name": "throws on keyless array header after a depth-0 field",
@@ -474,14 +481,14 @@
     },
     {
       "name": "throws on keyless fields-bearing header as list item in non-strict mode",
-      "input": "items[1]:\n  - [1]{x}:\n      1",
+      "input": "items[1]:\n  - [0]{x}:",
       "expected": null,
       "shouldError": true,
       "options": {
         "strict": false
       },
       "specSection": "6",
-      "minSpecVersion": "4.2"
+      "minSpecVersion": "4.4"
     },
     {
       "name": "throws on inline content after tabular header",
@@ -500,7 +507,6 @@
         "strict": false
       },
       "specSection": "6",
-      "note": "Read as a key-value line, the row becomes an over-indented scalar line (§5.2), so no non-strict leniency yields a value",
       "minSpecVersion": "4.2"
     },
     {
@@ -516,6 +522,15 @@
       "expected": null,
       "shouldError": true,
       "specSection": "6",
+      "minSpecVersion": "4.1"
+    },
+    {
+      "name": "throws on a tab between a key and its bracket segment",
+      "input": "t\t[1]: x",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "6",
+      "note": "HTAB is whitespace (§1.2); NBSP is not",
       "minSpecVersion": "4.1"
     },
     {

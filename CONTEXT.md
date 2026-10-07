@@ -124,7 +124,11 @@ The encoder-selected delimiter used for delimiter-aware quoting wherever no acti
 Benchmark-only measure – the percentage of a dataset's arrays that qualify for tabular form. Not a spec concept.
 
 **Strict mode**:
-Decoder mode enforcing declared counts, row widths, indentation, and delimiter consistency. Default on.
+Decoder mode that errors on every condition of SPEC §14. Default on.
+
+**Non-strict recovery**:
+One of the five outcomes `strict=false` applies instead of an error – advisory counts, last-write-wins duplicate keys, tolerant indentation, ignored blank lines in a header span, and a jumped first line setting its scope's depth (SPEC §14.4). Every other error stays an error.
+_Avoid_: leniency, fall-through
 
 ## Standing rules
 

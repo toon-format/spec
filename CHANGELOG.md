@@ -4,6 +4,30 @@ All notable changes to the TOON specification will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). The project follows the MAJOR.MINOR versioning policy described in [VERSIONING.md](./VERSIONING.md).
 
+## [Unreleased]
+
+### Changed
+
+- Non-strict mode is a closed set of five recoveries, each a MUST (§14.4): a declared `[N]` is advisory, duplicate keys resolve last-write-wins, indentation tolerates tabs and non-multiples (each tab one level, spaces floored), blank lines inside a header span are ignored, and a jumped first line sets its scope's depth. Every other §14 condition errors in both modes, so `strict=false` no longer reads a malformed header as a key-value line, skips over-indented lines or entry-depth lines without a colon, ignores trailing content after a root form, tolerates row-width mismatches, or replaces ill-formed UTF-8 with U+FFFD.
+- Whitespace is a closed set: SP and HTAB (§1.2). Trimming removes spaces only, as before; NBSP and every other Unicode space are ordinary content, and decoders must not apply a host-language whitespace test. An NBSP before a bracket segment or nested field group is part of the key or field name (`n<NBSP>[1]: y` decodes to `{"n\u00a0": ["y"]}`); a space or tab there stays a header syntax error.
+- A list-item hyphen may be followed by more than one space before any item, including a keyless header (`-   [2]: 1,2`), as it already could before a key-value line or primitive (§5.2).
+- §12 decoding opens with one ordered line preparation: byte-order mark, CR, trailing spaces, comment lines, blank lines.
+- VERSIONING.md: documents accepted by a non-strict decoder stay accepted unless they are encoder-unreachable, and a MINOR version keeps implementations conformant on every document a conforming encoder emits, with its CHANGELOG naming what changed for other documents.
+- Conformance fixtures: non-strict cases for the dropped recoveries now expect an error, fall-through cases already pinned by a strict counterpart are removed, and indices shift.
+
+### Compatibility
+
+Every change concerns input no conforming 4.x encoder emits: encoders write matching counts and widths, unique keys, valid headers, space indentation in multiples of indentSize, no blank lines or depth jumps, and one space after a hyphen, and they quote every key containing whitespace or NBSP. Every encode fixture's output decodes to the same value under 4.4, strict and non-strict.
+
+Callers that use `strict=false` for hand-written or model-written input now get an error for:
+
+- a missing or surplus cell in a row or entry row, such as a trailing comma (`1,x,`) or a truncated last row
+- a prose line after a root array or list (`[2]: 1,2` then `Note: done`)
+- a whole document indented by one level, or an over-indented line (`root:` / `  a: 1` / `      b: 2`)
+- a malformed header, such as `items [2]: a,b` or `key[]: 1,2`
+
+Fewer or more rows than `[N]`, blank lines between rows, tab or misaligned indentation, and a block that starts too deep still decode.
+
 ## [4.3] - 2026-10-06
 
 ### Changed

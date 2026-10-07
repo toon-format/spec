@@ -134,7 +134,7 @@
         "strict": false
       },
       "specSection": "5.1",
-      "note": "Comment removal precedes the §12 tab leniency, so the tab keeps the line out of the pre-pass"
+      "note": "Comment removal precedes the §14.4 indentation recovery, so the tab keeps the line out of the pre-pass"
     },
     {
       "name": "parses quoted hash-leading first cell as data, not comment",

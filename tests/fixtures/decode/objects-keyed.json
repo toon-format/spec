@@ -183,20 +183,26 @@
       "minSpecVersion": "4.1"
     },
     {
-      "name": "skips an entry-depth line without a colon in non-strict mode",
+      "name": "throws on an entry-depth line without a colon in non-strict mode",
       "input": "u[2:]{x}:\n  a: 1\n  boom",
-      "expected": {
-        "u": {
-          "a": {
-            "x": 1
-          }
-        }
-      },
+      "expected": null,
+      "shouldError": true,
       "options": {
         "strict": false
       },
       "specSection": "9.5",
-      "minSpecVersion": "4.1"
+      "minSpecVersion": "4.4"
+    },
+    {
+      "name": "throws on an entry row with fewer cells than fields in non-strict mode",
+      "input": "m[1:]{a,b}:\n  k: 1",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": false
+      },
+      "specSection": "14.1",
+      "minSpecVersion": "4.4"
     },
     {
       "name": "decodes every entry row beyond the declared count in non-strict mode",

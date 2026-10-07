@@ -112,6 +112,24 @@
       "minSpecVersion": "4.1"
     },
     {
+      "name": "tolerates extra spaces after a list-item hyphen",
+      "input": "items[3]:\n  -  a\n  -   [2]: 1,2\n  -  k: v",
+      "expected": {
+        "items": [
+          "a",
+          [
+            1,
+            2
+          ],
+          {
+            "k": "v"
+          }
+        ]
+      },
+      "specSection": "5.2",
+      "minSpecVersion": "4.4"
+    },
+    {
       "name": "keeps a second carriage return before CRLF as content",
       "input": "a: x\r\r\nb: 1",
       "expected": {

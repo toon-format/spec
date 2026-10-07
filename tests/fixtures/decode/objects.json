@@ -1,7 +1,7 @@
 {
   "version": "4.0",
   "category": "decode",
-  "description": "Object decoding – fields, nested objects, key parsing, §6 fall-through (non-strict), and §14.3 duplicate-key LWW",
+  "description": "Object decoding – fields, nested objects, key parsing, and §14.3 duplicate keys",
   "tests": [
     {
       "name": "parses objects with primitive values",
@@ -173,45 +173,6 @@
         "{key}": 6
       },
       "specSection": "7.4"
-    },
-    {
-      "name": "treats content between bracket segment and colon as literal key (non-strict)",
-      "input": "foo[1][bar]: 10\nfoo[2]extra: a,b",
-      "options": {
-        "strict": false
-      },
-      "expected": {
-        "foo[1][bar]": 10,
-        "foo[2]extra": "a,b"
-      },
-      "specSection": "6",
-      "note": "Non-whitespace content between ] and : (a second bracket group or plain text) prevents array header interpretation; non-strict fall-through produces a literal key not constrained by §7.3"
-    },
-    {
-      "name": "treats bracket segment without a length as literal key (non-strict)",
-      "input": "key[]: 1,2",
-      "options": {
-        "strict": false
-      },
-      "expected": {
-        "key[]": "1,2"
-      },
-      "specSection": "6",
-      "note": "An absent length prevents header interpretation; non-strict fall-through produces a literal key"
-    },
-    {
-      "name": "treats bracket content that fails the length grammar as literal key (non-strict)",
-      "input": "foo[bar][1]: 20\nn[-1]: 1\nk[\u0662]: a,b",
-      "options": {
-        "strict": false
-      },
-      "expected": {
-        "foo[bar][1]": 20,
-        "n[-1]": 1,
-        "k[\u0662]": "a,b"
-      },
-      "specSection": "6",
-      "note": "[bar], [-1] and [\u0662] (a non-ASCII digit) fail the length grammar; non-strict fall-through produces a literal key not constrained by §7.3"
     },
     {
       "name": "parses quoted key with comma",
@@ -404,18 +365,37 @@
       "specSection": "15"
     },
     {
-      "name": "falls through to a key-value line when whitespace precedes the bracket segment (non-strict)",
-      "input": "foo [2]: bar,baz\nt\t[1]: x\nn\u00a0[1]: y",
+      "name": "reads an NBSP before a bracket segment or nested field group as part of the name",
+      "input": "\u00a0[1]: z\nn\u00a0[1]: y\na[1]{b\u00a0{c}}:\n  1",
       "expected": {
-        "foo [2]": "bar,baz",
-        "t\t[1]": "x",
-        "n\u00a0[1]": "y"
+        "\u00a0": [
+          "z"
+        ],
+        "n\u00a0": [
+          "y"
+        ],
+        "a": [
+          {
+            "b\u00a0": {
+              "c": 1
+            }
+          }
+        ]
       },
+      "specSection": "6",
+      "note": "Whitespace is SP and HTAB only (§1.2); a leading NBSP keeps the first line from being a keyless root header",
+      "minSpecVersion": "4.4"
+    },
+    {
+      "name": "throws on a space before the bracket segment in non-strict mode",
+      "input": "foo [2]: bar,baz",
+      "expected": null,
+      "shouldError": true,
       "options": {
         "strict": false
       },
-      "specSection": "5.2",
-      "minSpecVersion": "4.1"
+      "specSection": "6",
+      "minSpecVersion": "4.4"
     },
     {
       "name": "accepts a header key outside the encoder unquoted-key pattern",
@@ -549,28 +529,15 @@
       "minSpecVersion": "4.2"
     },
     {
-      "name": "treats an invalid header line as a key-value line (non-strict)",
-      "input": "[1]{a}: 1\na[2:]{x}\nb[3]:\n  - k[1]{a}: 1\n  - [1]{a}: 2\n  - [1]{a}:",
-      "expected": {
-        "[1]{a}": 1,
-        "a[2": "]{x}",
-        "b": [
-          {
-            "k[1]{a}": 1
-          },
-          {
-            "[1]{a}": 2
-          },
-          {
-            "[1]{a}": {}
-          }
-        ]
-      },
+      "name": "throws on a malformed header line in non-strict mode",
+      "input": "a[2:]{x}",
+      "expected": null,
+      "shouldError": true,
       "options": {
         "strict": false
       },
-      "specSection": "6",
-      "minSpecVersion": "4.2"
+      "specSection": "5.2",
+      "minSpecVersion": "4.4"
     }
   ]
 }

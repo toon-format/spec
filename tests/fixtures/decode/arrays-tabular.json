@@ -225,37 +225,26 @@
       "minSpecVersion": "4.1"
     },
     {
-      "name": "materializes a nested field group without cells as an empty object in non-strict mode",
+      "name": "throws on a row missing a nested field group's cells in non-strict mode",
       "input": "items[1]{a,n{x}}:\n  1",
-      "expected": {
-        "items": [
-          {
-            "a": 1,
-            "n": {}
-          }
-        ]
-      },
+      "expected": null,
+      "shouldError": true,
       "options": {
         "strict": false
       },
       "specSection": "14.1",
-      "minSpecVersion": "4.1"
+      "minSpecVersion": "4.4"
     },
     {
-      "name": "drops surplus cells when the width mismatches in non-strict mode",
+      "name": "throws on a row with more cells than fields in non-strict mode",
       "input": "items[1]{a}:\n  1,2",
-      "expected": {
-        "items": [
-          {
-            "a": 1
-          }
-        ]
-      },
+      "expected": null,
+      "shouldError": true,
       "options": {
         "strict": false
       },
       "specSection": "14.1",
-      "minSpecVersion": "4.1"
+      "minSpecVersion": "4.4"
     },
     {
       "name": "parses unquoted colon after the delimiter in tabular row as data",
