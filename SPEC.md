@@ -266,7 +266,7 @@ TOON is a deterministic, line-oriented, indentation-based notation.
 - Objects:
   - key: value for primitives.
   - key: alone for nested or empty objects (see §8).
-  - Objects whose values are uniform non-empty objects: keyed tabular form key[N:<delim?>]{…}: with one entry row per line (see §9.5).
+  - Objects with at least two entries whose values are uniform non-empty objects: keyed tabular form key[N:<delim?>]{…}: with one entry row per line (see §9.5).
 - Arrays:
   - Non-empty primitive arrays are inline: key[N<delim?>]: v1<delim>v2…; empty arrays use key: [] (§9.1).
   - Arrays of primitive arrays: list form under a header: key[N<delim?>]: then "- [M<delim?>]: …".
