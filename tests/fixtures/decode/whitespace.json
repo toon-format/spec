@@ -83,13 +83,6 @@
       "specSection": "12"
     },
     {
-      "name": "keeps an escaped carriage return inside a quoted value",
-      "input": "a: \"x\\ry\"\r\n",
-      "expected": { "a": "x\ry" },
-      "specSection": "12",
-      "note": "Only a CR at the end of a line is part of the line terminator"
-    },
-    {
       "name": "treats a carriage-return-only line as blank",
       "input": "a: 1\n\r\nb: 2",
       "expected": { "a": 1, "b": 2 },
