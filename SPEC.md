@@ -370,8 +370,6 @@ Decoding requirements:
 - A non-keyed header without a field list: content after its colon is an inline primitive array (§9.1); nothing after the colon opens a block scope (§9.2, §9.4). A fields-bearing header – keyed or not – carries no inline content: content other than spaces after its colon MUST error (§14.2).
 - Keyless header positions: a keyless non-keyed header without a field list is valid only as the document's root header (§5) or as a list item after the list-item marker and its spaces (§5.2, §9.2, §9.4); a keyless header with a field list – keyed or not – is valid only as the document's root header. In any other position, decoders MUST error (§14.2).
 
-Note: Dotted keys are ordinary literal keys in headers. Example: `data.meta.items[2]{id,name}:` is a valid header whose key is the single literal key `data.meta.items`, followed by a standard bracket segment, field list, and colon.
-
 ## 7. Strings and Keys
 
 ### 7.1 Escaping
@@ -443,17 +441,14 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
 - Encoding:
   - Primitive fields: key: value (single space after colon).
   - Nested or empty objects: key: on its own line. If non-empty, nested fields appear at depth +1. An object that satisfies keyed tabular detection instead collapses per §9.5.
-  - Key order: Implementations MUST preserve encounter order when emitting fields.
   - An empty object at the root yields an empty document (no lines).
 - Dotted keys (e.g., `user.name`) are valid literal keys in TOON. Decoders MUST treat them as single literal keys; the dot has no structural meaning.
 - Decoding:
   - Lines in an object body are classified per §5.2; the rules below cover its key-value class.
-  - A line "key:" with nothing after the colon at depth d opens an object; subsequent lines at depth > d belong to that object until the depth decreases to ≤ d.
+  - Key-value lines at an object's content depth are its fields; duplicate keys: §14.3.
+  - A key-value line with nothing after the colon at depth d opens an object: the following lines at depth > d belong to it, up to the first line at depth ≤ d. With no such line it MUST decode to `{}`, never to an empty array (that is `key: []`, §9.1).
   - The first line of a non-empty nested scope MUST be at exactly depth d+1; a deeper first line is a depth jump and MUST error (§14.2), except under §14.4's depth-jump recovery. Conforming encoders never produce depth jumps; §10's depth model governs fields carried on a list-item hyphen line.
   - A line deeper than the content depth of its enclosing scope that is not the first line of a nested scope belongs to no scope (e.g., a depth d+1 line directly under a depth-d primitive field, or the document's first line at depth 1 or more). Decoders MUST error on such a line (§14.2); it MUST NOT be silently discarded.
-  - A bare `key:` (no value after the colon) MUST decode as an empty or nested object, not an empty array. Empty arrays use the explicit `key: []` form (§9.1).
-  - Lines "key: value" at the same depth are sibling fields.
-  - Duplicate sibling keys at the same depth: see §14.3.
 
 ## 9. Arrays and Tabular Forms
 
