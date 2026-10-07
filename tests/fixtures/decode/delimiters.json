@@ -210,6 +210,18 @@
         "items": [{ "t": [{ "a": 1, "b": 2 }] }]
       },
       "specSection": "11.2"
+    },
+    {
+      "name": "splits at a delimiter followed by a combining mark",
+      "input": "a[2]: x,\u0301y",
+      "expected": {
+        "a": [
+          "x",
+          "\u0301y"
+        ]
+      },
+      "specSection": "1.2",
+      "minSpecVersion": "4.4"
     }
   ]
 }
