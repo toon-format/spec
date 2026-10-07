@@ -443,7 +443,6 @@ Keys requiring quoting per the above rules MUST be quoted in all contexts, inclu
 Decoding of value tokens follows §4 (unquoted type inference, quoted strings, numeric rules). This section adds key-specific requirements:
 
 - Quoted keys MUST be unescaped per §7.1.
-- Keys (quoted or unquoted) MUST be followed by ":", optionally after spaces (§12); missing colon MUST error (see also §14.2).
 - Unquoted key token (normative): an unquoted key token is the text before the first unquoted colon of a key-value line (§5.2) or entry row (§9.5), with surrounding spaces trimmed (§12); the text before a header's bracket segment; or a field name in a field list (§6). An empty token before a key-value or entry-row colon is the empty key: `: 1` decodes to `{"": 1}`. Decoders MUST accept any non-empty such token as a literal key, even when it does not match §7.3's unquoted-key pattern: `foo-bar: 1`, `foo-bar[2]: 1,2`, and `items[1]{2key}:` are valid input. §7.3 governs how encoders emit keys, not what decoders accept.
 - Quoted-token boundary (normative): a token whose first character, after the trimming of §12, is `"` MUST be a complete quoted token – its closing `"` MUST be the token's last character. This applies wherever a token is extracted; any character after the closing quote MUST error. It overrides §4's "Otherwise → string" fallback.
 - Symmetrically for values: an unquoted value token that an encoder would have been required to quote (§7.2) is not an error. Decoders MUST decode it per §4 – unless another rule of this specification assigns the token structural meaning (§5.2, §6, §9.1). Example: `key: -x` decodes to the string `-x`. §7.2 governs encoder output; it adds no decoder-side rejection.
@@ -724,7 +723,7 @@ Decoders MUST error on the conditions listed in §14.1–§14.3. With `strict=fa
 - Over-indented lines (§8): a line deeper than the content depth of its enclosing scope that is not the first line of a nested scope (e.g., a depth d+1 line directly under a depth-d primitive field, or the document's first line at depth 1 or more). Decoders MUST NOT silently discard such lines.
 - Trailing content after a completed root form (§5): any non-comment, non-blank line following the inline values, rows, items, or entries of a root array or keyed tabular root object, or following a root `[]`.
 - Ill-formed UTF-8 in byte input (§4).
-- A scalar line (§5.2) anywhere other than root primitive position – e.g., a key without a colon (§7.4), a bare token line inside an array scope, or a second depth-0 line (§5).
+- A scalar line (§5.2) anywhere other than root primitive position – e.g., a key without a colon, a bare token line inside an array scope, or a second depth-0 line (§5).
 
 ### 14.3 Duplicate Object Keys
 
