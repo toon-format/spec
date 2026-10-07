@@ -60,6 +60,17 @@
       "note": "Token trimming removes U+0020 only; a host trim() that also strips NBSP or tab corrupts this round-trip"
     },
     {
+      "name": "keeps an NBSP or a tab around a key or field name",
+      "input": "a\u00a0: 1\nb\t: 2\nt[1]{\u00a0c}:\n  3",
+      "expected": {
+        "a\u00a0": 1,
+        "b\t": 2,
+        "t": [{ "\u00a0c": 3 }]
+      },
+      "specSection": "12",
+      "minSpecVersion": "4.1"
+    },
+    {
       "name": "decodes CRLF line terminators",
       "input": "a: 1\r\nb: 2\r\n",
       "expected": { "a": 1, "b": 2 },
