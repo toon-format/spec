@@ -713,7 +713,7 @@ The five recoveries:
 
 - Injection and ambiguity are mitigated by the quoting rules in §7.2, which bind encoders. The mitigation is a property of conforming encoder output: an unquoted marker in input is decoded per §4 unless another rule assigns the token structural meaning.
 - Prototype-key safety: No key has special meaning in TOON; decoders MUST materialize every key (including `__proto__`, `constructor`, and `prototype`) as an ordinary own entry, and decoding MUST NOT mutate prototype chains, class metadata, or any other shared state of the host object model. Implementations whose default object type cannot hold such keys as ordinary own entries MUST use a representation that can (e.g., a map type) and MUST document the behavior.
-- Decode checks (§14) detect malformed strings and width mismatches; in strict mode, length mismatches also detect truncated or injected values, items, rows, or entry rows (§14.4).
+- Decode checks (§14) detect malformed strings and width mismatches; in strict mode, count mismatches (§14.1) also detect truncated or injected values, items, rows, or entry rows.
 - Encoders SHOULD avoid excessive memory on large inputs; implement streaming/tabular row emission where feasible.
 - A declared length is attacker-controlled: a few bytes can declare a huge N. Decoders SHOULD NOT reserve storage in proportion to a declared N before that many values, items, rows, or entry rows have actually been read.
 - This specification places no limit on nesting depth or document size. Decoders that recurse over nesting MAY impose a documented depth limit and report exceeding it as an error rather than exhausting the host stack.
