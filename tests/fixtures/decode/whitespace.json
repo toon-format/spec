@@ -34,9 +34,9 @@
     },
     {
       "name": "parses empty tokens as empty string",
-      "input": "items[3]: a,,c",
+      "input": "items[4]: a,,c,",
       "expected": {
-        "items": ["a", "", "c"]
+        "items": ["a", "", "c", ""]
       },
       "specSection": "9.1"
     },
