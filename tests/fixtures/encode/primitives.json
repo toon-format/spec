@@ -249,6 +249,13 @@
       "specSection": "2",
       "note": "The binary64 value is exactly 123456789012345683968",
       "minSpecVersion": "4.2"
+    },
+    {
+      "name": "quotes a delimiter, colon, hyphen, or number sign that a combining mark follows",
+      "input": { "items": ["a,\u0301b", "-\u0301", "#\u0301"], "k": "x:\u0301" },
+      "expected": "items[3]: \"a,\u0301b\",\"-\u0301\",\"#\u0301\"\nk: \"x:\u0301\"",
+      "specSection": "1.2",
+      "minSpecVersion": "4.4"
     }
   ]
 }
