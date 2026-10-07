@@ -266,7 +266,7 @@
       "specSection": "14.4"
     },
     {
-      "name": "applies LWW for duplicate keys within a list-item object in non-strict mode",
+      "name": "applies last-write-wins for duplicate keys within a list-item object in non-strict mode",
       "input": "items[1]:\n  - id: 1\n    id: 2",
       "expected": {
         "items": [

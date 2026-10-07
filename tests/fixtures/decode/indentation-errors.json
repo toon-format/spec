@@ -121,7 +121,7 @@
       "specSection": "12"
     },
     {
-      "name": "accepts non-multiple indentation at nested depths when strict=false",
+      "name": "accepts non-multiple indentation at nested depths in non-strict mode",
       "input": "a:\n   b:\n     c: 1\n  d: 2\n   e[2]: 1,2",
       "expected": {
         "a": {

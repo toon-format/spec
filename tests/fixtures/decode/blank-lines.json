@@ -149,7 +149,7 @@
       "minSpecVersion": "4.4"
     },
     {
-      "name": "ignores blank lines inside list array when strict=false",
+      "name": "ignores blank lines inside list array in non-strict mode",
       "input": "items[4]:\n  - a\n\n  - b\n\n\n  - c\n  - x: 1\n\n    y: 2",
       "expected": {
         "items": ["a", "b", "c", { "x": 1, "y": 2 }]
@@ -161,7 +161,7 @@
       "minSpecVersion": "4.4"
     },
     {
-      "name": "ignores blank lines between tabular rows and entry rows when strict=false",
+      "name": "ignores blank lines between tabular rows and entry rows in non-strict mode",
       "input": "items[2]{id,name}:\n  1,Ada\n\n  2,Bob\nm[2:]{v}:\n  a: 1\n\n  b: 2",
       "expected": {
         "items": [

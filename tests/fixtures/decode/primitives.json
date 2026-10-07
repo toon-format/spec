@@ -7,7 +7,7 @@
       "name": "parses safe unquoted string",
       "input": "hello",
       "expected": "hello",
-      "specSection": "7.4"
+      "specSection": "4"
     },
     {
       "name": "parses empty quoted string",

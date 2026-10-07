@@ -148,7 +148,7 @@
       "specSection": "9.3"
     },
     {
-      "name": "applies LWW for duplicate field names, bare or grouped, in non-strict mode",
+      "name": "applies last-write-wins for duplicate field names, bare or grouped, in non-strict mode",
       "input": "items[1]{a,a,b,b{x}}:\n  1,2,3,4",
       "expected": {
         "items": [

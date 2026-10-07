@@ -38,7 +38,7 @@
       "expected": {
         "items": ["a", "", "c", ""]
       },
-      "specSection": "9.1"
+      "specSection": "11.2"
     },
     {
       "name": "keeps a leading NBSP and a trailing tab in unquoted values",
@@ -116,7 +116,7 @@
       "minSpecVersion": "4.1"
     },
     {
-      "name": "tolerates extra spaces after a list-item hyphen",
+      "name": "tolerates extra spaces after a list-item hyphen and keeps an NBSP after them",
       "input": "items[3]:\n  -  \u00a0a\n  -   [2]: 1,2\n  -  k[1]: v",
       "expected": {
         "items": [
