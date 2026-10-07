@@ -980,7 +980,7 @@ These sketches illustrate structure and common decoding helpers. They are inform
   - Lines start with "- " at one deeper depth than the parent array header (or the bare marker "-" for an empty object list item, §10).
   - After "- ":
     - If the remainder is exactly `[]` → empty inner array (§9.2).
-    - If an unquoted "[ … ]:" appears → inline array item; decode with its own header and active delimiter.
+    - Else if the remainder starts with "[" and is a keyless header (§6) → inner array (§9.2, §9.4); decode with its own header and active delimiter.
     - Else if an unquoted colon appears → object with first field on hyphen line.
     - Else → primitive token.
 
