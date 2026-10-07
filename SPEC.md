@@ -540,7 +540,7 @@ When tabular requirements are not met (encoding; including any column that is ne
 Decoding:
 - Header declares list length N; nested headers declare their own delimiter (§6).
 - Each list item is a list-item line (§5.2) starting with "- " at depth +1 (or the bare marker "-" for an empty object list item, §10) and is parsed as:
-  - Primitive (no colon and no array header),
+  - Primitive (no unquoted colon and no array header),
   - Inline primitive array (`- [M<delim?>]: …`) or the empty-array item `- []` (§9.2),
   - Object with first field on the hyphen line (`- key: …` or `- key[N…]{…}: …`),
   - Or nested arrays via nested headers.
