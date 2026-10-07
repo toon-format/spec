@@ -69,8 +69,8 @@
     },
     {
       "name": "treats leading-zeros in array as strings",
-      "input": "nums[3]: 05,007,0123",
-      "expected": { "nums": ["05", "007", "0123"] },
+      "input": "nums[4]: 05,007,0123,01.5",
+      "expected": { "nums": ["05", "007", "0123", "01.5"] },
       "specSection": "4"
     },
     {
