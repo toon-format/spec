@@ -132,6 +132,13 @@
       "minSpecVersion": "4.4"
     },
     {
+      "name": "throws on a tab after a list-item hyphen",
+      "input": "items[1]:\n  -\tx",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "5.2"
+    },
+    {
       "name": "keeps a second carriage return before CRLF as content",
       "input": "a: x\r\r\nb: 1",
       "expected": {
