@@ -255,7 +255,7 @@
       "options": {
         "strict": false
       },
-      "specSection": "8",
+      "specSection": "14.4",
       "minSpecVersion": "4.4"
     },
     {
@@ -266,7 +266,7 @@
       "options": {
         "strict": false
       },
-      "specSection": "8",
+      "specSection": "14.4",
       "minSpecVersion": "4.4"
     },
     {
@@ -277,7 +277,7 @@
       "options": {
         "strict": false
       },
-      "specSection": "8",
+      "specSection": "14.4",
       "minSpecVersion": "4.4"
     },
     {
