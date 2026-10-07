@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
-- Non-strict mode is a closed set of five recoveries, each a MUST (§14.4): a declared `[N]` is advisory, duplicate keys resolve last-write-wins, indentation tolerates tabs and non-multiples (each tab one level, spaces floored), blank lines inside a header span are ignored, and a jumped first line sets its scope's depth. Every other §14 condition errors in both modes, so `strict=false` no longer reads a malformed header as a key-value line, skips over-indented lines or entry-depth lines without a colon, ignores trailing content after a root form, tolerates row-width mismatches, or replaces ill-formed UTF-8 with U+FFFD.
+- Non-strict mode is a closed set of five recoveries, each a MUST (§14.4): a declared `[N]` is advisory, duplicate keys resolve last-write-wins, indentation tolerates tabs and non-multiples (each tab one level, spaces floored), blank lines inside a header span are ignored, and a jumped first line sets its scope's depth. Every other §14 condition errors in both modes, so `strict=false` no longer reads a malformed or misplaced header, or a fields-bearing header with inline content, as a key-value line, skips over-indented lines or entry-depth lines without a colon, ignores trailing content after a root form, tolerates row-width mismatches, or replaces ill-formed UTF-8 with U+FFFD.
 - Whitespace is a closed set: SP and HTAB (§1.2). Trimming removes spaces only, as before; NBSP and every other Unicode space are ordinary content, and decoders must not apply a host-language whitespace test. An NBSP before a bracket segment or nested field group is part of the key or field name (`n<NBSP>[1]: y` decodes to `{"n\u00a0": ["y"]}`); a space or tab there stays a header syntax error.
 - A list-item hyphen may be followed by more than one space before any item, including a keyless header (`-   [2]: 1,2`), as it already could before a key-value line or primitive (§5.2). A keyed header after extra spaces no longer carries them in its key: `-  a[2]: 1,2` decodes to key `a`, formerly `" a"`.
 - §12 decoding opens with one ordered line preparation: byte-order mark, CR, trailing spaces, comment lines, blank lines. Decoders now MUST ignore blank lines outside header spans in both modes and so accept a trailing newline (formerly SHOULD in non-strict mode and for the trailing newline).
@@ -24,7 +24,7 @@ Callers that use `strict=false` for hand-written or model-written input now get 
 - a missing or surplus cell in a row or entry row, such as a trailing comma (`1,x,`) or a truncated last row
 - a prose line after a root array or list (`[2]: 1,2` then `Note: done`)
 - a whole document indented by one level, or an over-indented line (`root:` / `  a: 1` / `      b: 2`)
-- a malformed header, such as `items [2]: a,b` or `key[]: 1,2`
+- a malformed or misplaced header, such as `items [2]: a,b`, `key[]: 1,2`, or a keyless `[2]: x,y` under a field (`a:` / `  [2]: x,y`)
 
 Fewer or more rows than `[N]`, blank lines between rows, tab or misaligned indentation, and a block that starts too deep still decode.
 
