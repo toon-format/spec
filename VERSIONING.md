@@ -19,7 +19,7 @@ The specification version (e.g., `3.2`) is `MAJOR.MINOR`. Published npm artifact
 
 ## What Constitutes a Breaking Change
 
-Breaking changes (requiring a MAJOR version bump) include:
+Breaking changes (requiring a MAJOR version bump) include the following; changes confined to encoder-unreachable documents are MINOR (see Non-Breaking Changes).
 
 ### Syntax Changes
 
@@ -30,15 +30,15 @@ Breaking changes (requiring a MAJOR version bump) include:
 
 ### Semantic Changes
 
-- Changing how valid TOON should be interpreted, except for encoder-unreachable documents (see Non-Breaking Changes).
+- Changing how valid TOON should be interpreted.
 - Modifying type conversion rules in incompatible ways.
 - Changing quoting rules in ways that break existing documents.
 - Altering delimiter behavior.
 
 ### Conformance Changes
 
-- Making previously valid TOON invalid, except for encoder-unreachable documents (see Non-Breaking Changes).
-- Adding new MUST requirements that existing implementations don't meet, except strict-mode-only tightening, encoder-side tightening, and changes to encoder-unreachable documents (see Non-Breaking Changes).
+- Making previously valid TOON invalid.
+- Adding new MUST requirements that existing implementations don't meet, except strict-mode-only tightening and encoder-side tightening (see Non-Breaking Changes).
 - Changing error handling in ways that break round-trip compatibility.
 
 ## What Constitutes a Non-Breaking Change
@@ -53,7 +53,7 @@ Non-breaking changes (MINOR version bump) include:
 - Expanding the specification to cover previously undefined behavior (if done in a backward-compatible way).
 - Adding new test cases that existing conformant implementations already pass.
 - Adding a normative decoder requirement that broadens accepted input, compatible with existing encoder output.
-- Tightening strict-mode validation (adding new strict-mode errors that formalize previously-undefined behavior). Behavior is "previously undefined" when no normative rule of the current MAJOR version assigned the affected document a decoded value; where the previous version did assign one, changing it is a MAJOR change even if the new outcome is an error, except for encoder-unreachable documents (below). Strict mode is the default, but non-strict mode (`strict=false`) remains a conformant option.
+- Tightening strict-mode validation (adding new strict-mode errors that formalize previously-undefined behavior). Behavior is "previously undefined" when no normative rule of the current MAJOR version assigned the affected document a decoded value; where a rule of the current MAJOR version did assign one, changing it is a MAJOR change even if the new outcome is an error, except for encoder-unreachable documents (below). Strict mode is the default, but non-strict mode (`strict=false`) remains a conformant option.
 - Encoder-side tightening: raising a SHOULD or MAY to MUST or MUST NOT for encoder output, or adding a new constraint on what encoders emit. This is MINOR only while every decoder rule of the current MAJOR version survives unchanged, so output from older encoders keeps decoding as before. Retiring a form the previous version let encoders emit therefore requires keeping the decoder's obligation to accept it.
 - Changing the treatment of encoder-unreachable documents. A document is encoder-unreachable when no conforming encoder of the current MAJOR version could emit it, so it can only have been hand-authored or produced by other means and no round-trip yields it. Reinterpreting such a document, or rejecting it outright, is MINOR.
 
