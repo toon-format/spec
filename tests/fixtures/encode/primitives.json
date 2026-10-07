@@ -84,9 +84,9 @@
       "specSection": "7.1"
     },
     {
-      "name": "keeps a string with an interior hash unquoted",
-      "input": "a #b",
-      "expected": "a #b",
+      "name": "keeps a string with an interior hyphen or hash unquoted",
+      "input": "a-b #c",
+      "expected": "a-b #c",
       "specSection": "7.2",
       "minSpecVersion": "4.2"
     },
