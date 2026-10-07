@@ -458,10 +458,12 @@
       "specSection": "15"
     },
     {
-      "name": "parses an unquoted key followed by spaces before the colon",
-      "input": "a : 1",
+      "name": "parses a key-value or header colon with spaces before it or none after it",
+      "input": "a : 1\nb:2\nc[2]:x,y",
       "expected": {
-        "a": 1
+        "a": 1,
+        "b": 2,
+        "c": ["x", "y"]
       },
       "specSection": "7.4"
     },
