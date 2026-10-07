@@ -477,7 +477,6 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
   - Root arrays: `[N<delim?>]: v1<delim>…`
 - Decoding:
   - Split using the active delimiter declared by the header (§11.2).
-  - When splitting inline arrays, empty tokens (including those surrounded by spaces) decode to the empty string.
   - `key[1]:` with nothing after the colon (after §12 trimming) is an array in list form, not an inline array with one empty value (§6); the single empty string is spelled `key[1]: ""`.
   - In strict mode, the number of decoded values MUST equal N; otherwise MUST error (§14.1).
   - Empty arrays: decoders MUST accept `key: []`, `[]`, and the legacy forms `key[0<delim?>]:` and `[0<delim?>]:` as empty arrays.
@@ -613,7 +612,7 @@ For an object appearing as a list item:
 
 - Delimiter-aware parsing:
   - Inline arrays, tabular rows, and keyed entry rows (after the entry key is split off at the row's first unquoted colon, §9.5) MUST be split only on the active delimiter declared by the nearest header.
-  - Splitting MUST preserve empty tokens; surrounding spaces are trimmed (§12), and empty tokens decode to the empty string. An empty cell sequence – the content after an entry key's colon, or after an inline array header's colon, that trims to nothing – is zero cells, not one empty cell; a single empty-string cell is written `""`.
+  - Splitting MUST preserve empty tokens; surrounding spaces are trimmed (§12), and empty tokens decode to the empty string. An empty cell sequence – the content after an entry key's colon that trims to nothing – is zero cells, not one empty cell; a single empty-string cell is written `""`.
   - Nested headers may change the active delimiter; decoding MUST use the delimiter declared by the nearest header.
 - Object field values (key: value): Decoders parse the entire post-colon token as a single value; document delimiter is not a decoder concept.
 
