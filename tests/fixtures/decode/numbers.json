@@ -100,12 +100,14 @@
       "note": "The grammar admits only an optional leading minus, so leading-plus cells stay strings"
     },
     {
-      "name": "treats Infinity and NaN tokens as strings",
-      "input": "a: Infinity\nb: -Infinity\nc: NaN",
+      "name": "treats Infinity, NaN, and case variants of literals as strings",
+      "input": "a: Infinity\nb: -Infinity\nc: NaN\nd: True\ne: NULL",
       "expected": {
         "a": "Infinity",
         "b": "-Infinity",
-        "c": "NaN"
+        "c": "NaN",
+        "d": "True",
+        "e": "NULL"
       },
       "specSection": "4"
     },
