@@ -538,6 +538,17 @@
       },
       "specSection": "5.2",
       "minSpecVersion": "4.4"
+    },
+    {
+      "name": "throws on a malformed header after a list-item hyphen in non-strict mode",
+      "input": "items[1]:\n  - k[1]{a}: 1",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": false
+      },
+      "specSection": "6",
+      "minSpecVersion": "4.4"
     }
   ]
 }
