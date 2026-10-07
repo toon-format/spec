@@ -101,7 +101,7 @@
     },
     {
       "name": "treats a hyphen followed by trailing spaces as the bare marker",
-      "input": "a[1]:\n  - ",
+      "input": "a[1]: \n  - ",
       "expected": {
         "a": [
           {}
