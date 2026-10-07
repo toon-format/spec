@@ -320,7 +320,7 @@ Header shapes:
 - With key: key[N<delim?>]:
 - Tabular header: key[N<delim?>]{field1<delim>field2<delim>…}:
 - Tabular header with a nested field group: key[N<delim?>]{field1<delim>field2{sub1<delim>sub2}<delim>…}: – a field entry carrying its own field list (§9.3)
-- Keyed header (objects, §9.5): key[N:<delim?>]{field1<delim>field2<delim>…}: – a colon immediately after the length marks a keyed header; the field list is REQUIRED, and N declares the entry count
+- Keyed header (objects, §9.5): key[N:<delim?>]{field1<delim>field2<delim>…}:
 
 Where:
 - N is the non-negative integer length (array length, or entry count in a keyed header).
@@ -328,14 +328,12 @@ Where:
   - absent for comma (","),
   - HTAB (U+0009) for tab,
   - "|" for pipe.
-- Field names in braces are separated by the same active delimiter and encoded as keys (§7.3). A field entry MAY be followed by a nested field group; the delimiter inside a nested group is the same active delimiter as the enclosing header.
+- Field names in braces are separated by the active delimiter and encoded as keys (§7.3). A field entry MAY be followed by a nested field group.
 
 Spacing and delimiters:
 - Every header MUST include a colon after the bracket segment and optional field list.
 - Spaces after the colon are governed by §12.
-- The bracket segment's delimiter symbol declares the active delimiter for the header and its scope: it splits the header's field list at every nesting level, the inline primitive array on that header line, and the tabular rows or keyed entry rows in the scope (§11.2), unless a nested header declares its own.
-- Decoders MUST perform exactly those splits with the declared delimiter; other delimiter characters appearing unquoted in row content are literal data and MUST NOT be re-interpreted as structural delimiters.
-- Absence of a delimiter symbol in a bracket segment always means comma, regardless of any parent header.
+- The bracket segment's delimiter symbol declares the active delimiter – comma when absent, regardless of any parent header. It splits the header's field list at every nesting level, the inline primitive array on that header line, and the tabular rows or keyed entry rows in its scope (§11.2).
 
 Normative header grammar (ABNF):
 ```
@@ -368,14 +366,12 @@ Note: The grammar above specifies header syntax only. Tabular row disambiguation
 Whitespace (§1.2) MUST NOT appear between a key and its bracket segment or between a field name and its nested field group, and `]` MUST be followed directly by `{` or `:` (e.g., `foo [2]:`, `t<TAB>[2]:`, `{b {c}}`, `[1][bar]:`, `[2]extra:`, `[2] :`); each is a header syntax error. Any other character before the `[` or `{` belongs to the key or field name: `n<NBSP>[1]: y` decodes to `{"n\u00a0": ["y"]}`.
 
 Decoding requirements:
-- The bracket segment MUST parse as a non-negative integer length N with no leading zeros (the single digit `0` is the only canonical form for length zero). Tokens like `[03]` or `[-1]` MUST NOT be interpreted as bracket segments. N has no upper bound: a length the implementation cannot represent still forms a header, and its count is unmet (§14.1).
-- A bracket segment without a length token (`key[]:`) is a header syntax error. This does not affect the empty-array value form `key: []` (§9.1), where `[]` follows the colon.
+- N matches `length`: `[03]`, `[-1]`, and `key[]:` are header syntax errors (§14.2); the empty-array value `key: []` (§9.1) is unaffected, since its `[]` follows the colon. N has no upper bound: a length the implementation cannot represent still forms a header, and its count is unmet (§14.1).
 - A colon immediately after the length and before the optional delimiter symbol marks a keyed header (§9.5): `[N:]` declares comma, `[N:<TAB>]` tab, `[N:|]` pipe. The colon MUST occupy exactly that position – tokens such as `[2|:]`, `[2 :]`, or `[2:,]` are malformed bracket segments, and the length rules above apply unchanged (`[03:]` is malformed).
 - A keyed header MUST carry a field list: `key[2:]:` without braces is a header syntax error (§14.2).
-- If a trailing tab or pipe appears inside the brackets, it selects the active delimiter; otherwise comma is active.
-- If a field list follows the bracket segment, parse field entries recursively using the active delimiter at every nesting level; quoted names MUST be unescaped per §7.1. Brace matching MUST ignore `{` and `}` inside quoted spans (§5.2).
+- If a field list follows the bracket segment, parse its field entries recursively; quoted names MUST be unescaped per §7.1. Brace matching MUST ignore `{` and `}` inside quoted spans (§5.2).
 - A field list MUST contain at least one field entry at every nesting level: an empty field list (`{}`, including a nested `field{}`), an empty field entry (`{a,}`), or a nameless nested group (`{a,{b}}`) is a header syntax error (§14.2), as are unmatched braces in a field list.
-- A line without any unquoted colon is neither a header nor a key context (§5.2): `items[2]` alone is a scalar line, and `- [2]` is a list item carrying the string `[2]`.
+- A line without any unquoted colon is never a header (§5.2): `items[2]` alone is a scalar line, and `- [2]` is a list item carrying the string `[2]`.
 - A non-keyed header without a field list: content after its colon is an inline primitive array (§9.1); nothing after the colon opens a block scope (§9.2, §9.4). A fields-bearing header – keyed or not – carries no inline content: content other than spaces after its colon MUST error (§14.2).
 - Keyless header positions: a keyless non-keyed header without a field list is valid only as the document's root header (§5) or as a list item after the list-item marker and its spaces (§5.2, §9.2, §9.4); a keyless header with a field list – keyed or not – is valid only as the document's root header. In any other position, decoders MUST error (§14.2).
 
