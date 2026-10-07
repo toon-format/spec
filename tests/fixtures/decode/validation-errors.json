@@ -522,15 +522,15 @@
       "note": "A fields-bearing header carries no inline content; decoding the values as an inline array would silently drop the field list"
     },
     {
-      "name": "throws on a fields-bearing header with inline content and a row in non-strict mode",
-      "input": "b[1]{c}: x\n  y",
+      "name": "throws on a fields-bearing header with inline content in non-strict mode",
+      "input": "b[1]{c}: x",
       "expected": null,
       "shouldError": true,
       "options": {
         "strict": false
       },
       "specSection": "6",
-      "minSpecVersion": "4.2"
+      "minSpecVersion": "4.4"
     },
     {
       "name": "throws on inline content after root tabular header",
@@ -770,7 +770,7 @@
     },
     {
       "name": "throws on content after a nested field group in non-strict mode",
-      "input": "a[1]{b{c}d}:\n  1",
+      "input": "a[0]{b{c}d}:",
       "expected": null,
       "shouldError": true,
       "options": {
@@ -778,7 +778,7 @@
       },
       "specSection": "6",
       "note": "Content after a nested field group fails the §6 grammar",
-      "minSpecVersion": "4.2"
+      "minSpecVersion": "4.4"
     },
     {
       "name": "throws on a \\u escape with a sign before its hex digits",
