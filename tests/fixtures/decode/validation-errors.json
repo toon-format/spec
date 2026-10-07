@@ -116,8 +116,8 @@
       "specSection": "6"
     },
     {
-      "name": "throws on duplicate sibling keys in strict mode",
-      "input": "name: Ada\nname: Bob",
+      "name": "throws on duplicate sibling keys, one of them quoted, in strict mode",
+      "input": "name: Ada\n\"name\": Bob",
       "expected": null,
       "shouldError": true,
       "options": {
