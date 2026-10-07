@@ -319,7 +319,7 @@ Where:
   - absent for comma (","),
   - HTAB (U+0009) for tab,
   - "|" for pipe.
-- Field names in braces are separated by the active delimiter and encoded as keys (§7.3). A field entry MAY be followed by a nested field group.
+- Field names in braces are encoded as keys (§7.3). A field entry MAY be followed by a nested field group.
 
 Spacing and delimiters:
 - Every header MUST include a colon after the bracket segment and optional field list.
@@ -350,7 +350,7 @@ quoted-key    = DQUOTE *quoted-char DQUOTE
 ; quoted-char is defined in §7.1
 ```
 
-The ABNF does not express delimiter equality between the `bracket-seg` and `fields-seg` productions; implementations enforce the same-delimiter rule above. A field list containing an unquoted delimiter character other than the one declared by the bracket segment is a header syntax error (§14.2).
+The ABNF does not express delimiter equality between the `bracket-seg` and `fields-seg` productions; implementations enforce it through the active-delimiter rule above. A field list containing an unquoted delimiter character other than the one declared by the bracket segment is a header syntax error (§14.2).
 
 Note: The grammar above specifies header syntax only. Tabular row disambiguation is defined in §9.3.
 
