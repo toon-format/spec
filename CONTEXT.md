@@ -65,7 +65,7 @@ The text extracted for one key or one value – before a key-value or entry-key 
 The region an opening line governs – a header, or a `key:` line with nothing after the colon – running from its content depth until the depth falls back to the opening line's or shallower (SPEC §8, §9.4, §9.5).
 
 **Content depth**:
-The depth at which a scope's immediate content appears – one level deeper than the line that opens the scope, except for first fields carried on a list-item hyphen line (SPEC §10).
+The depth at which a scope's immediate content appears – 0 for the root scope, otherwise one level deeper than the line that opens the scope, except for first fields carried on a list-item hyphen line (SPEC §10) and a depth adopted by the non-strict depth-jump recovery (SPEC §14.4).
 
 **Row depth**:
 The content depth of a tabular array's scope, at which its rows appear.
@@ -116,7 +116,7 @@ _Avoid_: mixed (except in the compound "mixed and non-uniform arrays", which nam
 The delimiter declared by the closest header in scope. Governs splitting and quoting for inline values, tabular row cells, and entry row cells.
 
 **Document delimiter**:
-The encoder-selected delimiter used for delimiter-aware quoting wherever no active delimiter governs – object field values and root primitives.
+The encoder-selected delimiter used for delimiter-aware quoting wherever no active delimiter governs – object field values, primitive list items, and root primitives.
 
 ## Beyond the format
 
