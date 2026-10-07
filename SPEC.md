@@ -599,11 +599,10 @@ For an object appearing as a list item:
 
 ### 11.1 Encoding Rules
 
-- Document delimiter: Encoders select a document delimiter (option: comma, tab, pipe; default comma). Encoders MUST declare it as the active delimiter of every header they emit (§6); it also governs delimiter-aware quoting for object field values (key: value), primitive list items (`- value`), and root primitives.
-- Active delimiter: Inside a header's scope, the active delimiter governs quoting only for inline array values, tabular row cells, and keyed entry-row cells (§9.5).
+- Document delimiter: Encoders select a document delimiter (option: comma, tab, pipe; default comma). Encoders MUST declare it as the active delimiter of every header they emit (§6).
 - Delimiter-aware quoting:
   - Inline array values, tabular row cells, and keyed entry-row cells: strings containing the active delimiter MUST be quoted.
-  - Object field values (key: value) and primitive list items (`- value`): encoders use the document delimiter to decide delimiter-aware quoting, regardless of the enclosing array's scope. Entry rows (§9.5) are not object-field lines: the content after the entry key's colon is a delimiter-joined cell sequence, quoted per the active delimiter.
+  - Object field values (key: value), primitive list items (`- value`), and root primitives: encoders use the document delimiter to decide delimiter-aware quoting, regardless of the enclosing array's scope. Entry rows (§9.5) are not object-field lines: the content after the entry key's colon is a delimiter-joined cell sequence, quoted per the active delimiter.
   - Strings containing non-active delimiters do not require quoting unless another condition applies (§7.2).
 
 ### 11.2 Decoding Rules
