@@ -450,7 +450,7 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
 ### 9.1 Primitive Arrays – Inline Form
 
 - Encoding:
-  - Non-empty arrays: `key[N<delim?>]: v1<delim>v2<delim>…` where each vi is encoded as a primitive (§7) with delimiter-aware quoting.
+  - Non-empty arrays: `key[N<delim?>]: v1<delim>v2<delim>…` where each vi is encoded as a primitive (§7).
   - Empty arrays (object field position): encoders MUST emit `key: []`. The legacy header form `key[0<delim?>]:` MUST NOT be emitted.
   - Empty arrays (root position): encoders MUST emit `[]` on its own line. The legacy `[0<delim?>]:` form MUST NOT be emitted.
   - Root arrays: `[N<delim?>]: v1<delim>…`
