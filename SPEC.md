@@ -132,6 +132,7 @@ All normative text is in Sections 1–16; the appendices and all examples are in
 ### 1.2 Core Concepts
 
 - TOON document: A sequence of UTF-8 text lines formatted according to this spec.
+- Character: A Unicode scalar value. A syntax character, such as a delimiter, quote, bracket, colon, or hyphen, matches as one scalar; a combining mark after it does not change it.
 - Line: A sequence of non-newline characters. Serialized documents use LF (U+000A) as the line separator between lines; encoders MUST use LF, not CRLF; decoders accept CRLF input (§12).
 - Whitespace: SP (U+0020) and HTAB (U+0009), and no other character. NBSP (U+00A0) and every other Unicode space are ordinary content; decoders MUST NOT apply a host-language whitespace test.
 
