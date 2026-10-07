@@ -313,6 +313,13 @@
       "specSection": "14.2"
     },
     {
+      "name": "throws on an unmatched closing brace after a field list",
+      "input": "a[0]{x}}:",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "6"
+    },
+    {
       "name": "throws on duplicate field names at the same field-list level in strict mode",
       "input": "items[0]{a,a{x}}:",
       "expected": null,
