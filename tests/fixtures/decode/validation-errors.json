@@ -33,7 +33,7 @@
     },
     {
       "name": "throws on invalid escape sequence",
-      "input": "\"a\\x\"",
+      "input": "\"a\\b\"",
       "expected": null,
       "shouldError": true,
       "specSection": "7.1"
