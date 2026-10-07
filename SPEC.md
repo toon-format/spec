@@ -133,7 +133,7 @@ All normative text is in Sections 1–16; the appendices and all examples are in
 
 - TOON document: A sequence of UTF-8 text lines formatted according to this spec.
 - Line: A sequence of non-newline characters. Serialized documents use LF (U+000A) as the line separator between lines; encoders MUST use LF, not CRLF; decoders accept CRLF input (§12).
-- Whitespace: SP (U+0020) and HTAB (U+0009), and no other character. Trimming and stripping remove spaces only (§12). NBSP (U+00A0) and every other Unicode space are ordinary content; decoders MUST NOT apply a host-language whitespace test.
+- Whitespace: SP (U+0020) and HTAB (U+0009), and no other character. NBSP (U+00A0) and every other Unicode space are ordinary content; decoders MUST NOT apply a host-language whitespace test.
 
 ### 1.3 Structural Terms
 
@@ -731,7 +731,7 @@ Two or more sibling fields at the same depth sharing the same literal key MUST e
 
 ### 14.4 Non-Strict Recoveries
 
-With `strict=false`, decoders MUST apply exactly these five recoveries:
+The five recoveries:
 
 1. Declared counts: a count mismatch (§14.1) is not an error. A declared `[N]` never terminates or truncates a scope – decoders decode every inline value, list item, tabular row, and entry row the scope contains. Row and entry-row widths are still checked.
 2. Duplicate keys: duplicate sibling keys (§14.3) and field names repeated within one field list (§9.3) resolve by last-write-wins in document order, silently. A repeated field, bare or carrying a nested field group, yields duplicate sibling keys in every decoded element.
