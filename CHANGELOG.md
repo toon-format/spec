@@ -12,7 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Whitespace is a closed set: SP and HTAB (§1.2). Trimming removes spaces only, as before; NBSP and every other Unicode space are ordinary content, and decoders must not apply a host-language whitespace test. An NBSP before a bracket segment or nested field group is part of the key or field name (`n<NBSP>[1]: y` decodes to `{"n\u00a0": ["y"]}`); a space or tab there stays a header syntax error.
 - A list-item hyphen may be followed by more than one space before any item, including a keyless header (`-   [2]: 1,2`), as it already could before a key-value line or primitive (§5.2).
 - §12 decoding opens with one ordered line preparation: byte-order mark, CR, trailing spaces, comment lines, blank lines.
-- VERSIONING.md: documents accepted by a non-strict decoder stay accepted unless they are encoder-unreachable, and a MINOR version keeps implementations conformant on every document a conforming encoder emits, with its CHANGELOG naming what changed for other documents.
+- VERSIONING.md: non-strict behavior on encoder-unreachable documents may change in a MINOR version, and a MINOR version keeps implementations conformant on every document a conforming encoder emits, with its CHANGELOG naming what changed for other documents. Encoder-unreachable documents, previously undefined behavior, and the decoder rules that encoder-side tightening must keep are now measured against the current MAJOR version, formerly the previous one.
 - Conformance fixtures: non-strict cases for the dropped recoveries now expect an error, fall-through cases already pinned by a strict counterpart are removed, and indices shift.
 
 ### Compatibility
