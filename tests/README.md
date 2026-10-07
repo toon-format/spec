@@ -42,13 +42,9 @@ Error tests use `shouldError: true` to indicate that the test expects an error t
 
 **Note:** Error tests do not specify expected error messages, as these are implementation-specific and vary across languages.
 
-### Non-Strict Tests
-
-Cases with `options.strict: false` are required like every other case.
-
 ## Using These Tests
 
-Load each fixture file, run every entry in its `tests` array whose `minSpecVersion`, if present, is not newer than the spec version you target, through your encoder or decoder with `test.options` applied, and assert the `expected` output – or that an error is thrown when `shouldError` is `true`.
+Load each fixture file and run every entry in its `tests` array through your encoder or decoder with `test.options` applied, skipping entries whose `minSpecVersion` is newer than the spec version you target; assert the `expected` output – or that an error is thrown when `shouldError` is `true`.
 
 **Note:** `name`, `description`, and `note` are prose, not identifiers. Key your runner on file path and array index, never on these strings – they follow the spec's terminology and are rewritten whenever it changes.
 
