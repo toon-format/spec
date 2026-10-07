@@ -13,7 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - A list-item hyphen may be followed by more than one space before any item, including a keyless header (`-   [2]: 1,2`), as it already could before a key-value line or primitive (§5.2). A keyed header after extra spaces no longer carries them in its key: `-  a[2]: 1,2` decodes to key `a`, formerly `" a"`.
 - §12 decoding opens with one ordered line preparation: byte-order mark, CR, trailing spaces, comment lines, blank lines. Decoders now MUST ignore blank lines outside header spans in both modes and so accept a trailing newline (formerly SHOULD in non-strict mode and for the trailing newline).
 - VERSIONING.md: non-strict behavior on encoder-unreachable documents may change in a MINOR version, and a MINOR version keeps implementations conformant on every document a conforming encoder emits, with its CHANGELOG naming what changed for other documents. Encoder-unreachable documents, previously undefined behavior, and the decoder rules that encoder-side tightening must keep are now measured against the current MAJOR version, formerly the previous one.
-- Conformance fixtures: non-strict cases for the dropped recoveries now expect an error, fall-through cases already pinned by a strict counterpart are removed, and indices shift.
+- Conformance fixtures: non-strict cases for the dropped recoveries now expect an error, fall-through cases already pinned by a strict counterpart and one redundant encode case are removed, new and extended cases pin earlier behavior under the spec version that introduced it, five minSpecVersion tags are corrected, and indices shift.
 
 ### Compatibility
 
