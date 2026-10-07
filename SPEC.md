@@ -247,14 +247,9 @@ Decoders map text tokens to host values:
 - Unquoted value tokens:
   - true, false, null → booleans/null.
   - Numeric parsing:
-    - Number grammar (normative): an unquoted token decodes as a number if and only if it matches `/^-?[0-9]+(?:\.[0-9]+)?(?:e[+-]?[0-9]+)?$/i` (ASCII digits only) and does not carry forbidden leading zeros (below). Any other token – e.g. `.5`, `1.`, `+5`, `Infinity`, `NaN`, `0x10`, `1_000` – decodes as a string. Decoders MUST NOT delegate this decision to a host-language number parser with a wider grammar.
-    - Decoders MUST accept decimal and exponent forms on input (e.g., `42`, `-3.14`, `1e-6`, `-1E+9`).
-    - Decoders MUST treat tokens with forbidden leading zeros in the integer part (e.g., `"05"`, `"0001"`, `"-05"`, `"-0001"`) as strings, not numbers. This rule does **not** apply to a single zero integer part followed by a fractional or exponent part (e.g., `0.5`, `0e1`, `-0.5`, `-0e1`), which are valid numbers.
+    - Number grammar (normative): an unquoted token decodes as a number if and only if it matches the JSON number grammar ([RFC8259] §6), `/^-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?$/`. Any other token – e.g. `05`, `-05`, `.5`, `1.`, `+5`, `Infinity`, `NaN`, `0x10`, `1_000` – decodes as a string. Decoders MUST NOT delegate this decision to a host-language number parser with a wider grammar.
     - If a decoded numeric token is not representable within the implementation's documented numeric domain, implementations MAY return a higher-precision numeric type, return a string, return an approximate numeric value, or reject the token (error) if that is the documented policy. Implementations MUST document their out-of-range policy; lossless-first is RECOMMENDED for libraries intended for data interchange or validation.
-    - Decoding examples:
-      - `1.5000` → `1.5` (trailing zeros in fractional part accepted)
-      - `-1E+03` → `-1000` (exponent forms accepted)
-      - `-0` → `0` (negative zero decodes to zero; most host environments do not distinguish -0 from 0)
+    - Decoding examples: `1.5000` → `1.5`; `-1E+03` → `-1000`; `0e1` → `0`; `-0` → `0` (equal under §2).
   - The literal token `[]` in object field position (`key: []`), root position (`[]`), and list-item position (`- []`, §9.2) decodes as an empty array (§9.1).
   - Otherwise → string.
 - Keys: decoded as strings per §7.4.
