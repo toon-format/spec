@@ -274,9 +274,10 @@
         "b": "NaN",
         "c": "True",
         "d": "\ufeffx",
-        "e": "a\u007fb"
+        "e": "a\u007fb",
+        "f": "\u0664\u0662"
       },
-      "expected": "a: .5\nb: NaN\nc: True\nd: \ufeffx\ne: a\u007fb",
+      "expected": "a: .5\nb: NaN\nc: True\nd: \ufeffx\ne: a\u007fb\nf: \u0664\u0662",
       "specSection": "7.2",
       "note": "Only a root primitive starting with U+FEFF is quoted, and only U+0000–U+001F count as controls (§7.1, §7.2)",
       "minSpecVersion": "4.2"
