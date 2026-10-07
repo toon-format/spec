@@ -498,7 +498,7 @@ When satisfied (encoding), encoders MUST use tabular form, except where §9.4 re
 - Root tabular arrays omit the key: `[N<delim?>]{…}:` followed by rows.
 
 Decoding:
-- A tabular header declares the active delimiter and the ordered field list; nested field groups declare nested-object columns. The leaf-field sequence is the depth-first, pre-order walk of the field list.
+- A tabular header declares the active delimiter and the ordered field list; nested field groups declare nested-object columns.
 - Rows appear at depth +1 as delimiter-separated value lines and contain only primitive cells. The empty-array form of §9.1 does not apply inside rows or inline arrays: a cell or inline element `[]` decodes to the string `[]` (§4).
 - Each row decodes to an object by walking the field list in header order: a leaf field takes the next cell; a nested field group materializes an object from its subfields, applied recursively. Decoded key order at every level is the header's field order at that level.
 - Duplicate field names within the same field list are a header defect (§14.2; non-strict recovery: §14.4). Names repeated at different nesting levels (e.g. `{x,n{x}}`) are not duplicates.
@@ -549,7 +549,7 @@ When satisfied (encoding):
 
 Decoding:
 - A keyed header declares the entry count N, the active delimiter, and the field list; the field list is REQUIRED (§6). The decoded value is an object with one key per entry row, in row order.
-- Entry rows appear at depth +1. Each row is parsed in two steps, in this order: first it is split at its first unquoted colon – the token before the colon is the entry key, decoded per §7.4; then the remainder is split on the active delimiter into cells and decodes exactly as a §9.3 row (cells map to leaf fields depth-first; nested field groups materialize recursively; decoded key order inside each entry value is the header's field order at every level).
+- Entry rows appear at depth +1. Each row is parsed in two steps, in this order: first it is split at its first unquoted colon – the token before the colon is the entry key, decoded per §7.4; then the remainder is split on the active delimiter into cells and decodes exactly as a §9.3 row.
 - Cells are primitive tokens (§4). The empty-array form of §9.1 does not apply inside entry rows: `alice: []` is one cell decoding to the string `[]`, and a bare `alice:` has zero cells – a width error, since a field list always declares at least one leaf field.
 - Line classification at entry depth (authoritative, referenced from §5.2): every line at entry depth containing an unquoted colon is an entry row. The §9.3 colon-before-delimiter rule does not apply – a keyed scope ends only when the depth decreases to the header's depth or less, or at end of input. A line at entry depth without an unquoted colon MUST error (§14.2).
 - Entry keys are sibling keys of the decoded object; duplicates are governed by §14.3. Duplicate field names within a field list behave as in §9.3.
