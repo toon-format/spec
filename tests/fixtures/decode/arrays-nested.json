@@ -175,11 +175,14 @@
     },
     {
       "name": "keeps every list item when the count mismatches in non-strict mode",
-      "input": "a[1]:\n  - 1\n  - 2",
+      "input": "a[1]:\n  - 1\n  - 2\nb[3]:\n  - x",
       "expected": {
         "a": [
           1,
           2
+        ],
+        "b": [
+          "x"
         ]
       },
       "options": {
