@@ -44,7 +44,7 @@ Error tests use `shouldError: true` to indicate that the test expects an error t
 
 ### Non-Strict Tests
 
-Tests with `options.strict: false` pin one of the five non-strict recoveries of SPEC §14.4, or an error that non-strict decoders still raise. Every case is required; none may be skipped.
+Every case with `options.strict: false` is required; none may be skipped.
 
 ## Using These Tests
 
@@ -83,9 +83,9 @@ Load each fixture file, run every entry in its `tests` array through your encode
 | `whitespace.json` | Whitespace tolerance and token trimming | §12 |
 | `root-form.json` | Root form detection (empty, single primitive) | §5 |
 | `validation-errors.json` | Syntax errors, length mismatches, malformed input | §6, §14 |
-| `indentation-errors.json` | Indentation validation and its non-strict recoveries | §8, §12, §14.4 |
-| `blank-lines.json` | Blank line handling in arrays | §12, §14.2, §14.4 |
-| `comments.json` | Comment-line stripping and full-line-only edge cases | §5.1, §7.2, §14.4 |
+| `indentation-errors.json` | Indentation validation and its non-strict recoveries | §8, §12, §14.2, §14.4 |
+| `blank-lines.json` | Blank lines inside and outside header spans | §12, §14.2, §14.4 |
+| `comments.json` | Comment-line stripping and full-line-only edge cases | §5.1, §7.2 |
 
 **Coverage note:** §3 host-type normalization (NaN/±Infinity → null, host Date/Set/Map/BigInt mappings) and §4 byte-input decoding (ill-formed UTF-8 errors in both modes, never U+FFFD) are intentionally outside these JSON fixtures, since the fixture format can express neither non-JSON encode inputs nor raw bytes. Implementations should cover both in their language-local test suites.
 
