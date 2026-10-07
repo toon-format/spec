@@ -124,10 +124,10 @@
     },
     {
       "name": "tolerates extra spaces after a list-item hyphen",
-      "input": "items[3]:\n  -  a\n  -   [2]: 1,2\n  -  k[1]: v",
+      "input": "items[3]:\n  -  \u00a0a\n  -   [2]: 1,2\n  -  k[1]: v",
       "expected": {
         "items": [
-          "a",
+          "\u00a0a",
           [
             1,
             2
