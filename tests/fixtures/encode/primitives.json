@@ -71,9 +71,9 @@
       "specSection": "7.1"
     },
     {
-      "name": "escapes U+0004, U+0008, and U+000C via \\uXXXX and keeps U+2028 literal in quoted strings",
-      "input": { "val": "a\u0004\b\fb", "sep": "a:\u2028b" },
-      "expected": "val: \"a\\u0004\\u0008\\u000cb\"\nsep: \"a:\u2028b\"",
+      "name": "escapes U+0004, U+0008, and U+000C via \\uXXXX and keeps DEL, U+0085, and U+2028 literal in quoted strings",
+      "input": { "val": "a\u0004\b\fb", "sep": "a:\u007f\u0085\u2028b" },
+      "expected": "val: \"a\\u0004\\u0008\\u000cb\"\nsep: \"a:\u007f\u0085\u2028b\"",
       "specSection": "7.1",
       "minSpecVersion": "4.2"
     },
