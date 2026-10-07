@@ -445,6 +445,13 @@
       "specSection": "14.3"
     },
     {
+      "name": "throws on a list-item first-field header key repeated by a later header",
+      "input": "items[1]:\n  - t[1]{a}:\n      1\n    t[1]: 2",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "14.3"
+    },
+    {
       "name": "throws on a keyless keyed header as a list item in strict mode",
       "input": "items[1]:\n  - [2:]{v}:\n      a: 1\n      b: 2",
       "expected": null,
