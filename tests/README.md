@@ -83,9 +83,9 @@ Load each fixture file, run every entry in its `tests` array through your encode
 | `whitespace.json` | Whitespace tolerance and token trimming | §12 |
 | `root-form.json` | Root form detection (empty, single primitive) | §5 |
 | `validation-errors.json` | Syntax errors, length mismatches, malformed input | §6, §14 |
-| `indentation-errors.json` | Strict mode indentation validation | §14.2, §12 |
-| `blank-lines.json` | Blank line handling in arrays | §14.2, §12 |
-| `comments.json` | Comment-line stripping and full-line-only edge cases | §5.1, §7.2, §14.1 |
+| `indentation-errors.json` | Indentation validation and its non-strict recoveries | §8, §12, §14.4 |
+| `blank-lines.json` | Blank line handling in arrays | §12, §14.2, §14.4 |
+| `comments.json` | Comment-line stripping and full-line-only edge cases | §5.1, §7.2, §14.4 |
 
 **Coverage note:** §3 host-type normalization (NaN/±Infinity → null, host Date/Set/Map/BigInt mappings) is intentionally outside these JSON fixtures, since the fixture format cannot express non-JSON encode inputs. Implementations should cover §3 in their language-local test suites.
 
