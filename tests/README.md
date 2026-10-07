@@ -87,7 +87,7 @@ Load each fixture file, run every entry in its `tests` array through your encode
 | `blank-lines.json` | Blank line handling in arrays | §12, §14.2, §14.4 |
 | `comments.json` | Comment-line stripping and full-line-only edge cases | §5.1, §7.2, §14.4 |
 
-**Coverage note:** §3 host-type normalization (NaN/±Infinity → null, host Date/Set/Map/BigInt mappings) is intentionally outside these JSON fixtures, since the fixture format cannot express non-JSON encode inputs. Implementations should cover §3 in their language-local test suites.
+**Coverage note:** §3 host-type normalization (NaN/±Infinity → null, host Date/Set/Map/BigInt mappings) and §4 byte-input decoding (ill-formed UTF-8 errors in both modes, never U+FFFD) are intentionally outside these JSON fixtures, since the fixture format can express neither non-JSON encode inputs nor raw bytes. Implementations should cover both in their language-local test suites.
 
 ## Contributing Test Cases
 
