@@ -73,7 +73,7 @@ https://www.iso.org/standard/70907.html
 15. [Security Considerations](#15-security-considerations)
 16. [Internationalization](#16-internationalization)
 17. [IANA Considerations](#17-iana-considerations)
-18. [Versioning and Extensibility](#18-versioning-and-extensibility)
+18. [Versioning](#18-versioning)
 19. [Intellectual Property Considerations](#19-intellectual-property-considerations)
 
 **Appendices:**
@@ -733,7 +733,7 @@ This specification does not request IANA registration at this time.
 
 Formal registration will be requested following the procedures defined in [RFC6838] once the media type is no longer provisional.
 
-## 18. Versioning and Extensibility
+## 18. Versioning
 
 For the versioning policy, see [VERSIONING.md](./VERSIONING.md); for version history, see [CHANGELOG.md](./CHANGELOG.md).
 
