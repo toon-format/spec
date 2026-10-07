@@ -283,8 +283,7 @@
           "": 2
         }
       ],
-      "specSection": "6",
-      "minSpecVersion": "4.2"
+      "specSection": "6"
     },
     {
       "name": "unescapes a quoted field name",
