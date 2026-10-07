@@ -728,7 +728,7 @@ Decoders MUST error on the conditions listed in §14.1–§14.3. With `strict=fa
 
 ### 14.3 Duplicate Object Keys
 
-Two or more sibling fields at the same depth sharing the same literal key MUST error. Entry keys of a keyed tabular object (§9.5) are sibling keys of the decoded object and fall under this rule.
+Two or more sibling fields at the same depth with the same decoded key (§7.4) MUST error. Entry keys of a keyed tabular object (§9.5) are sibling keys of the decoded object and fall under this rule.
 
 ### 14.4 Non-Strict Recoveries
 
