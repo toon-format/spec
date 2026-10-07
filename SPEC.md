@@ -636,7 +636,7 @@ For an object appearing as a list item:
   - Indentation: a line's indentation is its leading run of spaces and tabs. It MUST consist of spaces whose count is an exact multiple of indentSize, and the line's depth is that count divided by indentSize; otherwise MUST error, except under §14.4's indentation recovery. See §7.1 for tabs in quoted strings and as the HTAB delimiter.
   - Header span: the lines from the first item, row, or entry line in a header's scope through the last line of that scope's content (which may be a deeper line inside its last item). A blank line inside any header span MUST error, except under §14.4's blank-line recovery; decoders MUST ignore all other blank lines.
   - Token trimming: when a token is extracted – a key token before a key-value colon or an entry key's colon (§7.4, §9.5), a field entry in a field list (§6), or a value token after a key-value colon, after an array-header colon, or around each delimiter-separated token – decoders MUST trim surrounding spaces and no other character (§1.2). This trimming does not apply between a key and its bracket segment or between a field name and its nested field group, where whitespace is a header syntax error (§6).
-  - Trailing newline at end-of-file: decoders SHOULD accept; validators MAY warn.
+  - Trailing newline at end-of-file: decoders accept it – the empty line after the final LF is a blank line after the content (above); validators MAY warn.
 
 ## 13. Conformance and Options
 
