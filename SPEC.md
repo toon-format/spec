@@ -69,7 +69,7 @@ https://www.iso.org/standard/70907.html
 11. [Delimiters](#11-delimiters)
 12. [Indentation and Whitespace](#12-indentation-and-whitespace)
 13. [Conformance and Options](#13-conformance-and-options)
-14. [Strict Mode Errors and Diagnostics (Authoritative Checklist)](#14-strict-mode-errors-and-diagnostics-authoritative-checklist)
+14. [Decode Errors and Non-Strict Recoveries (Authoritative Checklist)](#14-decode-errors-and-non-strict-recoveries-authoritative-checklist)
 15. [Security Considerations](#15-security-considerations)
 16. [Internationalization](#16-internationalization)
 17. [IANA Considerations](#17-iana-considerations)
@@ -695,7 +695,7 @@ Validators SHOULD verify:
 - [ ] Array length counts match declared [N]
 - [ ] Every error condition of §14
 
-## 14. Strict Mode Errors and Diagnostics (Authoritative Checklist)
+## 14. Decode Errors and Non-Strict Recoveries (Authoritative Checklist)
 
 Decoders MUST error on the conditions listed in §14.1–§14.3. With `strict=false`, decoders MUST apply the recoveries of §14.4 to the conditions those recoveries name, and MUST error on every other condition; no other recovery exists. Error type, code, and message text are implementation-defined.
 
