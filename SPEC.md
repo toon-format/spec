@@ -138,7 +138,7 @@ All normative text is in Sections 1–16; the appendices and all examples are in
 ### 1.3 Structural Terms
 
 - Indentation level (depth): Leading indentation measured in fixed-size space units (indentSize). Depth 0 has no indentation.
-- Indentation unit (indentSize): A fixed number of spaces per level (default 2). Tabs MUST NOT be used for indentation.
+- Indentation unit (indentSize): A fixed number of spaces per level (default 2); §12 governs tabs in indentation.
 - Content depth: The depth at which a scope's immediate content appears – 0 for the root scope, otherwise one level deeper than the depth at which the scope's opening line stands (see §10 for first fields carried on a list-item hyphen line, and §14.4 for the non-strict depth-jump recovery).
 - Row depth, entry depth, item depth: The content depth of a tabular array's, keyed tabular object's, or list-form array's scope, at which its rows, entry rows, or list items appear (§9.3, §9.4, §9.5).
 
@@ -249,7 +249,7 @@ Decoders map text tokens to host values:
     - Number grammar (normative): an unquoted token decodes as a number if and only if it matches `/^-?[0-9]+(?:\.[0-9]+)?(?:e[+-]?[0-9]+)?$/i` (ASCII digits only) and does not carry forbidden leading zeros (below). Any other token – e.g. `.5`, `1.`, `+5`, `Infinity`, `NaN`, `0x10`, `1_000` – decodes as a string. Decoders MUST NOT delegate this decision to a host-language number parser with a wider grammar.
     - Decoders MUST accept decimal and exponent forms on input (e.g., `42`, `-3.14`, `1e-6`, `-1E+9`).
     - Decoders MUST treat tokens with forbidden leading zeros in the integer part (e.g., `"05"`, `"0001"`, `"-05"`, `"-0001"`) as strings, not numbers. This rule does **not** apply to a single zero integer part followed by a fractional or exponent part (e.g., `0.5`, `0e1`, `-0.5`, `-0e1`), which are valid numbers.
-    - If a decoded numeric token is not representable within the implementation's documented numeric domain, implementations MAY return a higher-precision numeric type, return a string, return an approximate numeric value, or reject the token (error; permitted in strict mode) if that is the documented policy. Implementations MUST document their out-of-range policy; lossless-first is RECOMMENDED for libraries intended for data interchange or validation.
+    - If a decoded numeric token is not representable within the implementation's documented numeric domain, implementations MAY return a higher-precision numeric type, return a string, return an approximate numeric value, or reject the token (error) if that is the documented policy. Implementations MUST document their out-of-range policy; lossless-first is RECOMMENDED for libraries intended for data interchange or validation.
     - Decoding examples:
       - `1.5000` → `1.5` (trailing zeros in fractional part accepted)
       - `-1E+03` → `-1000` (exponent forms accepted)
@@ -412,7 +412,7 @@ escaped-char   = %x5C ( %x5C / DQUOTE / %x6E / %x72 / %x74 / unicode-escape )
 unicode-escape = %x75 4HEXDIG
 ```
 
-Tabs are allowed inside quoted strings and as a declared delimiter; they MUST NOT be used for indentation (§12). Within quoted strings, decoders accept the literal controls in `unescaped-char`.
+Tabs are allowed inside quoted strings and as a declared delimiter; §12 governs tabs in indentation. Within quoted strings, decoders accept the literal controls in `unescaped-char`.
 
 ### 7.2 Quoting Rules for String Values
 
@@ -749,7 +749,7 @@ With `strict=false`, decoders MUST apply exactly these five recoveries:
 
 - Injection and ambiguity are mitigated by the quoting rules in §7.2, which bind encoders. The mitigation is a property of conforming encoder output: an unquoted marker in input is decoded per §4 unless another rule assigns the token structural meaning.
 - Prototype-key safety: No key has special meaning in TOON; decoders MUST materialize every key (including `__proto__`, `constructor`, and `prototype`) as an ordinary own entry, and decoding MUST NOT mutate prototype chains, class metadata, or any other shared state of the host object model. Implementations whose default object type cannot hold such keys as ordinary own entries MUST use a representation that can (e.g., a map type) and MUST document the behavior.
-- Strict-mode checks (§14) detect malformed strings, truncation, or injected rows/items/entries via length and width mismatches.
+- Decode checks (§14) detect malformed strings, truncation, or injected rows/items/entries via length and width mismatches.
 - Encoders SHOULD avoid excessive memory on large inputs; implement streaming/tabular row emission where feasible.
 - A declared length is attacker-controlled: a few bytes can declare a huge N. Decoders SHOULD NOT reserve storage in proportion to a declared N before that many values, items, rows, or entry rows have actually been read.
 - This specification places no limit on nesting depth or document size. Decoders that recurse over nesting MAY impose a documented depth limit and report exceeding it as an error rather than exhausting the host stack.
