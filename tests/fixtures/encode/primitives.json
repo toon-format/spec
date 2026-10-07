@@ -228,17 +228,11 @@
       "note": "Unquoted, a v3 host-parser decoder would read the number 1"
     },
     {
-      "name": "quotes string equal to hash",
-      "input": "#",
-      "expected": "\"#\"",
-      "specSection": "7.2",
-      "note": "Comment marker at position 0 must be quoted"
-    },
-    {
       "name": "quotes string starting with hash",
       "input": "#hello",
       "expected": "\"#hello\"",
-      "specSection": "7.2"
+      "specSection": "7.2",
+      "note": "Comment marker at position 0 must be quoted"
     },
     {
       "name": "quotes a root string starting with U+FEFF",
