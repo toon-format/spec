@@ -53,11 +53,12 @@
       "specSection": "7.2"
     },
     {
-      "name": "quotes string value with leading space",
+      "name": "quotes string values with a leading or trailing space",
       "input": {
-        "text": " padded "
+        "lead": " padded",
+        "trail": "padded "
       },
-      "expected": "text: \" padded \"",
+      "expected": "lead: \" padded\"\ntrail: \"padded \"",
       "specSection": "7.2"
     },
     {
