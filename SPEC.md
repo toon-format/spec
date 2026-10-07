@@ -620,7 +620,7 @@ For an object appearing as a list item:
   - Tabs MUST NOT be used for indentation.
   - Encoders MUST emit exactly one ASCII space (U+0020) after the colon in key: value lines and after an entry row's entry-key colon (§9.5).
   - Encoders MUST emit exactly one ASCII space (U+0020) after array headers when followed by inline values.
-  - Encoders MUST NOT emit trailing spaces at the end of any line.
+  - Encoders MUST NOT emit trailing spaces at the end of any line, or blank lines.
   - Encoders MUST NOT emit a trailing newline at the end of the document.
 - Decoding:
   - Line preparation: before line classification (§5.2), decoders MUST, in this order:
@@ -667,7 +667,7 @@ Conforming encoders MUST:
 - [ ] Convert -0 to 0 (§2)
 - [ ] Emit booleans and null as lowercase literals (§2)
 - [ ] Convert NaN/±Infinity to null (§3)
-- [ ] Emit no trailing spaces or trailing newline (§12)
+- [ ] Emit no trailing spaces, blank lines, or trailing newline (§12)
 - [ ] Emit no comment lines (§5.1)
 
 ### 13.2 Decoder Conformance Checklist
