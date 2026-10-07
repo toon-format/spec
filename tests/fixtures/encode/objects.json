@@ -161,11 +161,12 @@
       "note": "The unquoted-key pattern is ASCII-only, so every non-ASCII key is quoted"
     },
     {
-      "name": "keeps a dotted key unquoted",
+      "name": "keeps dotted and literal-named keys unquoted",
       "input": {
-        "a.b": 1
+        "a.b": 1,
+        "true": 2
       },
-      "expected": "a.b: 1",
+      "expected": "a.b: 1\ntrue: 2",
       "specSection": "7.3",
       "minSpecVersion": "4.2"
     },
