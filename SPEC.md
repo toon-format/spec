@@ -139,7 +139,7 @@ All normative text is in Sections 1–16; the appendices and all examples are in
 ### 1.3 Structural Terms
 
 - Indentation level (depth): Leading indentation measured in fixed-size space units (indentSize). Depth 0 has no indentation.
-- Indentation unit (indentSize): A fixed number of spaces per level (default 2); §12 governs tabs in indentation.
+- Indentation unit (indentSize): A fixed positive number of spaces per level (default 2); §12 governs tabs in indentation.
 - Content depth: The depth at which a scope's immediate content appears – 0 for the root scope, otherwise one level deeper than the depth at which the scope's opening line stands (see §10 for first fields carried on a list-item hyphen line, and §14.4 for the non-strict depth-jump recovery).
 - Row depth, entry depth, item depth: The content depth of a tabular array's, keyed tabular object's, or list-form array's scope, at which its rows, entry rows, or list items appear (§9.3, §9.4, §9.5).
 
