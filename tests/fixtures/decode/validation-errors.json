@@ -67,7 +67,7 @@
       "specSection": "14.2"
     },
     {
-      "name": "throws on two primitives at root depth in strict mode",
+      "name": "throws on two primitives at root depth",
       "input": "hello\nworld",
       "expected": null,
       "shouldError": true,
@@ -85,7 +85,7 @@
       "note": "Active delimiter is tab; rows using comma each parse as 1 value, failing the row width check"
     },
     {
-      "name": "throws on extra brackets between bracket segment and colon in strict mode",
+      "name": "throws on extra brackets between bracket segment and colon",
       "input": "foo[1][bar]: 10",
       "expected": null,
       "shouldError": true,
@@ -96,7 +96,7 @@
       "note": "Content between ] and : prevents array header interpretation"
     },
     {
-      "name": "throws on text between bracket segment and colon in strict mode",
+      "name": "throws on text between bracket segment and colon",
       "input": "foo[2]extra: a,b",
       "expected": null,
       "shouldError": true,
@@ -106,7 +106,7 @@
       "specSection": "6"
     },
     {
-      "name": "throws on non-integer bracket segment in strict mode",
+      "name": "throws on non-integer bracket segment",
       "input": "foo[bar]: 10",
       "expected": null,
       "shouldError": true,
@@ -170,7 +170,7 @@
       "specSection": "6"
     },
     {
-      "name": "throws on bracket length with leading zeros in strict mode",
+      "name": "throws on bracket length with leading zeros",
       "input": "items[03]: a,b,c",
       "expected": null,
       "shouldError": true,
@@ -181,7 +181,7 @@
       "note": "[03] is not a canonical non-negative integer length; decoders MUST NOT interpret it as a bracket segment"
     },
     {
-      "name": "throws on negative bracket length in strict mode",
+      "name": "throws on negative bracket length",
       "input": "items[-1]: a,b,c",
       "expected": null,
       "shouldError": true,
@@ -192,7 +192,7 @@
       "note": "[-1] is not a non-negative integer length; decoders MUST NOT interpret it as a bracket segment"
     },
     {
-      "name": "throws on decimal bracket length in strict mode",
+      "name": "throws on decimal bracket length",
       "input": "x[3.7]: a,b,c",
       "expected": null,
       "shouldError": true,
@@ -203,7 +203,7 @@
       "note": "[3.7] is not an integer length – lengths are DIGIT-only – so decoders MUST NOT interpret it as a bracket segment"
     },
     {
-      "name": "throws on bracket length with plus sign in strict mode",
+      "name": "throws on bracket length with plus sign",
       "input": "x[+3]: a,b,c",
       "expected": null,
       "shouldError": true,
@@ -214,7 +214,7 @@
       "note": "[+3] carries a sign and is not a non-negative integer length; decoders MUST NOT interpret it as a bracket segment"
     },
     {
-      "name": "throws on bracket length in exponent form in strict mode",
+      "name": "throws on bracket length in exponent form",
       "input": "x[1e1]: 1,2,3,4,5,6,7,8,9,10",
       "expected": null,
       "shouldError": true,
@@ -233,7 +233,7 @@
       "note": "A length takes ASCII digits only; a Unicode-aware \\d would accept \u0662"
     },
     {
-      "name": "throws on whitespace between bracket segment and colon in strict mode",
+      "name": "throws on whitespace between bracket segment and colon",
       "input": "items[2] : 1,2",
       "expected": null,
       "shouldError": true,
@@ -244,7 +244,7 @@
       "note": "No whitespace is permitted between ] and the colon/field list; any content there prevents header interpretation"
     },
     {
-      "name": "throws on whitespace between bracket segment and field list in strict mode",
+      "name": "throws on whitespace between bracket segment and field list",
       "input": "items[0] {a,b}:",
       "expected": null,
       "shouldError": true,
@@ -298,14 +298,14 @@
       "note": "The header declares three leaf fields (id, customer.name, customer.country); the row has two cells"
     },
     {
-      "name": "throws on empty field list in strict mode",
+      "name": "throws on empty field list",
       "input": "items[0]{}:",
       "expected": null,
       "shouldError": true,
       "specSection": "14.2"
     },
     {
-      "name": "throws on empty nested field group in strict mode",
+      "name": "throws on empty nested field group",
       "input": "items[0]{id,meta{}}:",
       "expected": null,
       "shouldError": true,
@@ -313,7 +313,7 @@
       "note": "A field list must contain at least one field entry at every nesting level"
     },
     {
-      "name": "throws on unmatched brace in field list in strict mode",
+      "name": "throws on unmatched brace in field list",
       "input": "items[0]{id,customer{name:",
       "expected": null,
       "shouldError": true,
@@ -361,7 +361,7 @@
       "note": "A bare entrykey: has zero cells, and a field list always declares at least one leaf field (§9.5)"
     },
     {
-      "name": "throws on keyed header without a field list in strict mode",
+      "name": "throws on keyed header without a field list",
       "input": "m[0:]:",
       "expected": null,
       "shouldError": true,
@@ -372,7 +372,7 @@
       "note": "A keyed header without a field list declares no cells at all"
     },
     {
-      "name": "throws on keyed marker after the delimiter symbol in strict mode",
+      "name": "throws on keyed marker after the delimiter symbol",
       "input": "m[2|:]{v}:\n  a: 1\n  b: 2",
       "expected": null,
       "shouldError": true,
@@ -383,7 +383,7 @@
       "note": "The keyed colon must immediately follow the length and precede the delimiter symbol: [2:|]"
     },
     {
-      "name": "throws on keyed marker with leading-zero length in strict mode",
+      "name": "throws on keyed marker with leading-zero length",
       "input": "m[02:]{v}:\n  a: 1\n  b: 2",
       "expected": null,
       "shouldError": true,
@@ -393,7 +393,7 @@
       "specSection": "6"
     },
     {
-      "name": "throws on whitespace before the keyed marker in strict mode",
+      "name": "throws on whitespace before the keyed marker",
       "input": "m[2 :]{v}:\n  a: 1\n  b: 2",
       "expected": null,
       "shouldError": true,
@@ -403,7 +403,7 @@
       "specSection": "6"
     },
     {
-      "name": "throws on explicit comma delimiter after the keyed marker in strict mode",
+      "name": "throws on explicit comma delimiter after the keyed marker",
       "input": "m[2:,]{v}:\n  a: 1\n  b: 2",
       "expected": null,
       "shouldError": true,
@@ -414,7 +414,7 @@
       "note": "Comma is never written as a delimiter symbol; [N:] already declares it"
     },
     {
-      "name": "throws on inline content after a keyed header colon in strict mode",
+      "name": "throws on inline content after a keyed header colon",
       "input": "m[1:]{v}: x\n  a: 1",
       "expected": null,
       "shouldError": true,
@@ -425,7 +425,7 @@
       "note": "A keyed header carries no inline entries"
     },
     {
-      "name": "throws on a line without an unquoted colon at entry depth in strict mode",
+      "name": "throws on a line without an unquoted colon at entry depth",
       "input": "m[1:]{v}:\n  a: 1\n  5",
       "expected": null,
       "shouldError": true,
@@ -452,7 +452,7 @@
       "specSection": "14.3"
     },
     {
-      "name": "throws on a keyless keyed header as a list item in strict mode",
+      "name": "throws on a keyless keyed header as a list item",
       "input": "items[1]:\n  - [2:]{v}:\n      a: 1\n      b: 2",
       "expected": null,
       "shouldError": true,
@@ -608,7 +608,7 @@
       "minSpecVersion": "4.1"
     },
     {
-      "name": "throws on the removed [#N] length marker in a root header in strict mode",
+      "name": "throws on the removed [#N] length marker in a root header",
       "input": "[#2]: a,b",
       "expected": null,
       "shouldError": true,
@@ -618,7 +618,7 @@
       "specSection": "6"
     },
     {
-      "name": "throws on the removed [#N] length marker in a field header in strict mode",
+      "name": "throws on the removed [#N] length marker in a field header",
       "input": "xs[#2]: a,b",
       "expected": null,
       "shouldError": true,
@@ -628,7 +628,7 @@
       "specSection": "6"
     },
     {
-      "name": "throws on the removed [#N] length marker in a keyless list-item header in strict mode",
+      "name": "throws on the removed [#N] length marker in a keyless list-item header",
       "input": "items[1]:\n  - [#2]: a,b",
       "expected": null,
       "shouldError": true,
@@ -638,7 +638,7 @@
       "specSection": "6"
     },
     {
-      "name": "throws on the removed [#N] length marker in a list-item first-field header in strict mode",
+      "name": "throws on the removed [#N] length marker in a list-item first-field header",
       "input": "items[1]:\n  - xs[#2]: a,b",
       "expected": null,
       "shouldError": true,
