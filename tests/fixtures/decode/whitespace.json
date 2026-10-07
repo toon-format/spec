@@ -113,7 +113,7 @@
     },
     {
       "name": "tolerates extra spaces after a list-item hyphen",
-      "input": "items[3]:\n  -  a\n  -   [2]: 1,2\n  -  k: v",
+      "input": "items[3]:\n  -  a\n  -   [2]: 1,2\n  -  k[1]: v",
       "expected": {
         "items": [
           "a",
@@ -122,7 +122,9 @@
             2
           ],
           {
-            "k": "v"
+            "k": [
+              "v"
+            ]
           }
         ]
       },
