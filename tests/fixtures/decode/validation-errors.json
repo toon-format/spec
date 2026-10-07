@@ -526,6 +526,14 @@
       "specSection": "6"
     },
     {
+      "name": "throws on a tab after a fields-bearing header's colon",
+      "input": "a[1:]{x}:\t\n  k: 1",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "6",
+      "minSpecVersion": "4.4"
+    },
+    {
       "name": "throws on whitespace between a key and its bracket segment",
       "input": "foo [2]: bar,baz",
       "expected": null,
