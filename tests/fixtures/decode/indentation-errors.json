@@ -38,11 +38,18 @@
     },
     {
       "name": "accepts correct indentation with custom indentSize (4 spaces with indentSize 4)",
-      "input": "a:\n    b: 1",
+      "input": "a:\n    b: 1\nl[2]:\n    - b: 1\n        c: 2\n    - 1",
       "expected": {
         "a": {
           "b": 1
-        }
+        },
+        "l": [
+          {
+            "b": 1,
+            "c": 2
+          },
+          1
+        ]
       },
       "options": {
         "indentSize": 4,
