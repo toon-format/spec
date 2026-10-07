@@ -498,13 +498,13 @@ Decoding:
 - Each row decodes to an object by walking the field list in header order: a leaf field takes the next cell; a nested field group materializes an object from its subfields, applied recursively. Decoded key order at every level is the header's field order at that level.
 - Duplicate field names within the same field list are a header defect (§14.2; non-strict recovery: §14.4). Names repeated at different nesting levels (e.g. `{x,n{x}}`) are not duplicates.
 - Decoders MUST error when a row's cell count differs from the leaf-field count, and in strict mode when the number of rows differs from N (§14.1).
-- Disambiguation at row depth (unquoted tokens; authoritative for the row/key-value choice, referenced from §5.2):
+- Disambiguation at row depth (unquoted tokens; authoritative for the row choice, referenced from §5.2):
   - Compute the first unquoted occurrence of the active delimiter and the first unquoted colon.
   - If a same-depth line has no unquoted colon → row.
   - If both appear, compare first-unquoted positions:
     - Delimiter before colon → row.
-    - Colon before delimiter → key-value line (end of rows).
-  - If a line has an unquoted colon but no unquoted active delimiter → key-value line (end of rows).
+    - Colon before delimiter → not a row (end of rows).
+  - If a line has an unquoted colon but no unquoted active delimiter → not a row (end of rows).
   - A line that ends the rows this way is not itself a row; it then belongs to no scope and §8 governs its disposition.
 - When a tabular array appears as the first field of a list-item object, indentation is governed by §10.
 
