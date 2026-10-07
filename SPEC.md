@@ -460,7 +460,7 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
   - Lines in an object body are classified per §5.2; the rules below cover its key-value class.
   - A line "key:" with nothing after the colon at depth d opens an object; subsequent lines at depth > d belong to that object until the depth decreases to ≤ d.
   - The first line of a non-empty nested scope MUST be at exactly depth d+1; a deeper first line is a depth jump and MUST error (§14.2), except under §14.4's depth-jump recovery. Conforming encoders never produce depth jumps; §10's depth model governs fields carried on a list-item hyphen line.
-  - A line deeper than the content depth of its enclosing scope whose preceding line did not open a scope belongs to no scope (e.g., a depth d+1 line directly under a depth-d primitive field, or the document's first line at depth 1 or more). Decoders MUST error on such a line (§14.2); it MUST NOT be silently discarded.
+  - A line deeper than the content depth of its enclosing scope that is not the first line of a nested scope belongs to no scope (e.g., a depth d+1 line directly under a depth-d primitive field, or the document's first line at depth 1 or more). Decoders MUST error on such a line (§14.2); it MUST NOT be silently discarded.
   - A bare `key:` (no value after the colon) MUST decode as an empty or nested object, not an empty array. Empty arrays use the explicit `key: []` form (§9.1).
   - Lines "key: value" at the same depth are sibling fields.
   - Duplicate sibling keys at the same depth: see §14.3.
@@ -721,7 +721,7 @@ Decoders MUST error on the conditions listed in §14.1–§14.3. With `strict=fa
 - Whitespace between a key and its bracket segment or between a field name and its nested field group, and any content between a valid bracket segment and the colon (or field list) (§6).
 - Indentation and blank-line invariants per §12, evaluated after comment removal (§5.1).
 - Indentation depth jumps (§8): the first line of a nested scope standing deeper than the scope's content depth (§1.3; e.g., a depth d+2 line directly under a depth-d `key:`).
-- Over-indented lines (§8): a line deeper than the content depth of its enclosing scope when the preceding line did not open a scope (e.g., a depth d+1 line directly under a depth-d primitive field, or the document's first line at depth 1 or more). Decoders MUST NOT silently discard such lines.
+- Over-indented lines (§8): a line deeper than the content depth of its enclosing scope that is not the first line of a nested scope (e.g., a depth d+1 line directly under a depth-d primitive field, or the document's first line at depth 1 or more). Decoders MUST NOT silently discard such lines.
 - Trailing content after a completed root form (§5): any non-comment, non-blank line following the inline values, rows, items, or entries of a root array or keyed tabular root object, or following a root `[]`.
 - Ill-formed UTF-8 in byte input (§4).
 - A scalar line (§5.2) anywhere other than root primitive position – e.g., a key without a colon (§7.4), a bare token line inside an array scope, or a second depth-0 line (§5).
