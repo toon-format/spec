@@ -400,7 +400,7 @@ escaped-char   = %x5C ( %x5C / DQUOTE / %x6E / %x72 / %x74 / unicode-escape )
 unicode-escape = %x75 4HEXDIG
 ```
 
-Tabs are allowed inside quoted strings and as a declared delimiter; §12 governs tabs in indentation. Within quoted strings, decoders accept the literal controls in `unescaped-char`.
+Within quoted strings, decoders accept the literal controls in `unescaped-char`, HTAB included.
 
 ### 7.2 Quoting Rules for String Values
 
@@ -604,7 +604,7 @@ For an object appearing as a list item:
     3. Strip trailing spaces from each line. A line `-` followed only by spaces is therefore the bare marker of an empty-object list item (§9.4, §10), not a list item carrying an empty token.
     4. Remove comment lines (§5.1).
     5. Identify blank lines: a line of spaces only, regardless of their count, is blank. Blank lines never create or close structure and are never counted; the indentation rule below does not apply to them.
-  - Indentation: a line's indentation is its leading run of spaces and tabs. It MUST consist of spaces whose count is an exact multiple of indentSize, and the line's depth is that count divided by indentSize; otherwise MUST error, except under §14.4's indentation recovery. See §7.1 for tabs in quoted strings and as the HTAB delimiter.
+  - Indentation: a line's indentation is its leading run of spaces and tabs. It MUST consist of spaces whose count is an exact multiple of indentSize, and the line's depth is that count divided by indentSize; otherwise MUST error, except under §14.4's indentation recovery.
   - Header span: the lines from the first item, row, or entry line in a header's scope through the last line of that scope's content (which may be a deeper line inside its last item). A blank line inside any header span MUST error, except under §14.4's blank-line recovery; decoders MUST ignore all other blank lines.
   - Token trimming: when a token is extracted – a key token before a key-value colon or an entry key's colon (§7.4, §9.5), a field entry in a field list (§6), or a value token after a key-value colon, after an array-header colon, or around each delimiter-separated token – decoders MUST trim surrounding spaces and no other character (§1.2). This trimming does not apply between a key and its bracket segment or between a field name and its nested field group, where whitespace is a header syntax error (§6).
   - Trailing newline at end-of-file: decoders accept it – the empty line after the final LF is a blank line after the content (above); validators MAY warn.
