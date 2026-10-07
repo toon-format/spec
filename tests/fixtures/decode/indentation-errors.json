@@ -267,9 +267,9 @@
     },
     {
       "name": "adopts the depth of a jumped first line in non-strict mode",
-      "input": "a:\n    b: 1\n    c: 2\nitems[2]:\n    - 1\n    - 2\nt[1]{a}:\n    1\nm[1:]{v}:\n    k: 2\nl[1]:\n  - k:\n        x: 1",
+      "input": "a:\n    b:\n      x: 1\n    c: 2\nitems[2]:\n    - 1\n    - 2\nt[1]{a}:\n    1\nm[1:]{v}:\n    k: 2\nl[1]:\n  - k:\n        x: 1",
       "expected": {
-        "a": { "b": 1, "c": 2 },
+        "a": { "b": { "x": 1 }, "c": 2 },
         "items": [1, 2],
         "t": [{ "a": 1 }],
         "m": { "k": { "v": 2 } },
