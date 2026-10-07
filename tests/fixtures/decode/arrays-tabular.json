@@ -95,11 +95,11 @@
       "specSection": "9.3"
     },
     {
-      "name": "parses sibling nested field groups by depth-first cell assignment",
-      "input": "shipments[1]{id,sender{name,city},receiver{name,city}}:\n  s1,ACME,Berlin,Globex,Oslo",
+      "name": "parses sibling nested field groups by depth-first cell assignment, with a name repeated across levels",
+      "input": "shipments[1]{id,sender{id,city},receiver{id,city}}:\n  s1,ACME,Berlin,Globex,Oslo",
       "expected": {
         "shipments": [
-          { "id": "s1", "sender": { "name": "ACME", "city": "Berlin" }, "receiver": { "name": "Globex", "city": "Oslo" } }
+          { "id": "s1", "sender": { "id": "ACME", "city": "Berlin" }, "receiver": { "id": "Globex", "city": "Oslo" } }
         ]
       },
       "specSection": "9.3"
