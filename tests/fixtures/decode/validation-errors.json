@@ -320,7 +320,9 @@
       "options": {
         "strict": true
       },
-      "specSection": "9.3"
+      "specSection": "9.3",
+      "note": "A duplicate field name is a header defect, diagnosed from the header line alone",
+      "minSpecVersion": "4.1"
     },
     {
       "name": "throws on entry row count mismatch with keyed header length",
@@ -534,12 +536,11 @@
       "minSpecVersion": "4.1"
     },
     {
-      "name": "throws on duplicate field names in a zero-row tabular header",
-      "input": "items[0]{a,a}:",
+      "name": "throws on duplicate field names inside a nested field group",
+      "input": "items[0]{n{x,x}}:",
       "expected": null,
       "shouldError": true,
       "specSection": "9.3",
-      "note": "A duplicate field name is a header defect, diagnosed from the header line alone",
       "minSpecVersion": "4.1"
     },
     {
