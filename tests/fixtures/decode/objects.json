@@ -323,11 +323,12 @@
     },
     {
       "name": "accepts unquoted values and keys an encoder would quote in strict mode",
-      "input": "k: b:c\npaths[2]: C:\\,D:\\\na\\: b",
+      "input": "k: b:c\npaths[2]: C:\\,D:\\\na\\: b\ne: {}",
       "expected": {
         "k": "b:c",
         "paths": ["C:\\", "D:\\"],
-        "a\\": "b"
+        "a\\": "b",
+        "e": "{}"
       },
       "specSection": "7.4",
       "note": "The first unquoted colon ends the key; the entire post-colon token is the value (§11.2)"
