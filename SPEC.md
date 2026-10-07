@@ -441,7 +441,7 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
 - Decoding:
   - Lines in an object body are classified per §5.2; the rules below cover its key-value class.
   - Key-value lines at an object's content depth are its fields; duplicate keys: §14.3.
-  - A key-value line with nothing after the colon at depth d opens an object: the following lines at depth > d belong to it, up to the first line at depth ≤ d. With no such line it MUST decode to `{}`, never to an empty array (that is `key: []`, §9.1).
+  - A key-value line with nothing after the colon at depth d opens an object: the following lines at depth > d belong to it, up to the first line at depth ≤ d. If no line belongs to it, its value MUST decode to `{}`, never to an empty array (`key: []`, §9.1).
   - The first line of a non-empty nested scope MUST be at exactly depth d+1; a deeper first line is a depth jump and MUST error (§14.2), except under §14.4's depth-jump recovery. Conforming encoders never produce depth jumps; §10's depth model governs fields carried on a list-item hyphen line.
   - A line deeper than the content depth of its enclosing scope that is not the first line of a nested scope belongs to no scope (e.g., a depth d+1 line directly under a depth-d primitive field, or the document's first line at depth 1 or more). Decoders MUST error on such a line (§14.2); it MUST NOT be silently discarded.
 
