@@ -117,8 +117,8 @@
       "specSection": "12"
     },
     {
-      "name": "accepts blank line between nested object fields",
-      "input": "a:\n  b: 1\n\n  c: 2",
+      "name": "accepts blank lines before and between nested object fields",
+      "input": "a:\n\n  b: 1\n\n  c: 2",
       "expected": {
         "a": {
           "b": 1,
@@ -129,6 +129,21 @@
         "strict": true
       },
       "specSection": "12"
+    },
+    {
+      "name": "accepts blank lines before and between nested object fields in non-strict mode",
+      "input": "a:\n\n  b: 1\n\n  c: 2",
+      "expected": {
+        "a": {
+          "b": 1,
+          "c": 2
+        }
+      },
+      "options": {
+        "strict": false
+      },
+      "specSection": "12",
+      "minSpecVersion": "4.4"
     },
     {
       "name": "ignores blank lines inside list array when strict=false",
