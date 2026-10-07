@@ -212,12 +212,17 @@
       "specSection": "11.2"
     },
     {
-      "name": "splits at a delimiter followed by a combining mark",
-      "input": "a[2]: x,\u0301y",
+      "name": "matches a delimiter, colon, space, or comment marker followed by a combining mark as syntax",
+      "input": "a[2]: x,\u0301y\nb:\u0301z\nk: \u0301z\nl[1]:\n  - \u0301w\n#\u0301 c",
       "expected": {
         "a": [
           "x",
           "\u0301y"
+        ],
+        "b": "\u0301z",
+        "k": "\u0301z",
+        "l": [
+          "\u0301w"
         ]
       },
       "specSection": "1.2",
