@@ -96,18 +96,11 @@
       "specSection": "4"
     },
     {
-      "name": "parses quoted string value that looks like true",
-      "input": "v: \"true\"",
+      "name": "parses quoted field values that look like true or an integer",
+      "input": "v: \"true\"\nw: \"42\"",
       "expected": {
-        "v": "true"
-      },
-      "specSection": "4"
-    },
-    {
-      "name": "parses quoted string value that looks like integer",
-      "input": "v: \"42\"",
-      "expected": {
-        "v": "42"
+        "v": "true",
+        "w": "42"
       },
       "specSection": "4"
     },
@@ -129,22 +122,14 @@
       "note": "Quoting makes the value opaque (§4), so it is never parsed as a header – the matching count is irrelevant because a quoted scalar is never a header candidate"
     },
     {
-      "name": "parses unquoted value shaped like an inline array header after the key",
-      "input": "key: foo [2]: bar",
+      "name": "parses unquoted values shaped like inline or tabular array headers after the key",
+      "input": "key: foo [2]: bar\na: b [2]{x,y}: 1,2",
       "expected": {
-        "key": "foo [2]: bar"
-      },
-      "specSection": "5.2",
-      "note": "An unquoted key cannot contain a colon, so the first colon ends the key; the bracket-and-colon shape in the remainder is value text, not an array header"
-    },
-    {
-      "name": "parses unquoted value shaped like a tabular array header after the key",
-      "input": "a: b [2]{x,y}: 1,2",
-      "expected": {
+        "key": "foo [2]: bar",
         "a": "b [2]{x,y}: 1,2"
       },
       "specSection": "5.2",
-      "note": "An unquoted key cannot contain a colon, so the first colon ends the key; the tabular-header shape in the remainder is value text, not an array header"
+      "note": "An unquoted key cannot contain a colon, so the first colon ends the key; a header shape in the remainder is value text"
     },
     {
       "name": "parses quoted object value with bracket text and a later colon",
