@@ -256,9 +256,7 @@ Decoders map text tokens to host values:
       - `-0` → `0` (negative zero decodes to zero; most host environments do not distinguish -0 from 0)
   - The literal token `[]` in object field position (`key: []`), root position (`[]`), and list-item position (`- []`, §9.2) decodes as an empty array (§9.1).
   - Otherwise → string.
-- Keys:
-  - Decoded as strings (quoted keys MUST be unescaped per §7.1).
-  - A colon MUST follow a key; missing colon MUST error.
+- Keys: decoded as strings per §7.4.
 
 ## 5. Concrete Syntax and Root Form
 
@@ -713,7 +711,7 @@ Decoders MUST error on the conditions listed in §14.1–§14.3. With `strict=fa
 
 ### 14.2 Syntax and Structural Errors
 
-- Missing colon in key context (§4, §7.4).
+- Missing colon in key context (§7.4).
 - Invalid escape sequences or unterminated strings in quoted tokens, and characters after a quoted token's closing quote (§4, §7.1, §7.4).
 - Header delimiter mismatch (§6): MUST error as a header syntax error, independent of row width/count checks.
 - Array-header lines (§5.2) that fail the §6 grammar – e.g., malformed bracket lengths or keyed markers, an unclosed bracket segment (`a[1:`), or no colon after the bracket segment or field list (`a[2:]{x}`).
