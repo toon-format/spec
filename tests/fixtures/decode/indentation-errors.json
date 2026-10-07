@@ -304,6 +304,17 @@
       "minSpecVersion": "4.4"
     },
     {
+      "name": "throws on a key-value line directly under an empty array header in non-strict mode",
+      "input": "x[0]:\n  a: 1",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": false
+      },
+      "specSection": "8",
+      "minSpecVersion": "4.4"
+    },
+    {
       "name": "throws on an over-indented line under a list-item field in non-strict mode",
       "input": "items[1]:\n  - a: 1\n      b: 2",
       "expected": null,
