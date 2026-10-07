@@ -851,7 +851,7 @@ links[2]{id,url}:
   2,"https://example.com?q=a:b"
 ```
 
-Error cases (each fragment below is invalid on its own):
+Error cases (each fragment below errors on its own in strict mode; §14.4 recovers the last three):
 ```
 user:
   key value
