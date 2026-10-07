@@ -110,8 +110,8 @@
       "minSpecVersion": "4.2"
     },
     {
-      "name": "throws on an indented first line in non-strict mode",
-      "input": "  a: 1\nb: 2",
+      "name": "throws on a whole document indented by one level in non-strict mode",
+      "input": "  a: 1\n  b: 2",
       "expected": null,
       "shouldError": true,
       "options": {
