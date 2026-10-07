@@ -248,8 +248,8 @@
       "minSpecVersion": "4.4"
     },
     {
-      "name": "parses unquoted colon after the delimiter in tabular row as data",
-      "input": "items[1]{id,note}:\n  1,a:b",
+      "name": "parses an unquoted colon after the active delimiter in a tabular row as data",
+      "input": "items[1|]{id|note}:\n  1|a:b",
       "expected": {
         "items": [
           {
