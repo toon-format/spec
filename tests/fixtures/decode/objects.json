@@ -378,11 +378,14 @@
       "specSection": "15"
     },
     {
-      "name": "reads an NBSP before a bracket segment or nested field group as part of the name",
-      "input": "\u00a0[1]: z\nn\u00a0[1]: y\na[1]{b\u00a0{c}}:\n  1",
+      "name": "reads an NBSP before a quote, bracket segment, or nested field group as part of the name",
+      "input": "\u00a0[1]: z\n\u00a0\"q\"[1]: w\nn\u00a0[1]: y\na[1]{b\u00a0{c}}:\n  1",
       "expected": {
         "\u00a0": [
           "z"
+        ],
+        "\u00a0\"q\"": [
+          "w"
         ],
         "n\u00a0": [
           "y"
@@ -396,7 +399,7 @@
         ]
       },
       "specSection": "6",
-      "note": "Whitespace is SP and HTAB only (§1.2); a leading NBSP keeps the first line from being a keyless root header",
+      "note": "Whitespace is SP and HTAB only (§1.2); a leading NBSP keeps a line from being a keyless root header or a quoted key",
       "minSpecVersion": "4.4"
     },
     {
