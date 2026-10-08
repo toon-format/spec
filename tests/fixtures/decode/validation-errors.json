@@ -747,6 +747,28 @@
       "specSection": "6"
     },
     {
+      "name": "throws on a tab field list after a pipe delimiter symbol in non-strict mode",
+      "input": "a[0|]{x\ty}:",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": false
+      },
+      "specSection": "6",
+      "minSpecVersion": "4.4"
+    },
+    {
+      "name": "throws on a pipe field list after a bracket segment without a delimiter symbol in non-strict mode",
+      "input": "a[0]{x|y}:",
+      "expected": null,
+      "shouldError": true,
+      "options": {
+        "strict": false
+      },
+      "specSection": "6",
+      "minSpecVersion": "4.4"
+    },
+    {
       "name": "throws on a hyphen without a following space at item depth",
       "input": "items[2]:\n  - a\n  -b",
       "expected": null,
