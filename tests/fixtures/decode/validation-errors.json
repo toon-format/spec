@@ -252,7 +252,7 @@
         "strict": true
       },
       "specSection": "6",
-      "note": "No whitespace is permitted between ] and the colon or field list; the line is an array-header line that fails the §6 grammar (§5.2)"
+      "note": "The line is an array-header line that fails the §6 grammar (§5.2)"
     },
     {
       "name": "throws on whitespace between bracket segment and field list",
@@ -601,7 +601,6 @@
       "expected": null,
       "shouldError": true,
       "specSection": "6",
-      "note": "HTAB is whitespace (§1.2); NBSP is not",
       "minSpecVersion": "4.1"
     },
     {
@@ -839,7 +838,6 @@
         "strict": false
       },
       "specSection": "6",
-      "note": "Content after a nested field group fails the §6 grammar",
       "minSpecVersion": "4.4"
     },
     {
