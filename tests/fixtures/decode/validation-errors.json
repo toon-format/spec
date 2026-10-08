@@ -507,6 +507,13 @@
       "note": "Keyless headers are valid only as the document's root header or as list items"
     },
     {
+      "name": "throws on keyless array header as a later field of a list-item object",
+      "input": "a[1]:\n  - b: 1\n    [2]: x,y",
+      "expected": null,
+      "shouldError": true,
+      "specSection": "6"
+    },
+    {
       "name": "throws on keyless fields-bearing header as list item",
       "input": "items[1]:\n  - [0]{x}:",
       "expected": null,
