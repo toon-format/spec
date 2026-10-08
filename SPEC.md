@@ -272,7 +272,7 @@ TOON is a deterministic, line-oriented, indentation-based notation.
   - Else if the document has exactly one non-blank line, at depth 0, and it is a scalar line (§5.2), decode a single primitive (examples: `hello`, `42`, `true`).
   - Otherwise, decode an object.
   - An empty document (no non-blank lines after comment removal, §5.1) decodes to an empty object `{}`. A document consisting only of comment and blank lines is therefore `{}`.
-  - The root form spans the whole document: once a root array, an empty root array (`[]`), or a keyed tabular root object is complete, no further non-comment, non-blank line may follow. Decoders MUST error on such trailing content (§14.2) – it MUST NOT be silently discarded. (A root object extends to the last line of the document, so this case does not arise for object roots.)
+  - The root form spans the whole document: once a root array, an empty root array (`[]`), or a keyed tabular root object is complete, no further non-comment, non-blank line may follow. Decoders MUST error on such trailing content (§14.2). (A root object extends to the last line of the document, so this case does not arise for object roots.)
   - A second depth-0 scalar line is invalid (§5.2):
     ```
     hello
@@ -443,7 +443,7 @@ Decoding of value tokens follows §4 (unquoted type inference, quoted strings, n
   - Key-value lines at an object's content depth are its fields; duplicate keys: §14.3.
   - A key-value line with nothing after the colon at depth d opens an object: the following lines at depth > d belong to it, up to the first line at depth ≤ d. If no line belongs to it, its value MUST decode to `{}`, never to an empty array (`key: []`, §9.1).
   - The first line of a non-empty nested scope MUST be at exactly depth d+1; a deeper first line is a depth jump and MUST error (§14.2), except under §14.4's depth-jump recovery. Conforming encoders never produce depth jumps; §10's depth model governs fields carried on a list-item hyphen line.
-  - A line deeper than the content depth of its enclosing scope that is not the first line of a nested scope belongs to no scope (e.g., a depth d+1 line directly under a depth-d primitive field, or the document's first line at depth 1 or more). Decoders MUST error on such a line (§14.2); it MUST NOT be silently discarded.
+  - A line deeper than the content depth of its enclosing scope that is not the first line of a nested scope belongs to no scope (e.g., a depth d+1 line directly under a depth-d primitive field, or the document's first line at depth 1 or more). Decoders MUST error on such a line (§14.2).
 
 ## 9. Arrays and Tabular Forms
 
@@ -594,7 +594,7 @@ For an object appearing as a list item:
     2. Split the document at LF and exclude a single CR (U+000D) at the end of each line from its content, thereby accepting CRLF input. A CR anywhere else in a line is content.
     3. Strip trailing spaces from each line. A line `-` followed only by spaces is therefore the bare marker of an empty-object list item (§9.4, §10), not a list item carrying an empty token.
     4. Remove comment lines (§5.1).
-    5. Identify blank lines: a line of spaces only, regardless of their count, is blank. Blank lines never create or close structure and are never counted; the indentation rule below does not apply to them.
+    5. Identify blank lines: a line left empty is blank. Blank lines never create or close structure and are never counted.
   - Indentation: a line's indentation is its leading run of spaces and tabs. It MUST consist of spaces whose count is an exact multiple of indentSize, and the line's depth is that count divided by indentSize; otherwise MUST error, except under §14.4's indentation recovery.
   - Header span: the lines from the first item, row, or entry line in a header's scope through the last line of that scope's content (which may be a deeper line inside its last item). A blank line inside any header span MUST error, except under §14.4's blank-line recovery; decoders MUST ignore all other blank lines.
   - Token trimming: when a token is extracted – a key token before a key-value colon or an entry key's colon (§7.4, §9.5), a field entry in a field list (§6), or a value token after a key-value colon, after an array-header colon, or around each delimiter-separated token – decoders MUST trim surrounding spaces and no other character (§1.2). This trimming does not apply between a key and its bracket segment or between a field name and its nested field group, where whitespace is a header syntax error (§6).
@@ -664,7 +664,7 @@ Validators MAY warn about other deviations from encoder output, such as a traili
 
 ## 14. Decode Errors and Non-Strict Recoveries (Authoritative Checklist)
 
-Decoders MUST error on the conditions listed in §14.1–§14.3. With `strict=false`, decoders MUST apply the recoveries of §14.4 to the conditions those recoveries name, and MUST error on every other condition; no other recovery exists. Error type, code, and message text are implementation-defined.
+Decoders MUST error on the conditions listed in §14.1–§14.3. With `strict=false`, decoders MUST apply the recoveries of §14.4 to the conditions those recoveries name, and MUST error on every other condition. Error type, code, and message text are implementation-defined.
 
 ### 14.1 Array Count and Width Mismatches
 
@@ -678,16 +678,15 @@ Decoders MUST error on the conditions listed in §14.1–§14.3. With `strict=fa
 ### 14.2 Syntax and Structural Errors
 
 - Invalid escape sequences or unterminated strings in quoted tokens, and characters after a quoted token's closing quote (§4, §7.1, §7.4).
-- Header delimiter mismatch (§6): MUST error as a header syntax error, independent of row width/count checks.
 - Array-header lines (§5.2) that fail the §6 grammar – e.g., malformed bracket lengths or keyed markers, an unclosed bracket segment (`a[1:`), or no colon after the bracket segment or field list (`a[2:]{x}`, `a[1]{x:y}`).
-- Malformed field lists in headers: an empty field list (`{}`, including a nested `field{}`), an empty field entry (`{a,}`), a nameless nested group (`{a,{b}}`), unmatched braces, or a field name repeated within the same field list (`{a,a}`, including inside a nested group); see §6, §9.3, §9.5. These are diagnosed from the header line alone, independent of the declared count and of any following rows or entry rows.
+- Malformed field lists in headers: an empty field list (`{}`, including a nested `field{}`), an empty field entry (`{a,}`), a nameless nested group (`{a,{b}}`), unmatched braces, a field name repeated within the same field list (`{a,a}`, including inside a nested group), or an unquoted delimiter other than the bracket segment's; see §6, §9.3, §9.5. These are diagnosed from the header line alone, independent of the declared count and of any following rows or entry rows.
 - Keyed headers (§9.5): a missing field list (`key[2:]:`) or a line at entry depth without an unquoted colon.
 - Content other than spaces after a fields-bearing header's colon (§6), keyed or not (e.g., `items[2]{a,b}: 1,2`).
 - Keyless headers outside their valid positions (§6): a keyless header without a field list in object-field position (e.g., `[2]: x,y` under an object field, or as a non-first depth-0 line), or a keyless fields-bearing header, keyed or not, anywhere but as the document's root header (e.g., `- [2]{a}:`).
-- Whitespace between a key and its bracket segment or between a field name and its nested field group, and any content between a valid bracket segment and the colon (or field list) (§6).
+- Whitespace between a key and its bracket segment or between a field name and its nested field group (§6).
 - Indentation and blank-line invariants per §12, evaluated after comment removal (§5.1).
 - Indentation depth jumps (§8): the first line of a nested scope standing deeper than the scope's content depth (§1.3; e.g., a depth d+2 line directly under a depth-d `key:`).
-- Over-indented lines (§8): a line deeper than the content depth of its enclosing scope that is not the first line of a nested scope (e.g., a depth d+1 line directly under a depth-d primitive field, or the document's first line at depth 1 or more). Decoders MUST NOT silently discard such lines.
+- Over-indented lines (§8): a line deeper than the content depth of its enclosing scope that is not the first line of a nested scope (e.g., a depth d+1 line directly under a depth-d primitive field, or the document's first line at depth 1 or more).
 - Trailing content after a completed root form (§5): any non-comment, non-blank line following the inline values, rows, items, or entries of a root array or keyed tabular root object, or following a root `[]`.
 - Ill-formed UTF-8 in byte input (§4).
 - A scalar line (§5.2) anywhere other than root primitive position – e.g., a key without a colon, a bare token line inside an array scope, or a second depth-0 line (§5).
@@ -702,9 +701,9 @@ The five recoveries:
 
 1. Declared counts: a count mismatch (§14.1) is not an error. A declared `[N]` never terminates or truncates a scope – decoders decode every inline value, list item, tabular row, and entry row the scope contains. Row and entry-row widths are still checked.
 2. Duplicate keys: duplicate sibling keys (§14.3) and field names repeated within one field list (§9.3) resolve by last-write-wins in document order, silently; the key keeps the position of its first occurrence. A repeated field, bare or carrying a nested field group, yields duplicate sibling keys in every decoded element.
-3. Indentation: a line's depth is T + floor(S / indentSize), where T and S count the tabs and spaces in its indentation (§12). Indentation is removed from the line's content before classification (§5.2), and a line of only spaces and tabs is blank. A comment line still allows only spaces before its "#" (§5.1).
-4. Blank lines: a blank line inside a header span (§12) is ignored and not counted as a row, item, or entry.
-5. Depth jumps: when the first line of a nested scope (§1.3) stands at depth m, deeper than the scope's content depth c, m becomes the content depth: the scope's lines, up to the first line shallower than c, are read as if each stood m − c levels shallower, and a line among them shallower than m MUST error. This recovery never skips a line. It does not apply after a list-item hyphen line whose field opens no scope, such as `- a: 1`, `- a[2]: 1,2`, or `- a: []`: that field is the list-item object's first line (§10), so a deeper line after it is over-indented (§8).
+3. Indentation: a line's depth is T + floor(S / indentSize), where T and S count the tabs and spaces in its indentation (§12). A line of only spaces and tabs is blank.
+4. Blank lines: a blank line inside a header span (§12) is ignored.
+5. Depth jumps: when the first line of a nested scope (§1.3) stands at depth m, deeper than the scope's content depth c, m becomes the content depth: the scope's lines, up to the first line shallower than c, are read as if each stood m − c levels shallower, and a line among them shallower than m MUST error. It does not apply after a list-item hyphen line whose field opens no scope, such as `- a: 1`, `- a[2]: 1,2`, or `- a: []`: that field is the list-item object's first line (§10), so a deeper line after it is over-indented (§8).
 
 ## 15. Security Considerations
 
