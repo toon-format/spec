@@ -2,9 +2,9 @@
 
 ## Token-Oriented Object Notation
 
-**Version:** 4.3
+**Version:** 4.4
 
-**Date:** 2026-10-06
+**Date:** 2026-10-08
 
 **Status:** Working Draft
 
@@ -616,7 +616,7 @@ Options:
 
 Decode errors are enumerated in §14.
 
-Implementations SHOULD declare the specification version they target (e.g., `toon-spec: 4.3`) in their documentation.
+Implementations SHOULD declare the specification version they target (e.g., `toon-spec: 4.4`) in their documentation.
 
 ### 13.1 Encoder Conformance Checklist
 

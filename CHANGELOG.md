@@ -4,7 +4,7 @@ All notable changes to the TOON specification will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Each version lists what changed for encoders and decoders; patch releases that changed a rule appear under their minor version. The project follows the MAJOR.MINOR versioning policy described in [VERSIONING.md](./VERSIONING.md).
 
-## [Unreleased]
+## [4.4] - 2026-10-08
 
 ### Encoders
 
