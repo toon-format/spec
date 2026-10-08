@@ -65,7 +65,7 @@ The text extracted for one key or one value – before a key-value or entry-key 
 The region an opening line governs – a header, or a `key:` line with nothing after the colon – running from its content depth until the depth falls back to the opening line's or shallower (SPEC §8, §9.4, §9.5).
 
 **Content depth**:
-The depth at which a scope's immediate content appears – one level deeper than the line that opens the scope, except for first fields carried on a list-item hyphen line (SPEC §10).
+The depth at which a scope's immediate content appears – 0 for the root scope, otherwise one level deeper than the line that opens the scope, except for first fields carried on a list-item hyphen line (SPEC §10) and a depth adopted by the non-strict depth-jump recovery (SPEC §14.4).
 
 **Row depth**:
 The content depth of a tabular array's scope, at which its rows appear.
@@ -113,10 +113,10 @@ _Avoid_: mixed (except in the compound "mixed and non-uniform arrays", which nam
 ## Delimiters
 
 **Active delimiter**:
-The delimiter declared by the closest header in scope. Governs splitting and quoting for inline values, tabular row cells, and entry row cells.
+The delimiter declared by the closest header in scope. Governs splitting for inline values, tabular row cells, and entry row cells.
 
 **Document delimiter**:
-The encoder-selected delimiter used for delimiter-aware quoting wherever no active delimiter governs – object field values and root primitives.
+The encoder-selected delimiter, declared in every header an encoder emits; encoders quote every string value containing it (SPEC §7.2, §11.1).
 
 ## Beyond the format
 
@@ -124,12 +124,16 @@ The encoder-selected delimiter used for delimiter-aware quoting wherever no acti
 Benchmark-only measure – the percentage of a dataset's arrays that qualify for tabular form. Not a spec concept.
 
 **Strict mode**:
-Decoder mode enforcing declared counts, row widths, indentation, and delimiter consistency. Default on.
+Decoder mode that errors on every condition of SPEC §14. Default on.
+
+**Non-strict recovery**:
+One of the five outcomes `strict=false` applies instead of an error – declared counts, duplicate keys, indentation, blank lines, and depth jumps (SPEC §14.4). Every other error stays an error.
+_Avoid_: leniency, fall-through
 
 ## Standing rules
 
 - **Prefer *form* over *format* for the four renderings.** "Tabular format" wrongly implies a sibling of JSON or YAML rather than a shape inside TOON. `format` stays correct for TOON itself ("text format", "number formatting").
-- **`field` is overloaded on purpose.** §8 uses it for object properties ("sibling fields"); §9.3 uses it for field-list members ("leaf field"). Disambiguate with a compound – *object field*, *leaf field*, *field entry* – never by inventing a new word.
+- **`field` is overloaded on purpose.** §14.3 uses it for object properties ("sibling fields"); §9.3 uses it for field-list members ("leaf field"). Disambiguate with a compound – *object field*, *leaf field*, *field entry* – never by inventing a new word.
 - **`entry` likewise.** *Field entry* is a field-list member; *entry row* and *entry key* belong to keyed tabular form.
 - **Prose beats grammar names.** Reader-facing text and error messages use the concept names above; ABNF production names appear only when discussing the grammar.
 - **"form" also carries its ordinary English sense throughout SPEC.md** – root form (§5), canonical decimal and exponent form (§2), the empty-array value form `key: []` (§9.1), the legacy header form (§9.1), quoted and unquoted forms (§7.4). None of these are the four renderings above and none should be renamed.
