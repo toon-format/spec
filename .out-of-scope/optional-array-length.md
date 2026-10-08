@@ -9,7 +9,7 @@ The length is load-bearing: §6 makes it mandatory, encoders MUST emit the actua
 > The `[N]` header is a fundamental invariant in TOON: every array declares its length explicitly. That property underpins strict‑mode validation (count checks, truncation detection), the "structure awareness / structural validation" behavior in the benchmarks, and a big part of TOON's differentiation from "CSV + indent." Making `[N]` optional for tabular arrays would weaken those guarantees and introduce a second, non‑canonical syntax for the same structure.
 > – [spec#11](https://github.com/toon-format/spec/pull/11#issuecomment-3569473088)
 
-It isn't backward compatible either: strict decoders reject `key[]:` (§6). A producer that can't know `N` up front counts first or chunks the data into several arrays ([spec#15](https://github.com/toon-format/spec/issues/15#issuecomment-3569512191)); hand-edited data is better edited as JSON and converted, so `[N]` is generated ([toon#145](https://github.com/toon-format/toon/issues/145#issuecomment-3536756237)).
+It isn't backward compatible either: decoders reject `key[]:` (§6). A producer that can't know `N` up front counts first or chunks the data into several arrays ([spec#15](https://github.com/toon-format/spec/issues/15#issuecomment-3569512191)); hand-edited data is better edited as JSON and converted, so `[N]` is generated ([toon#145](https://github.com/toon-format/toon/issues/145#issuecomment-3536756237)).
 
 ## Prior requests
 
