@@ -29,7 +29,7 @@
         "b": 0
       },
       "specSection": "4",
-      "note": "Most host environments do not distinguish -0 from 0"
+      "note": "-0 and 0 are equal numbers (§2)"
     },
     {
       "name": "parses array with mixed numeric forms",
