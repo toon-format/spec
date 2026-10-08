@@ -939,7 +939,7 @@ These sketches illustrate structure and common decoding helpers. They are inform
   - The first field on a list-item hyphen line: nested fields at depth +2 relative to the hyphen line; subsequent fields at +1.
 - List items:
   - Lines start with "- " at one deeper depth than the parent array header (or the bare marker "-" for an empty object list item, §10).
-  - After "- ":
+  - After the marker and its spaces (§5.2):
     - If the remainder is exactly `[]` → empty inner array (§9.2).
     - Else if the remainder starts with "[" and is an array-header line (§5.2) → inner array (§9.2, §9.4); decode with its own header and active delimiter.
     - Else if an unquoted colon appears → object with first field on hyphen line.
