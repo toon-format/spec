@@ -588,9 +588,10 @@ For an object appearing as a list item:
   - Encoders MUST emit exactly one ASCII space (U+0020) after array headers when followed by inline values.
   - Encoders MUST NOT emit blank lines or trailing spaces at the end of any line.
   - Encoders MUST NOT emit a trailing newline at the end of the document.
+  - Encoders MUST NOT emit a byte-order mark.
 - Decoding:
   - Line preparation: before line classification (§5.2), decoders MUST, in this order:
-    1. Remove a single U+FEFF at the very start of the document; it is a byte-order mark, and a U+FEFF anywhere else is content. Encoders MUST NOT emit one.
+    1. Remove a single U+FEFF at the very start of the document; it is a byte-order mark, and a U+FEFF anywhere else is content.
     2. Split the document at LF and exclude a single CR (U+000D) at the end of each line from its content, thereby accepting CRLF input. A CR anywhere else in a line is content.
     3. Strip trailing spaces from each line. A line `-` followed only by spaces is therefore the bare marker of an empty-object list item (§9.4, §10), not a list item carrying an empty token.
     4. Remove comment lines (§5.1).
