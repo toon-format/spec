@@ -447,7 +447,7 @@
       "specSection": "15"
     },
     {
-      "name": "parses a key-value or header colon with spaces before it or none after it",
+      "name": "parses a key-value colon with spaces before it and a key-value or header colon with none after it",
       "input": "a : 1\nb:2\nc[2]:x,y",
       "expected": {
         "a": 1,

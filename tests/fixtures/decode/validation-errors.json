@@ -149,7 +149,7 @@
       "minSpecVersion": "4.3"
     },
     {
-      "name": "throws on a malformed header line in non-strict mode",
+      "name": "throws on a keyed header line without its colon in non-strict mode",
       "input": "a[2:]{x}",
       "expected": null,
       "shouldError": true,
