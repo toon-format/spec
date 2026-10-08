@@ -74,7 +74,7 @@ Non-breaking changes (MINOR version bump) include:
 
 When in doubt, we err on the side of caution and treat potentially breaking changes as MAJOR version bumps.
 
-A new MINOR version keeps existing conformant implementations conformant on every document a conforming encoder of the current MAJOR version emits; on encoder-unreachable documents, its CHANGELOG.md entry names what changed. A new MAJOR version may require updates; previous-version implementations remain valid, and its CHANGELOG.md entry carries the migration guidance. A MINOR version that renames or retires a public concept handle (for example an option name) carries a migration note in CHANGELOG.md naming the old and new spelling.
+A new MINOR version keeps existing conformant decoders conformant on every document a conforming encoder of the current MAJOR version emits; on encoder-unreachable documents, its CHANGELOG.md entry summarizes what changed. A new MAJOR version may require updates; previous-version implementations remain valid, and its CHANGELOG.md entry carries the migration guidance. A MINOR version that renames or retires a public concept handle (for example an option name) carries a migration note in CHANGELOG.md naming the old and new spelling.
 
 ## Version History
 
