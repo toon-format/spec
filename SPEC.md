@@ -586,7 +586,7 @@ For an object appearing as a list item:
   - Tabs MUST NOT be used for indentation.
   - Encoders MUST emit exactly one ASCII space (U+0020) after the colon in key: value lines and after an entry row's entry-key colon (§9.5).
   - Encoders MUST emit exactly one ASCII space (U+0020) after array headers when followed by inline values.
-  - Encoders MUST NOT emit blank lines or trailing spaces at the end of any line.
+  - Encoders MUST NOT emit blank lines or trailing spaces.
   - Encoders MUST NOT emit a trailing newline at the end of the document.
   - Encoders MUST NOT emit a byte-order mark.
 - Decoding:
